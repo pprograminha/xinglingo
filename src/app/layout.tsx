@@ -5,10 +5,11 @@ import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
 })
+
 export const metadata: Metadata = {
   title: 'EnglishAI',
   description: 'English pronunciation Ai Speech',
