@@ -30,9 +30,10 @@ export function Microphone({ onAudio }: MicrophoneProps) {
       text: '',
     })
 
-    const WebkitSpeechRecognition = webkitSpeechRecognition
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition
 
-    recognitionRef.current = new WebkitSpeechRecognition()
+    recognitionRef.current = new SpeechRecognition()
     recognitionRef.current.continuous = true
     recognitionRef.current.interimResults = true
 
