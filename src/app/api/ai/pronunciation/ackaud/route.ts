@@ -31,8 +31,7 @@ export async function POST(req: Request) {
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
-
-    const filepath = path.join('tmp', blob.name)
+    const filepath = path.resolve('tmp', blob.name)
 
     await fs.promises.writeFile(filepath, buffer)
 
@@ -47,7 +46,6 @@ export async function POST(req: Request) {
     pronunciationAssessmentConfig.enableContentAssessmentWithTopic(
       'conversation',
     )
-
     const audioStream = openPushStream(filepath)
     const audioConfig = SpeechSDK.AudioConfig.fromStreamInput(audioStream)
     const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
