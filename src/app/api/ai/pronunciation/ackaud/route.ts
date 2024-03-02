@@ -1,5 +1,6 @@
 import { env } from '@/env'
 import { openPushStream } from '@/lib/file-push-stream'
+import { isJsonString } from '@/lib/is-json-string'
 import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 import { z } from 'zod'
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
       )
     })
 
-    return Response.json(JSON.parse(result))
+    return Response.json(isJsonString(result) ? JSON.parse(result) : result)
   } catch (error) {
     console.error(error)
 

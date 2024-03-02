@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/[ui]/button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -8,7 +8,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from '@/components/[ui]/form'
+} from '@/components/ui/form'
 import {
   Table,
   TableBody,
@@ -16,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/[ui]/table'
+} from '@/components/ui/table'
 import { blobToAudioBuffer } from '@/lib/blob-buffer'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toWav from 'audiobuffer-to-wav'
@@ -24,7 +24,7 @@ import { Info, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useToast } from '../[ui]/use-toast'
+import { useToast } from '../ui/use-toast'
 import { Microphone } from './microphone'
 
 const formSchema = z.strictObject({
