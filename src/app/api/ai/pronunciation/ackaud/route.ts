@@ -1,8 +1,9 @@
-import { env } from '@/env'
-import { openPushStream } from '@/lib/file-push-stream'
-import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 import { z } from 'zod'
+import { applyCommonConfigurationTo } from './services/apply-common-configuration'
+import { getAudioConfig } from './services/get-audio-config'
+import { getPronunciationAssessmentConfig } from './services/get-pronunciation-assessment-config'
+import { getSpeechConfig } from './services/get-speech-config'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -28,37 +29,11 @@ export async function POST(req: Request) {
     const referenceText = safeParse.data.audioText
     const blob = safeParse.data.audioBlob as File
 
-    const bytes = await blob.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    const filepath =
-      env.NODE_ENV === 'production' ? `/tmp/${blob.name}` : `tmp/${blob.name}`
+    const audioConfig = await getAudioConfig(blob)
+    const speechConfig = await getSpeechConfig()
 
-    await fs.promises.writeFile(filepath, buffer)
-
-    const pronunciationAssessmentConfig =
-      new SpeechSDK.PronunciationAssessmentConfig(
-        referenceText,
-        SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
-        SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
-        true,
-      )
-
-    pronunciationAssessmentConfig.enableContentAssessmentWithTopic(
-      'conversation',
-    )
-    const audioStream = openPushStream(filepath)
-    const audioConfig = SpeechSDK.AudioConfig.fromStreamInput(audioStream)
-    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
-      env.AZURE_SPEECH_SUBSCRITION_KEY,
-      env.AZURE_SPEECH_REGION,
-    )
-    const autoDetectSourceLanguageConfig =
-      SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages([
-        env.AZURE_SPEECH_LANGUAGE,
-      ])
-
-    pronunciationAssessmentConfig.enableProsodyAssessment = true
-    speechConfig.speechRecognitionLanguage = env.AZURE_SPEECH_LANGUAGE
+    const { autoDetectSourceLanguageConfig, pronunciationAssessmentConfig } =
+      await getPronunciationAssessmentConfig(referenceText)
 
     const speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(
       speechConfig,
@@ -66,7 +41,11 @@ export async function POST(req: Request) {
       audioConfig,
     )
 
+    applyCommonConfigurationTo(speechRecognizer)
+
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
+
+    speechRecognizer.startContinuousRecognitionAsync()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await new Promise<any>((resolve, reject) => {
@@ -79,6 +58,9 @@ export async function POST(req: Request) {
           if (pronunciationAssessmentResultJson)
             resolve(JSON.parse(pronunciationAssessmentResultJson))
           else reject(new Error('Result Json is Empty'))
+        },
+        (error) => {
+          reject(new Error(error))
         },
       )
     })
