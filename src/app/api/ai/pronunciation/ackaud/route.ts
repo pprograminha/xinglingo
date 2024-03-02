@@ -85,7 +85,7 @@ export async function POST(req: Request) {
           )
         })
 
-        return isJsonString(result) ? JSON.parse(result) : result
+        return isJsonString(result) ? JSON.parse(result) : { od: result }
       } catch {
         if (attempts < 30) await retry()
 
