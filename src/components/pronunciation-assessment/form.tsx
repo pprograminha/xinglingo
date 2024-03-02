@@ -156,31 +156,45 @@ export function PronunciationAssessmentForm() {
 
     formData.append('audioText', values.microphone.audioText)
 
-    try {
-      const response = await fetch('/api/ai/pronunciation/ackaud', {
-        body: formData,
-        method: 'POST',
-      })
+    let attempts = 0
 
-      const data = await response.json()
+    const retry = async () => {
+      try {
+        const response = await fetch('/api/ai/pronunciation/ackaud', {
+          body: formData,
+          method: 'POST',
+        })
 
-      if (data.RecognitionStatus === 'Success') {
-        setRecognition(data)
+        const data = await response.json()
+
+        if (data.RecognitionStatus === 'Success') {
+          setRecognition(data)
+
+          toast({
+            title: 'Audio successfully loaded correctly',
+          })
+        } else {
+          throw new Error()
+        }
+      } catch {
+        attempts += attempts + 1
+
+        if (attempts <= 10) {
+          await retry()
+
+          return
+        }
 
         toast({
-          title: 'Audio successfully loaded correctly',
+          title: 'Did not catch audio properly! Please try again.',
+          variant: 'destructive',
         })
-      } else {
-        throw new Error()
+      } finally {
+        setIsLoading(false)
       }
-    } catch {
-      toast({
-        title: 'Did not catch audio properly! Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsLoading(false)
     }
+
+    await retry()
   }
 
   const recognitionData = recognition?.NBest[0]
