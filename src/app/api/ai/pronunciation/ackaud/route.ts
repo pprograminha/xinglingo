@@ -30,14 +30,14 @@ export async function POST(req: Request) {
     const blob = safeParse.data.audioBlob as File
     let attempts = 0
 
+    const bytes = await blob.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    const filepath =
+      env.NODE_ENV === 'production' ? `/tmp/${blob.name}` : `tmp/${blob.name}`
+
+    await fs.promises.writeFile(filepath, buffer)
+
     const retry = async () => {
-      const bytes = await blob.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-      const filepath =
-        env.NODE_ENV === 'production' ? `/tmp/${blob.name}` : `tmp/${blob.name}`
-
-      await fs.promises.writeFile(filepath, buffer)
-
       const pronunciationAssessmentConfig =
         new SpeechSDK.PronunciationAssessmentConfig(
           referenceText,
@@ -71,22 +71,22 @@ export async function POST(req: Request) {
 
       pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-      try {
-        const result = await new Promise<string>((resolve) => {
-          speechRecognizer.recognizeOnceAsync(
-            (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
-              const pronunciationAssessmentResultJson =
-                speechRecognitionResult.properties.getProperty(
-                  SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
-                )
+      const result = await new Promise<string>((resolve) => {
+        speechRecognizer.recognizeOnceAsync(
+          (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
+            const pronunciationAssessmentResultJson =
+              speechRecognitionResult.properties.getProperty(
+                SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
+              )
 
-              resolve(pronunciationAssessmentResultJson)
-            },
-          )
-        })
+            resolve(pronunciationAssessmentResultJson)
+          },
+        )
+      })
 
-        return isJsonString(result) ? JSON.parse(result) : { od: result }
-      } catch {
+      if (!isJsonString(result)) {
+        console.log('Retrying... Result: ', result)
+
         if (attempts < 30) await retry()
 
         attempts += attempts + 1
