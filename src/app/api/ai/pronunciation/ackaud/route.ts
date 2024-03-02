@@ -3,7 +3,7 @@ import { openPushStream } from '@/lib/file-push-stream'
 import { isJsonString } from '@/lib/is-json-string'
 import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
-import { string, z } from 'zod'
+import { z } from 'zod'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -28,7 +28,6 @@ export async function POST(req: Request) {
 
     const referenceText = safeParse.data.audioText
     const blob = safeParse.data.audioBlob as File
-    const attempts = 0
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
