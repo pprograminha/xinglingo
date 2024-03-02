@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
   const safeParse = z
     .object({
-      audioBlob: z.instanceof(File),
+      audioBlob: z.any(),
       audioText: z.string().min(1),
     })
     .safeParse({
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     }
 
     const referenceText = safeParse.data.audioText
-    const blob = safeParse.data.audioBlob
+    const blob = safeParse.data.audioBlob as File
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
