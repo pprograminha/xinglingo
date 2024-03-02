@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const filepath = path.join(blob.name)
+    const filepath = path.join('tmp', blob.name)
 
     await fs.promises.writeFile(filepath, buffer)
 

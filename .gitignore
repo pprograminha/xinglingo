@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 
-/*.wav
-/*.webm
+tmp/*.wav
+tmp/*.webm
