@@ -1,9 +1,7 @@
 import { env } from '@/env'
 import { openPushStream } from '@/lib/file-push-stream'
-import { isJsonString } from '@/lib/is-json-string'
 import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
-import { ContentAssessmentResult } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/PronunciationAssessmentResult'
 import { z } from 'zod'
 
 export async function POST(req: Request) {
@@ -70,7 +68,7 @@ export async function POST(req: Request) {
 
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-    const result = await new Promise<string>((resolve) => {
+    const result = await new Promise<string>((resolve, reject) => {
       speechRecognizer.recognizeOnceAsync(
         (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
           const pronunciationAssessmentResultJson =
@@ -79,15 +77,12 @@ export async function POST(req: Request) {
             )
           if (pronunciationAssessmentResultJson)
             resolve(pronunciationAssessmentResultJson)
+          else reject(new Error('Result Json is Empty'))
         },
       )
     })
 
-    return Response.json(
-      isJsonString(result)
-        ? (JSON.parse(result) as ContentAssessmentResult)
-        : { ok: String(result) + ' + feedback' },
-    )
+    return Response.json(result)
   } catch (error) {
     console.error(error)
 
