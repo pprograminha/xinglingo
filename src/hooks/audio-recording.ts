@@ -1,3 +1,5 @@
+import { toast } from '@/components/ui/use-toast'
+
 type AudioRecorder = {
   audioBlobs: Blob[]
   mediaRecorder: MediaRecorder | null
@@ -23,6 +25,13 @@ const audioRecorder: AudioRecorder = {
     if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
       // Feature is not supported in browser
       // return a custom error
+
+      toast({
+        title:
+          'mediaDevices API or getUserMedia method is not supported in this browser.',
+        variant: 'destructive',
+      })
+
       return Promise.reject(
         new Error(
           'mediaDevices API or getUserMedia method is not supported in this browser.',
@@ -73,8 +82,6 @@ const audioRecorder: AudioRecorder = {
     return new Promise<Blob>((resolve) => {
       // save audio type to pass to set the Blob type
       const mimeType = audioRecorder.mediaRecorder?.mimeType
-
-      console.log(mimeType)
 
       // listen to the stop event in order to create & return a single Blob object
       audioRecorder.mediaRecorder?.addEventListener('stop', () => {

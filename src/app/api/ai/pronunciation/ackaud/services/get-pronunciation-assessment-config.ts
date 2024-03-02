@@ -6,24 +6,15 @@ import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 export const getPronunciationAssessmentConfig = async (
   referenceText: string,
 ) => {
-  // const pronunciationAssessmentConfig =
-  //   new SpeechSDK.PronunciationAssessmentConfig(
-  //     referenceText,
-  //     SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
-  //     SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
-  //     true,
-  //   )
-
   const pronunciationAssessmentConfig =
-    SpeechSDK.PronunciationAssessmentConfig.fromJSON(
-      `{"GradingSystem": "HundredMark", \
-      "Granularity": "Phoneme", \
-      "EnableMiscue": "True", \
-      "ReferenceText": "${referenceText}", \
-      "EnableProsodyAssessment": "True"}`,
+    new SpeechSDK.PronunciationAssessmentConfig(
+      referenceText,
+      SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
+      SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
+      true,
     )
 
-  // pronunciationAssessmentConfig.enableProsodyAssessment = true
+  pronunciationAssessmentConfig.enableProsodyAssessment = true
 
   const autoDetectSourceLanguageConfig =
     SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages([

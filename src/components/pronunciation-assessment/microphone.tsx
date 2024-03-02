@@ -6,6 +6,7 @@ import { Download, Mic, Pause, RotateCcw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
+import { toast } from '../ui/use-toast'
 
 type MicrophoneProps = {
   onReset: () => void
@@ -51,6 +52,16 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition
+
+    if (!SpeechRecognition) {
+      toast({
+        title: 'SpeechRecognition API is not supported in this browser.',
+        variant: 'destructive',
+      })
+
+      setIsRecording(false)
+      return
+    }
 
     recognitionRef.current = new SpeechRecognition()
     recognitionRef.current.continuous = true
