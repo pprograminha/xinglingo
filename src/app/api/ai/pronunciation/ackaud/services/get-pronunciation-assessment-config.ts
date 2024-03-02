@@ -12,6 +12,8 @@ export const getPronunciationAssessmentConfig = async (
       true,
     )
 
+  pronunciationAssessmentConfig.enableProsodyAssessment = true
+
   const autoDetectSourceLanguageConfig =
     SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages([
       env.AZURE_SPEECH_LANGUAGE,
