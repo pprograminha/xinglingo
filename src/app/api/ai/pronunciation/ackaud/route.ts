@@ -69,20 +69,34 @@ export async function POST(req: Request) {
 
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-    const result = await new Promise<string>((resolve) => {
-      speechRecognizer.recognizeOnceAsync(
-        (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
-          const pronunciationAssessmentResultJson =
-            speechRecognitionResult.properties.getProperty(
-              SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
-            )
+    let attempts = 0
 
-          resolve(pronunciationAssessmentResultJson)
-        },
-      )
-    })
+    const retry = async () => {
+      try {
+        const result = await new Promise<string>((resolve) => {
+          speechRecognizer.recognizeOnceAsync(
+            (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
+              const pronunciationAssessmentResultJson =
+                speechRecognitionResult.properties.getProperty(
+                  SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
+                )
 
-    return Response.json(isJsonString(result) ? JSON.parse(result) : result)
+              resolve(pronunciationAssessmentResultJson)
+            },
+          )
+        })
+
+        return isJsonString(result) ? JSON.parse(result) : result
+      } catch {
+        if (attempts < 30) await retry()
+
+        attempts += attempts + 1
+      }
+    }
+
+    const value = await retry()
+
+    return Response.json(value)
   } catch (error) {
     console.error(error)
 
