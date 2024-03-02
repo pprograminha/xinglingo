@@ -1,9 +1,8 @@
-import { z } from 'zod'
-import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 import { env } from '@/env'
-import fs from 'fs'
-import path from 'path'
 import { openPushStream } from '@/lib/file-push-stream'
+import fs from 'fs'
+import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
+import { z } from 'zod'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -31,7 +30,7 @@ export async function POST(req: Request) {
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const filepath = path.resolve('tmp', blob.name)
+    const filepath = `/tmp/${blob.name}`
 
     await fs.promises.writeFile(filepath, buffer)
 
