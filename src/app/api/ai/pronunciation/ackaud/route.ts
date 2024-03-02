@@ -68,7 +68,8 @@ export async function POST(req: Request) {
 
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-    const result = await new Promise<string>((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await new Promise<any>((resolve, reject) => {
       speechRecognizer.recognizeOnceAsync(
         (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
           const pronunciationAssessmentResultJson =
@@ -76,7 +77,7 @@ export async function POST(req: Request) {
               SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
             )
           if (pronunciationAssessmentResultJson)
-            resolve(pronunciationAssessmentResultJson)
+            resolve(JSON.parse(pronunciationAssessmentResultJson))
           else reject(new Error('Result Json is Empty'))
         },
       )
