@@ -2,16 +2,23 @@
 
 import { useAudioRecorder } from '@/hooks/audio-recording'
 import { makeDownload } from '@/lib/make-download'
-import { Download, Mic, Pause } from 'lucide-react'
+import { Download, Mic, Pause, RotateCcw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 
 type MicrophoneProps = {
+  onReset: () => void
   onAudio: (data: { blob: Blob | null; text: string }) => void
 }
 
-export function Microphone({ onAudio }: MicrophoneProps) {
+type ResetControlsData = {
+  exclude: {
+    setIsRecording?: boolean
+  }
+}
+
+export function Microphone({ onAudio, onReset }: MicrophoneProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordingComplete, setRecordingComplete] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -20,14 +27,26 @@ export function Microphone({ onAudio }: MicrophoneProps) {
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const audioRecorder = useAudioRecorder()
 
-  const startRecording = () => {
-    setIsRecording(true)
+  const resetControls = (data?: ResetControlsData) => {
+    if (!data?.exclude.setIsRecording) {
+      setIsRecording(false)
+    }
+
+    onReset()
     setRecordingComplete(false)
     setAudioBlob(null)
     setTranscript('')
     onAudio({
       blob: null,
       text: '',
+    })
+  }
+
+  const startRecording = () => {
+    resetControls({
+      exclude: {
+        setIsRecording: true,
+      },
     })
 
     const SpeechRecognition =
@@ -47,7 +66,7 @@ export function Microphone({ onAudio }: MicrophoneProps) {
       }
 
       setTranscript(transcriptCollection.join(' '))
-      onAudio({ text: transcript, blob: audioBlob })
+      onAudio({ text: transcriptCollection.join(' '), blob: audioBlob })
     }
 
     recognitionRef.current.start()
@@ -86,6 +105,15 @@ export function Microphone({ onAudio }: MicrophoneProps) {
   return (
     <div className="flex items-center justify-center">
       <div className="w-full">
+        <Button
+          type="button"
+          className="mb-3"
+          size="icon"
+          variant="outline"
+          onClick={() => resetControls()}
+        >
+          <RotateCcw className="w-5" />
+        </Button>
         {(isRecording || transcript) && (
           <div className="m-auto rounded-md border border-zinc-200 dark:border-zinc-800 p-4 ">
             <div className="flex-1 flex w-full justify-between">

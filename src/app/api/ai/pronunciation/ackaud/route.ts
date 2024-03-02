@@ -30,7 +30,8 @@ export async function POST(req: Request) {
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const filepath = `/tmp/${blob.name}`
+    const filepath =
+      env.NODE_ENV === 'production' ? `/tmp/${blob.name}` : `tmp/${blob.name}`
 
     await fs.promises.writeFile(filepath, buffer)
 

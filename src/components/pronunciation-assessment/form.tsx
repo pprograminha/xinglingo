@@ -220,6 +220,10 @@ export function PronunciationAssessmentForm() {
                 <FormLabel>Reference Text</FormLabel>
                 <FormControl>
                   <Microphone
+                    onReset={() => {
+                      setIsLoading(false)
+                      setRecognition(null)
+                    }}
                     onAudio={(data) => {
                       onChange({
                         target: {
