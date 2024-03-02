@@ -74,7 +74,9 @@ export async function POST(req: Request) {
     if (!result) {
       throw new Error('Result Json is Empty')
     }
-
+    result.pronunciationAssessmentConfig = JSON.stringify(
+      pronunciationAssessmentConfig,
+    )
     return Response.json(result)
   } catch (error) {
     console.error(error)
