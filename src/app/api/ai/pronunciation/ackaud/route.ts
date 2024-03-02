@@ -3,7 +3,7 @@ import { openPushStream } from '@/lib/file-push-stream'
 import { isJsonString } from '@/lib/is-json-string'
 import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
-import { z } from 'zod'
+import { string, z } from 'zod'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     const referenceText = safeParse.data.audioText
     const blob = safeParse.data.audioBlob as File
-    let attempts = 0
+    const attempts = 0
 
     const bytes = await blob.arrayBuffer()
     const buffer = Buffer.from(bytes)
@@ -37,70 +37,57 @@ export async function POST(req: Request) {
 
     await fs.promises.writeFile(filepath, buffer)
 
-    const retry = async () => {
-      const pronunciationAssessmentConfig =
-        new SpeechSDK.PronunciationAssessmentConfig(
-          referenceText,
-          SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
-          SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
-          true,
-        )
-
-      pronunciationAssessmentConfig.enableContentAssessmentWithTopic(
-        'conversation',
-      )
-      const audioStream = openPushStream(filepath)
-      const audioConfig = SpeechSDK.AudioConfig.fromStreamInput(audioStream)
-      const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
-        env.AZURE_SPEECH_SUBSCRITION_KEY,
-        env.AZURE_SPEECH_REGION,
-      )
-      const autoDetectSourceLanguageConfig =
-        SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages([
-          env.AZURE_SPEECH_LANGUAGE,
-        ])
-
-      pronunciationAssessmentConfig.enableProsodyAssessment = true
-      speechConfig.speechRecognitionLanguage = env.AZURE_SPEECH_LANGUAGE
-
-      const speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(
-        speechConfig,
-        autoDetectSourceLanguageConfig,
-        audioConfig,
+    const pronunciationAssessmentConfig =
+      new SpeechSDK.PronunciationAssessmentConfig(
+        referenceText,
+        SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
+        SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
+        true,
       )
 
-      pronunciationAssessmentConfig.applyTo(speechRecognizer)
+    pronunciationAssessmentConfig.enableContentAssessmentWithTopic(
+      'conversation',
+    )
+    const audioStream = openPushStream(filepath)
+    const audioConfig = SpeechSDK.AudioConfig.fromStreamInput(audioStream)
+    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
+      env.AZURE_SPEECH_SUBSCRITION_KEY,
+      env.AZURE_SPEECH_REGION,
+    )
+    const autoDetectSourceLanguageConfig =
+      SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages([
+        env.AZURE_SPEECH_LANGUAGE,
+      ])
 
-      const result = await new Promise<string>((resolve) => {
-        speechRecognizer.recognizeOnceAsync(
-          (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
-            const pronunciationAssessmentResultJson =
-              speechRecognitionResult.properties.getProperty(
-                SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
-              )
+    pronunciationAssessmentConfig.enableProsodyAssessment = true
+    speechConfig.speechRecognitionLanguage = env.AZURE_SPEECH_LANGUAGE
 
-            resolve(pronunciationAssessmentResultJson)
-          },
-        )
-      })
-      if (isJsonString(result)) {
-        return result
-      } else {
-        console.log('Retrying... Result: ', result)
+    const speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(
+      speechConfig,
+      autoDetectSourceLanguageConfig,
+      audioConfig,
+    )
 
-        if (attempts < 30) await retry()
+    pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-        attempts += attempts + 1
-      }
-    }
+    const result = await new Promise<string>((resolve) => {
+      speechRecognizer.recognizeOnceAsync(
+        (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
+          const pronunciationAssessmentResultJson =
+            speechRecognitionResult.properties.getProperty(
+              SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
+            )
 
-    const value = await retry()
+          resolve(pronunciationAssessmentResultJson)
+        },
+      )
+    })
 
-    if (!value) {
-      throw new Error('Result Json is Empty')
-    }
-
-    return Response.json(value)
+    return Response.json(
+      isJsonString(result)
+        ? JSON.parse(result)
+        : { ok: String(result) + ' + feedback' },
+    )
   } catch (error) {
     console.error(error)
 
