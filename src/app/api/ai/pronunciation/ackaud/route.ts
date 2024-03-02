@@ -58,7 +58,7 @@ export async function POST(req: Request) {
             speechRecognitionResult.properties.getProperty(
               SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
             )
-          return pronunciationAssessmentResult
+          resolve(pronunciationAssessmentResult)
           if (pronunciationAssessmentResultJson)
             resolve(JSON.parse(pronunciationAssessmentResultJson))
           else resolve(null)
