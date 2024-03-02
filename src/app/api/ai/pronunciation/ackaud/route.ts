@@ -45,8 +45,6 @@ export async function POST(req: Request) {
 
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
 
-    speechRecognizer.startContinuousRecognitionAsync()
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await new Promise<any>((resolve, reject) => {
       speechRecognizer.recognizeOnceAsync(
