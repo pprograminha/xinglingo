@@ -5,6 +5,7 @@ import { applyCommonConfigurationTo } from './services/apply-common-configuratio
 import { getAudioConfig } from './services/get-audio-config'
 import { getPronunciationAssessmentConfig } from './services/get-pronunciation-assessment-config'
 import { getSpeechConfig } from './services/get-speech-config'
+import console from 'console'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
       audioBlob,
       audioText,
     })
-
+  let pronunciationAssessmentConfig: any
   try {
     if (safeParse.success === false) {
       throw new Error('Zod Validation Error')
@@ -33,15 +34,17 @@ export async function POST(req: Request) {
     const audioConfig = await getAudioConfig(blob)
     const speechConfig = await getSpeechConfig()
 
-    const { autoDetectSourceLanguageConfig, pronunciationAssessmentConfig } =
-      await getPronunciationAssessmentConfig(referenceText)
+    const {
+      autoDetectSourceLanguageConfig,
+      pronunciationAssessmentConfig: $pronunciationAssessmentConfig,
+    } = await getPronunciationAssessmentConfig(referenceText)
 
     const speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(
       speechConfig,
       autoDetectSourceLanguageConfig,
       audioConfig,
     )
-
+    pronunciationAssessmentConfig = $pronunciationAssessmentConfig
     applyCommonConfigurationTo(speechRecognizer)
     ;(speechRecognizer as any).recognized = undefined
 
@@ -77,7 +80,12 @@ export async function POST(req: Request) {
     console.error(error)
 
     return Response.json(
-      { message: (error as Error)?.message },
+      {
+        message: (error as Error)?.message,
+        pronunciationAssessmentConfig: JSON.stringify(
+          pronunciationAssessmentConfig,
+        ),
+      },
       {
         status: 400,
       },
