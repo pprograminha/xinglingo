@@ -4,8 +4,8 @@ import { useAudioRecorder } from '@/hooks/audio-recording'
 import { makeDownload } from '@/lib/make-download'
 import { Download, Mic, Pause, RotateCcw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Button } from '../ui/button'
-import { Textarea } from '../ui/textarea'
+import { Button } from '../[ui]/button'
+import { Textarea } from '../[ui]/textarea'
 
 type MicrophoneProps = {
   onReset: () => void
