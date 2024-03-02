@@ -83,8 +83,9 @@ export async function POST(req: Request) {
           },
         )
       })
-
-      if (!isJsonString(result)) {
+      if (isJsonString(result)) {
+        return result
+      } else {
         console.log('Retrying... Result: ', result)
 
         if (attempts < 30) await retry()
@@ -94,6 +95,10 @@ export async function POST(req: Request) {
     }
 
     const value = await retry()
+
+    if (!value) {
+      throw new Error('Result Json is Empty')
+    }
 
     return Response.json(value)
   } catch (error) {
