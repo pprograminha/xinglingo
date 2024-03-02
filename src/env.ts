@@ -8,6 +8,7 @@ export const env = createEnv({
     AZURE_SPEECH_SUBSCRITION_KEY: z.string().min(1),
     AZURE_SPEECH_REGION: z.string().min(1),
     AZURE_SPEECH_LANGUAGE: z.string().min(1),
+    ABLY_API_KEY: z.string().min(1),
   },
 
   shared: {
