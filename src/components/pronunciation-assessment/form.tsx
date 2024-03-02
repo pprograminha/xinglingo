@@ -177,10 +177,12 @@ export function PronunciationAssessmentForm() {
           throw new Error()
         }
       } catch {
-        attempts += attempts + 1
+        attempts += 1
 
         if (attempts <= 10) {
-          await retry()
+          setTimeout(() => {
+            retry()
+          }, 500)
 
           return
         }
