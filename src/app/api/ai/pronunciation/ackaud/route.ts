@@ -50,15 +50,14 @@ export async function POST(req: Request) {
     const result = await new Promise<any>((resolve, reject) => {
       speechRecognizer.recognizeOnceAsync(
         (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
-          const pronunciationAssessmentResult =
-            SpeechSDK.PronunciationAssessmentResult.fromResult(
-              speechRecognitionResult,
-            )
+          // const pronunciationAssessmentResult =
+          //   SpeechSDK.PronunciationAssessmentResult.fromResult(
+          //     speechRecognitionResult,
+          //   )
           const pronunciationAssessmentResultJson =
             speechRecognitionResult.properties.getProperty(
               SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
             )
-          resolve(pronunciationAssessmentResult)
           if (pronunciationAssessmentResultJson)
             resolve(JSON.parse(pronunciationAssessmentResultJson))
           else resolve(null)
