@@ -3,6 +3,7 @@ import { openPushStream } from '@/lib/file-push-stream'
 import { isJsonString } from '@/lib/is-json-string'
 import fs from 'fs'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
+import { ContentAssessmentResult } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/PronunciationAssessmentResult'
 import { z } from 'zod'
 
 export async function POST(req: Request) {
@@ -76,15 +77,15 @@ export async function POST(req: Request) {
             speechRecognitionResult.properties.getProperty(
               SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
             )
-
-          resolve(pronunciationAssessmentResultJson)
+          if (pronunciationAssessmentResultJson)
+            resolve(pronunciationAssessmentResultJson)
         },
       )
     })
 
     return Response.json(
       isJsonString(result)
-        ? JSON.parse(result)
+        ? (JSON.parse(result) as ContentAssessmentResult)
         : { ok: String(result) + ' + feedback' },
     )
   } catch (error) {
