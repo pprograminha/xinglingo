@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 import { z } from 'zod'
 import { applyCommonConfigurationTo } from './services/apply-common-configuration'
@@ -42,26 +43,34 @@ export async function POST(req: Request) {
     )
 
     applyCommonConfigurationTo(speechRecognizer)
+    ;(speechRecognizer as any).recognized = undefined
 
     pronunciationAssessmentConfig.applyTo(speechRecognizer)
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await new Promise<any>((resolve, reject) => {
       speechRecognizer.recognizeOnceAsync(
         (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
+          // const pronunciationAssessmentResult =
+          //   SpeechSDK.PronunciationAssessmentResult.fromResult(
+          //     speechRecognitionResult,
+          //   )
           const pronunciationAssessmentResultJson =
             speechRecognitionResult.properties.getProperty(
               SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
             )
           if (pronunciationAssessmentResultJson)
             resolve(JSON.parse(pronunciationAssessmentResultJson))
-          else reject(new Error('Result Json is Empty'))
+          else resolve(null)
         },
         (error) => {
           reject(new Error(error))
         },
       )
     })
+
+    if (!result) {
+      throw new Error('Result Json is Empty')
+    }
 
     return Response.json(result)
   } catch (error) {
