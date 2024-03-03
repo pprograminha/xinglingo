@@ -3,10 +3,11 @@
 import { useAudioRecorder } from '@/hooks/audio-recording'
 import { makeDownload } from '@/lib/make-download'
 import { Download, Mic, Pause, RotateCcw } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
+import { useRecordConversation } from '@/hooks/use-record-conversation'
 
 type MicrophoneProps = {
   onReset: () => void
@@ -24,75 +25,82 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
   const [recordingComplete, setRecordingComplete] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const { conversation } = useRecordConversation()
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const audioRecorder = useAudioRecorder()
 
-  const resetControls = (data?: ResetControlsData) => {
-    if (!data?.exclude.setIsRecording) {
-      setIsRecording(false)
-    }
+  const resetControls = useCallback(
+    (data?: ResetControlsData) => {
+      if (!data?.exclude.setIsRecording) {
+        setIsRecording(false)
+      }
 
-    onReset()
-    setRecordingComplete(false)
-    setAudioBlob(null)
-    setTranscript('')
-    onAudio({
-      blob: null,
-      text: '',
-    })
-  }
+      onReset()
+      setRecordingComplete(false)
 
-  const startRecording = () => {
-    resetControls({
-      exclude: {
-        setIsRecording: true,
-      },
-    })
+      if (!conversation) {
+        setAudioBlob(null)
+        setTranscript('')
+        onAudio({
+          blob: null,
+          text: '',
+        })
+      }
+    },
+    [onAudio, onReset, conversation],
+  )
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
-
-    if (!SpeechRecognition) {
-      toast({
-        title: 'SpeechRecognition API is not supported in this browser.',
-        variant: 'destructive',
+  const startRecording = useCallback(
+    (text?: string) => {
+      resetControls({
+        exclude: {
+          setIsRecording: true,
+        },
       })
 
-      setIsRecording(false)
-      return
-    }
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition
 
-    recognitionRef.current = new SpeechRecognition()
-    recognitionRef.current.continuous = true
-    recognitionRef.current.interimResults = true
+      if (!SpeechRecognition) {
+        toast({
+          title: 'SpeechRecognition API is not supported in this browser.',
+          variant: 'destructive',
+        })
 
-    recognitionRef.current.onresult = (event) => {
-      const transcriptCollection: string[] = []
-
-      for (let index = 0; index < event.results.length; index++) {
-        const element = event.results.item(index)
-
-        transcriptCollection.push(element.item(0).transcript)
+        setIsRecording(false)
+        return
       }
 
-      setTranscript(transcriptCollection.join(' '))
-      onAudio({ text: transcriptCollection.join(' '), blob: audioBlob })
-    }
+      recognitionRef.current = new SpeechRecognition()
+      recognitionRef.current.continuous = true
+      recognitionRef.current.interimResults = true
 
-    recognitionRef.current.start()
-    audioRecorder.start()
-  }
+      recognitionRef.current.onresult = (event) => {
+        const transcriptCollection: string[] = []
 
-  useEffect(() => {
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop()
+        for (let index = 0; index < event.results.length; index++) {
+          const element = event.results.item(index)
+
+          transcriptCollection.push(element.item(0).transcript)
+        }
+
+        if (!text) {
+          setTranscript(transcriptCollection.join(' '))
+        }
+        onAudio({
+          text: text || transcriptCollection.join(' '),
+          blob: audioBlob,
+        })
       }
-    }
-  }, [])
 
-  const stopRecording = () => {
+      recognitionRef.current.start()
+      audioRecorder.start()
+    },
+    [audioBlob, audioRecorder, onAudio, resetControls],
+  )
+
+  const stopRecording = useCallback(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop()
       setRecordingComplete(true)
@@ -102,29 +110,51 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
       setAudioBlob(audioBlob)
       onAudio({ text: transcript, blob: audioBlob })
     })
-  }
+  }, [audioRecorder, onAudio, transcript])
 
-  const handleToggleRecording = () => {
+  const toggleRecordingHandler = useCallback(() => {
     setIsRecording(!isRecording)
     if (!isRecording) {
-      startRecording()
+      startRecording(conversation?.text)
     } else {
       stopRecording()
     }
-  }
+  }, [startRecording, stopRecording, isRecording, conversation])
+
+  useEffect(() => {
+    if (conversation !== undefined) {
+      if (conversation) {
+        startRecording(conversation.text)
+        setTranscript(conversation.text)
+        setIsRecording(true)
+      } else {
+        stopRecording()
+        setIsRecording(false)
+      }
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversation])
 
   return (
     <div className="flex items-center justify-center">
       <div className="w-full">
-        <Button
-          type="button"
-          className="mb-3"
-          size="icon"
-          variant="outline"
-          onClick={() => resetControls()}
-        >
-          <RotateCcw className="w-5" />
-        </Button>
+        {!conversation && (
+          <Button
+            type="button"
+            className="mb-3"
+            size="icon"
+            variant="outline"
+            onClick={() => resetControls()}
+          >
+            <RotateCcw className="w-5" />
+          </Button>
+        )}
         {(isRecording || transcript) && (
           <div className="m-auto rounded-md border border-zinc-200 dark:border-zinc-800 p-4 ">
             <div className="flex-1 flex w-full justify-between">
@@ -160,16 +190,22 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
               </div>
             </div>
             <Textarea
+              disabled={!!conversation}
               className="resize-none min-h-[75px] mt-2"
+              {...(conversation && {
+                placeholder: conversation.text,
+              })}
               value={transcript}
               onChange={(e) => {
-                onAudio({
-                  text: e.target.value,
-                  blob: audioBlob,
-                })
-                setTranscript(e.target.value)
+                if (!conversation) {
+                  onAudio({
+                    text: e.target.value,
+                    blob: audioBlob,
+                  })
+                  setTranscript(e.target.value)
+                }
               }}
-            ></Textarea>
+            />
           </div>
         )}
 
@@ -177,7 +213,9 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
           {isRecording ? (
             <button
               type="button"
-              onClick={handleToggleRecording}
+              onClick={() => {
+                toggleRecordingHandler()
+              }}
               className="mt-10 m-auto flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-16 h-16 focus:outline-none"
             >
               <Pause className="w-8 h-8" />
@@ -185,7 +223,7 @@ export function Microphone({ onAudio, onReset }: MicrophoneProps) {
           ) : (
             <button
               type="button"
-              onClick={handleToggleRecording}
+              onClick={() => toggleRecordingHandler()}
               className="mt-10 m-auto flex items-center justify-center bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
             >
               <Mic className="w-8 h-8" />

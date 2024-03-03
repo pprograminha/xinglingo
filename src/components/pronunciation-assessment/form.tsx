@@ -26,6 +26,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useToast } from '../ui/use-toast'
 import { Microphone } from './microphone'
+import { useRecordConversation } from '@/hooks/use-record-conversation'
 
 const formSchema = z.strictObject({
   microphone: z.object(
@@ -134,9 +135,9 @@ type RecognitionResult = {
 export function PronunciationAssessmentForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
-
   const { toast } = useToast()
 
+  const { toggleRecord } = useRecordConversation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
@@ -173,6 +174,8 @@ export function PronunciationAssessmentForm() {
           toast({
             title: 'Audio successfully loaded correctly',
           })
+
+          toggleRecord()
         } else {
           throw new Error()
         }
@@ -191,12 +194,12 @@ export function PronunciationAssessmentForm() {
           title: 'Did not catch audio properly! Please try again.',
           variant: 'destructive',
         })
-      } finally {
-        setIsLoading(false)
       }
     }
 
     await retry()
+
+    setIsLoading(false)
   }
 
   const recognitionData = recognition?.NBest[0]
@@ -261,7 +264,7 @@ export function PronunciationAssessmentForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <Loader2 className="animate-spin w-4 h-4" />
             ) : (

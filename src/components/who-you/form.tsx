@@ -56,7 +56,7 @@ function ButtonAction() {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit">
+    <Button type="submit" disabled={pending}>
       {pending ? <Loader2 className="w-4 animate-spin" /> : 'Send'}
     </Button>
   )
