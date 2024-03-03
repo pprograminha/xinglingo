@@ -4,7 +4,7 @@ import { Conversation } from '@/lib/db/drizzle/@types'
 import * as Ably from 'ably'
 import { AblyProvider, useChannel } from 'ably/react'
 import { Bone } from 'lucide-react'
-import { Suspense, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -37,7 +37,7 @@ const Chat = () => {
     channel.publish('update-from-client', conversation)
   }
 
-  const c = <ConversationContainer />
+  const c = useMemo(() => <ConversationContainer />, [])
 
   return (
     <>
