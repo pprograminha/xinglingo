@@ -27,6 +27,7 @@ import { z } from 'zod'
 import { useToast } from '../ui/use-toast'
 import { Microphone } from './microphone'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
+import { scoreStyle, scoreColor } from '@/lib/score-color'
 
 const formSchema = z.strictObject({
   microphone: z.object(
@@ -120,7 +121,7 @@ type PrimaryLanguage = {
   Confidence: string
 }
 
-type RecognitionResult = {
+export type RecognitionResult = {
   Id: string
   RecognitionStatus: string
   Offset: number
@@ -137,7 +138,7 @@ export function PronunciationAssessmentForm() {
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
   const { toast } = useToast()
 
-  const { toggleRecord } = useRecordConversation()
+  const { toggleRecord, conversation } = useRecordConversation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
@@ -156,6 +157,8 @@ export function PronunciationAssessmentForm() {
     )
 
     formData.append('audioText', values.microphone.audioText)
+
+    if (conversation?.id) formData.append('conversationId', conversation.id)
 
     let attempts = 0
 
@@ -176,6 +179,11 @@ export function PronunciationAssessmentForm() {
           })
 
           toggleRecord()
+        } else if (data.RecognitionStatus === 'InitialSilenceTimeout') {
+          toast({
+            title: 'Initial silence timeout! Please try again.',
+            variant: 'destructive',
+          })
         } else {
           throw new Error()
         }
@@ -204,21 +212,6 @@ export function PronunciationAssessmentForm() {
 
   const recognitionData = recognition?.NBest[0]
 
-  const scoreColor = (score: number) => {
-    if (score >= 1 && score < 50) {
-      return 'red'
-    }
-    if (score >= 50 && score < 70) {
-      return 'yellow'
-    }
-    if (score >= 70) {
-      return 'green'
-    }
-    return 'red'
-  }
-
-  const headStyle =
-    'data-[score-color=green]:text-green-400 dark:data-[score-color=green]:text-green-400 data-[score-color=red]:text-red-400 dark:data-[score-color=red]:text-red-400 data-[score-color=yellow]:text-yellow-400 dark:data-[score-color=yellow]:text-yellow-200'
   const cellStyle =
     'data-[score-color=green]:text-green-600 dark:data-[score-color=green]:text-green-700 data-[score-color=red]:text-red-500 data-[score-color=yellow]:text-yellow-500 dark:data-[score-color=yellow]:text-yellow-400'
 
@@ -283,7 +276,7 @@ export function PronunciationAssessmentForm() {
                   data-score-color={scoreColor(
                     recognitionData.PronunciationAssessment.AccuracyScore,
                   )}
-                  className={`${headStyle}`}
+                  className={`${scoreStyle}`}
                 >
                   Accuracy Score
                 </TableHead>
@@ -291,7 +284,7 @@ export function PronunciationAssessmentForm() {
                   data-score-color={scoreColor(
                     recognitionData.PronunciationAssessment.CompletenessScore,
                   )}
-                  className={`${headStyle}`}
+                  className={`${scoreStyle}`}
                 >
                   Completeness Score
                 </TableHead>
@@ -299,7 +292,7 @@ export function PronunciationAssessmentForm() {
                   data-score-color={scoreColor(
                     recognitionData.PronunciationAssessment.PronScore,
                   )}
-                  className={`text-center ${headStyle}`}
+                  className={`text-center ${scoreStyle}`}
                 >
                   Pronunciation Score
                 </TableHead>
@@ -307,7 +300,7 @@ export function PronunciationAssessmentForm() {
                   data-score-color={scoreColor(
                     recognitionData.PronunciationAssessment.FluencyScore,
                   )}
-                  className={`text-right ${headStyle}`}
+                  className={`text-right ${scoreStyle}`}
                 >
                   Fluency Score
                 </TableHead>
@@ -365,7 +358,7 @@ export function PronunciationAssessmentForm() {
                     data-score-color={scoreColor(
                       word.PronunciationAssessment.AccuracyScore,
                     )}
-                    className={`${headStyle} relative`}
+                    className={`${scoreStyle} relative`}
                   >
                     {word.Word}{' '}
                     <span

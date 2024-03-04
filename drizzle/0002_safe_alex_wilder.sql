@@ -1,0 +1,1 @@
+ALTER TABLE "pronunciationAssessment" RENAME TO "pronunciationsAssessment";
