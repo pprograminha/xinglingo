@@ -1,14 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form'
 import {
   Table,
   TableBody,
@@ -17,39 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { blobToAudioBuffer } from '@/lib/blob-buffer'
-import { zodResolver } from '@hookform/resolvers/zod'
-import toWav from 'audiobuffer-to-wav'
-import { Info, Loader2 } from 'lucide-react'
+import { scoreColor, scoreStyle } from '@/lib/score-color'
+import { Info } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { useToast } from '../ui/use-toast'
 import { Microphone } from './microphone'
+import { toast } from '../ui/use-toast'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
-import { scoreStyle, scoreColor } from '@/lib/score-color'
-
-const formSchema = z.strictObject({
-  microphone: z.object(
-    {
-      audioText: z
-        .string({
-          required_error: 'Audio recording is required',
-        })
-        .min(2, {
-          message: 'Audio recording is required',
-        }),
-
-      audioBlob: z.instanceof(Blob, {
-        path: ['microphone'],
-        message: 'Audio recording is required',
-      }),
-    },
-    {
-      required_error: 'Audio recording is required',
-    },
-  ),
-})
 
 type PronunciationAssessment = {
   AccuracyScore: number
@@ -133,81 +97,57 @@ export type RecognitionResult = {
   NBest: NBest[]
 }
 
+type CreatePronunciationAssessmentHandlerData = {
+  referenceText?: string
+  conversationId?: string
+  speechRecognitionResult: RecognitionResult
+}
+
 export function PronunciationAssessmentForm() {
-  const [isLoading, setIsLoading] = useState(false)
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
-  const { toast } = useToast()
 
-  const { toggleRecord, conversation } = useRecordConversation()
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  })
+  const { toggleRecord } = useRecordConversation()
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-
+  async function createPronunciationAssessmentHandler({
+    speechRecognitionResult,
+    conversationId,
+    referenceText,
+  }: CreatePronunciationAssessmentHandlerData) {
     const formData = new FormData()
 
-    formData.append(
-      'audioBlob',
-      new Blob([toWav(await blobToAudioBuffer(values.microphone.audioBlob))], {
-        type: 'audio/wav',
-      }),
-      'pronunciation.wav',
-    )
-
-    formData.append('audioText', values.microphone.audioText)
-
-    if (conversation?.id) formData.append('conversationId', conversation.id)
-
-    let attempts = 0
-
-    const retry = async () => {
-      try {
-        const response = await fetch('/api/ai/pronunciation/ackaud', {
-          body: formData,
-          method: 'POST',
-        })
-
-        const data = await response.json()
-
-        if (data.RecognitionStatus === 'Success') {
-          setRecognition(data)
-
-          toast({
-            title: 'Audio successfully loaded correctly',
-          })
-
-          toggleRecord()
-        } else if (data.RecognitionStatus === 'InitialSilenceTimeout') {
-          toast({
-            title: 'Initial silence timeout! Please try again.',
-            variant: 'destructive',
-          })
-        } else {
-          throw new Error()
-        }
-      } catch {
-        attempts += 1
-
-        if (attempts <= 10) {
-          setTimeout(() => {
-            retry()
-          }, 500)
-
-          return
-        }
-
-        toast({
-          title: 'Did not catch audio properly! Please try again.',
-          variant: 'destructive',
-        })
-      }
+    if (referenceText) {
+      formData.append('referenceText', referenceText)
+    }
+    if (conversationId) {
+      formData.append('conversationId', conversationId)
     }
 
-    await retry()
+    formData.append(
+      'speechRecognitionResult',
+      JSON.stringify(speechRecognitionResult),
+    )
 
-    setIsLoading(false)
+    try {
+      const response = await fetch('/api/ai/pronunciation/ackaud', {
+        body: formData,
+        method: 'POST',
+      })
+
+      await response.json()
+
+      if (speechRecognitionResult.RecognitionStatus === 'Success') {
+        setRecognition(speechRecognitionResult)
+        toast({
+          title: 'Audio successfully loaded correctly',
+        })
+        toggleRecord()
+      }
+    } catch {
+      toast({
+        title: 'Failed when trying to create pronunciation assessment.',
+        variant: 'destructive',
+      })
+    }
   }
 
   const recognitionData = recognition?.NBest[0]
@@ -222,50 +162,14 @@ export function PronunciationAssessmentForm() {
 
   return (
     <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="microphone"
-            render={({ field: { onChange }, formState }) => (
-              <FormItem>
-                <FormLabel>Reference Text</FormLabel>
-                <FormControl>
-                  <Microphone
-                    onReset={() => {
-                      setIsLoading(false)
-                      setRecognition(null)
-                    }}
-                    onAudio={(data) => {
-                      onChange({
-                        target: {
-                          value: {
-                            audioBlob: data.blob,
-                            audioText: data.text,
-                          },
-                        },
-                      })
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>Practice your pronunciation</FormDescription>
-                <p className="text-[0.8rem] font-medium  text-red-400">
-                  {formState.errors.microphone?.message ||
-                    formState.errors.microphone?.audioBlob?.message ||
-                    formState.errors.microphone?.audioText?.message}
-                </p>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <Loader2 className="animate-spin w-4 h-4" />
-            ) : (
-              'Verify pronunciation'
-            )}
-          </Button>
-        </form>
-      </Form>
+      <Microphone
+        onReset={() => {
+          setRecognition(null)
+        }}
+        onRecognition={(data) => {
+          createPronunciationAssessmentHandler(data)
+        }}
+      />
 
       {recognitionData && (
         <>

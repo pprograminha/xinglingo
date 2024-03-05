@@ -2,11 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { ModeToggle } from '../mode-toggle'
-import { PronunciationAssessmentForm } from './form'
-import { AudioWaveform } from 'lucide-react'
-import { Button } from '../ui/button'
+import { AudioWaveform, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { ModeToggle } from '../mode-toggle'
+import { Button } from '../ui/button'
+import { PronunciationAssessmentForm } from './form'
 
 export function PronunciationAssessment() {
   return (
@@ -16,9 +16,19 @@ export function PronunciationAssessment() {
           <div className=" flex gap-2 items-center">
             <AudioWaveform className="h-10 w-10" />
             Pronunciation assessment
+            <Button size="icon" variant="outline" asChild>
+              <Link
+                href="https://elevenlabs.io/speech-synthesis"
+                target="_blank"
+              >
+                <ExternalLink className="w-4" />
+              </Link>
+            </Button>
           </div>
           <Button size="sm" variant="link" asChild>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/dashboard" target="_blank">
+              Dashboard
+            </Link>
           </Button>
         </CardTitle>
       </CardHeader>

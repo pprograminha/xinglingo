@@ -6,83 +6,41 @@ import {
   pronunciationsAssessment,
   words,
 } from '@/lib/db/drizzle/schema'
-import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
+import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { z } from 'zod'
-import { applyCommonConfigurationTo } from './services/apply-common-configuration'
-import { getAudioConfig } from './services/get-audio-config'
-import { getPronunciationAssessmentConfig } from './services/get-pronunciation-assessment-config'
-import { getSpeechConfig } from './services/get-speech-config'
-import { eq } from 'drizzle-orm'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
 
-  const audioBlob = formData.get('audioBlob')
-  const audioText = formData.get('audioText')
+  const speechRecognitionResult = JSON.parse(
+    formData.get('speechRecognitionResult') as string,
+  )
   const conversationId = formData.get('conversationId')
+  const referenceText = formData.get('referenceText')
 
   const safeParse = z
     .object({
-      audioBlob: z.any(),
-      audioText: z.string().min(1),
+      speechRecognitionResult: z.any(),
       conversationId: z.string().optional().nullable(),
+      referenceText: z.string().optional().nullable(),
     })
     .safeParse({
-      audioBlob,
-      audioText,
+      speechRecognitionResult,
       conversationId,
+      referenceText,
     })
 
   try {
     if (safeParse.success === false) {
       throw new Error('Zod Validation Error')
     }
-
-    const referenceText = safeParse.data.audioText
-    const blob = safeParse.data.audioBlob as File
     const conversationId = safeParse.data.conversationId
+    const referenceText = safeParse.data.referenceText
+    const speechRecognitionResult = safeParse.data
+      .speechRecognitionResult as RecognitionResult
 
-    const audioConfig = await getAudioConfig(blob)
-    const speechConfig = await getSpeechConfig()
-
-    const { autoDetectSourceLanguageConfig, pronunciationAssessmentConfig } =
-      await getPronunciationAssessmentConfig(referenceText)
-
-    const speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(
-      speechConfig,
-      autoDetectSourceLanguageConfig,
-      audioConfig,
-    )
-    applyCommonConfigurationTo(speechRecognizer)
-    ;(speechRecognizer as any).recognized = undefined
-
-    pronunciationAssessmentConfig.applyTo(speechRecognizer)
-
-    const result = await new Promise<RecognitionResult | null>(
-      (resolve, reject) => {
-        speechRecognizer.recognizeOnceAsync(
-          (speechRecognitionResult: SpeechSDK.SpeechRecognitionResult) => {
-            const pronunciationAssessmentResultJson =
-              speechRecognitionResult.properties.getProperty(
-                SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult,
-              )
-            if (pronunciationAssessmentResultJson)
-              resolve(JSON.parse(pronunciationAssessmentResultJson))
-            else resolve(null)
-          },
-          (error) => {
-            reject(new Error(error))
-          },
-        )
-      },
-    )
-
-    if (!result) {
-      throw new Error('Result Json is Empty')
-    }
-
-    const nbest = result.NBest[0]
+    const nbest = speechRecognitionResult.NBest[0]
 
     if (nbest) {
       let popularPronunciationAssessment = true
@@ -226,7 +184,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return Response.json(result)
+    return Response.json({ ok: 1 })
   } catch (error) {
     console.error(error)
 

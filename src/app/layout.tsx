@@ -4,6 +4,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
+import { Toaster as Sonner } from '@/components/ui/sonner'
 import { WhoYou } from '@/components/who-you'
 
 const fontSans = FontSans({
@@ -30,6 +31,7 @@ export default function RootLayout({
         )}
       >
         <Toaster />
+        <Sonner />
         <ThemeProvider>
           {children}
 
