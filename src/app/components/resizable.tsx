@@ -34,7 +34,10 @@ export function ResizableHome() {
         </div>
       </ResizablePanel>
       {isMd && <ResizableHandle withHandle />}
-      <ResizablePanel className="md:min-w-[400px] min-w-[200px] min-h-[625.77px]">
+      <ResizablePanel
+        defaultSize={50}
+        className="md:min-w-[400px] min-w-[200px] min-h-[625.77px]"
+      >
         <ChatContainer />
       </ResizablePanel>
     </ResizablePanelGroup>

@@ -115,46 +115,58 @@ export async function POST(req: Request) {
               ),
             )
 
-          await db.insert(pronunciationsAssessment).values([
-            {
+          const newPronunciationsAssessmentId = crypto.randomUUID()
+
+          const [newPronunciationsAssessment] = await db
+            .insert(pronunciationsAssessment)
+            .values([
+              {
+                id: newPronunciationsAssessmentId,
+                accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
+                fluencyScore: nbest.PronunciationAssessment.FluencyScore,
+                prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
+                pronScore: nbest.PronunciationAssessment.PronScore,
+                completenessScore:
+                  nbest.PronunciationAssessment.CompletenessScore,
+                conversationId,
+              },
+            ])
+            .returning()
+
+          try {
+            const insertWords = nbest.Words.map((w) => ({
               id: crypto.randomUUID(),
-              accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
-              fluencyScore: nbest.PronunciationAssessment.FluencyScore,
-              prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
-              pronScore: nbest.PronunciationAssessment.PronScore,
-              completenessScore:
-                nbest.PronunciationAssessment.CompletenessScore,
-              conversationId,
-            },
-          ])
+              accuracyScore: w.PronunciationAssessment.AccuracyScore,
+              word: w.Word,
+              pronunciationAssessmentId: newPronunciationsAssessment.id,
+            }))
 
-          const insertWords = nbest.Words.map((w) => ({
-            id: crypto.randomUUID(),
-            accuracyScore: w.PronunciationAssessment.AccuracyScore,
-            word: w.Word,
-            pronunciationAssessmentId: conversation.pronunciationAssessment!.id,
-          }))
+            const fullWords = insertWords.map((w, i) => {
+              return {
+                ...w,
+                W: nbest.Words[i],
+              }
+            })
 
-          const fullWords = insertWords.map((w, i) => {
-            return {
-              ...w,
-              W: nbest.Words[i],
-            }
-          })
-
-          const insertPhonemes = fullWords
-            .map((w) =>
-              w.W.Phonemes.map((p) => ({
-                id: crypto.randomUUID(),
-                accuracyScore: p.PronunciationAssessment.AccuracyScore,
-                phoneme: p.Phoneme,
-                wordId: w.id,
-              })),
-            )
-            .flat()
-
-          await db.insert(words).values(insertWords)
-          await db.insert(phonemes).values(insertPhonemes)
+            const insertPhonemes = fullWords
+              .map((w) =>
+                w.W.Phonemes.map((p) => ({
+                  id: crypto.randomUUID(),
+                  accuracyScore: p.PronunciationAssessment.AccuracyScore,
+                  phoneme: p.Phoneme,
+                  wordId: w.id,
+                })),
+              )
+              .flat()
+            await db.insert(words).values(insertWords)
+            await db.insert(phonemes).values(insertPhonemes)
+          } catch {
+            await db
+              .delete(pronunciationsAssessment)
+              .where(
+                eq(pronunciationsAssessment.id, newPronunciationsAssessment.id),
+              )
+          }
 
           popularPronunciationAssessment = false
         }

@@ -49,7 +49,7 @@ const Chat = () => {
         <CardContent className="flex-grow flex flex-col">
           <Suspense
             fallback={
-              <div className="pr-4 h-[474px] w-[50vw] flex items-center justify-center flex-grow">
+              <div className="pr-4 h-[474px] flex items-center justify-center flex-grow">
                 <Bone className="w-16 h-16 animate-bounce" />
               </div>
             }
