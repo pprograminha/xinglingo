@@ -6,7 +6,7 @@ import { AudioWaveform, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { ModeToggle } from '../mode-toggle'
 import { Button } from '../ui/button'
-import { PronunciationAssessmentForm } from './form'
+import { PronunciationAssessmentDash } from './ponunciation-assesment-dash'
 
 export function PronunciationAssessment() {
   return (
@@ -33,7 +33,7 @@ export function PronunciationAssessment() {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col justify-between flex-grow">
-        <PronunciationAssessmentForm />
+        <PronunciationAssessmentDash />
         <div className="my-4">
           <Separator className="my-4 " />
           <ModeToggle />

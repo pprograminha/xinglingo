@@ -103,7 +103,7 @@ type CreatePronunciationAssessmentHandlerData = {
   speechRecognitionResult: RecognitionResult
 }
 
-export function PronunciationAssessmentForm() {
+export function PronunciationAssessmentDash() {
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
 
   const { toggleRecord } = useRecordConversation()

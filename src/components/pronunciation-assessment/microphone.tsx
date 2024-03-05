@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
 import { toast as sonner } from 'sonner'
-import { RecognitionResult } from './form'
+import { RecognitionResult } from './ponunciation-assesment-dash'
 
 type RecognitionData = {
   referenceText?: string
