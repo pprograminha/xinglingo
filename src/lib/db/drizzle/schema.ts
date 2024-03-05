@@ -17,7 +17,9 @@ export const users = pgTable('users', {
 export const conversations = pgTable('conversations', {
   id: uuid('id').primaryKey(),
   text: text('text').notNull(),
-  authorId: uuid('authorId').references(() => users.id),
+  authorId: uuid('authorId').references(() => users.id, {
+    onDelete: 'cascade',
+  }),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -26,8 +28,9 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
   id: uuid('id').primaryKey(),
 
   text: text('text'),
-  conversationId: uuid('conversationId'),
-
+  conversationId: uuid('conversationId').references(() => conversations.id, {
+    onDelete: 'cascade',
+  }),
   accuracyScore: doublePrecision('accuracyScore').notNull(),
   completenessScore: doublePrecision('completenessScore').notNull(),
   fluencyScore: doublePrecision('fluencyScore').notNull(),
@@ -43,7 +46,9 @@ export const words = pgTable('words', {
 
   word: text('word').notNull(),
   pronunciationAssessmentId: uuid('pronunciationAssessmentId')
-    .references(() => pronunciationsAssessment.id)
+    .references(() => pronunciationsAssessment.id, {
+      onDelete: 'cascade',
+    })
     .notNull(),
   accuracyScore: doublePrecision('accuracyScore').notNull(),
 
@@ -55,7 +60,9 @@ export const phonemes = pgTable('phonemes', {
   id: uuid('id').primaryKey(),
   phoneme: text('phoneme').notNull(),
   wordId: uuid('wordId')
-    .references(() => words.id)
+    .references(() => words.id, {
+      onDelete: 'cascade',
+    })
     .notNull(),
   accuracyScore: doublePrecision('accuracyScore').notNull(),
 
@@ -69,6 +76,10 @@ export const wordsRelations = relations(words, ({ many, one }) => ({
     references: [pronunciationsAssessment.id],
   }),
   phonemes: many(phonemes),
+}))
+
+export const usersRelations = relations(users, ({ many }) => ({
+  conversations: many(conversations),
 }))
 
 export const conversationsRelations = relations(conversations, ({ one }) => ({

@@ -1,5 +1,5 @@
 {
-  "id": "46cc6b7f-98cb-4477-bcc3-42228840f912",
+  "id": "2480cb5f-7d53-4385-9666-57ef077b3812",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -53,7 +53,155 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "phonemes": {
+      "name": "phonemes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "phoneme": {
+          "name": "phoneme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wordId": {
+          "name": "wordId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "phonemes_wordId_words_id_fk": {
+          "name": "phonemes_wordId_words_id_fk",
+          "tableFrom": "phonemes",
+          "tableTo": "words",
+          "columnsFrom": [
+            "wordId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "pronunciationsAssessment": {
+      "name": "pronunciationsAssessment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conversationId": {
+          "name": "conversationId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "completenessScore": {
+          "name": "completenessScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fluencyScore": {
+          "name": "fluencyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pronScore": {
+          "name": "pronScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prosodyScore": {
+          "name": "prosodyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pronunciationsAssessment_conversationId_conversations_id_fk": {
+          "name": "pronunciationsAssessment_conversationId_conversations_id_fk",
+          "tableFrom": "pronunciationsAssessment",
+          "tableTo": "conversations",
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -92,6 +240,68 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "words": {
+      "name": "words",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "word": {
+          "name": "word",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pronunciationAssessmentId": {
+          "name": "pronunciationAssessmentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "words_pronunciationAssessmentId_pronunciationsAssessment_id_fk": {
+          "name": "words_pronunciationAssessmentId_pronunciationsAssessment_id_fk",
+          "tableFrom": "words",
+          "tableTo": "pronunciationsAssessment",
+          "columnsFrom": [
+            "pronunciationAssessmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

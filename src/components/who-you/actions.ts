@@ -34,3 +34,8 @@ export async function makeUser({ email, fullName }: Omit<NewUser, 'id'>) {
 
   return createdUser
 }
+export async function getUser(uid: string) {
+  const [user] = await db.select().from(users).where(eq(users.id, uid))
+
+  if (user) return user
+}

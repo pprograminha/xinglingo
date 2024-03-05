@@ -73,6 +73,19 @@ export function Conversations({
 
   const dayConversations = groupConversationsPerDay[channnelIndex] || []
 
+  const $getWords = (conversation: TConversations['0']) =>
+    conversation.pronunciationAssessment?.words.map((w) => ({
+      ...w,
+      w:
+        conversation.text
+          .split(' ')
+          .find(
+            (word) =>
+              word.toLowerCase().replace(/[^a-z0-9']/g, '') ===
+              w.word.toLowerCase().replace(/[^a-z0-9']/g, ''),
+          ) || w.word,
+    })) || []
+
   return (
     <div className="flex-grow">
       <p className="text-xs">Words: {words.length}</p>
@@ -136,45 +149,135 @@ export function Conversations({
                           </span>
                           <span className="inline-flex group-data-[me=true]:flex-row-reverse">
                             <span>🧩</span>
-                            <span>{conversation.text}</span>
+                            <span>
+                              {conversation.pronunciationAssessment ? (
+                                <>
+                                  {$getWords(conversation).map((w) => (
+                                    <span
+                                      key={w.id}
+                                      data-score-color={scoreColor(
+                                        w.accuracyScore,
+                                      )}
+                                      className="inline-block border-b mx-[2px] data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
+                                    >
+                                      {w.w}
+                                    </span>
+                                  ))}
+                                </>
+                              ) : (
+                                conversation.text
+                              )}
+                            </span>
                           </span>
                         </p>
                       </div>
-                      {!conversation.pronunciationAssessment && (
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          data-on={recConversation?.id === conversation.id}
-                          onClick={() => {
-                            if (recConversation?.id !== conversation.id)
-                              toggleRecord(conversation)
-                          }}
-                          className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
-                        >
-                          {recConversation?.id === conversation.id ? (
-                            <Mic />
-                          ) : (
-                            <MicOff />
-                          )}
-                        </Button>
-                      )}
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        data-on={recConversation?.id === conversation.id}
+                        onClick={() => {
+                          if (recConversation?.id !== conversation.id)
+                            toggleRecord(conversation)
+                        }}
+                        className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+                      >
+                        {recConversation?.id === conversation.id ? (
+                          <Mic />
+                        ) : (
+                          <MicOff />
+                        )}
+                      </Button>
                     </div>
                   </HoverCardTrigger>
                   <HoverCardContent
                     align={conversation.authorId === uid() ? 'end' : 'start'}
                   >
                     {conversation.pronunciationAssessment ? (
-                      <p className="text-sm mb-1">
+                      <div className="text-sm mb-1">
+                        <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
+                          <span className="text-zinc-400 text-xs">
+                            Accuracy Score:
+                          </span>{' '}
+                          <span
+                            className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
+                            data-score-color={scoreColor(
+                              conversation.pronunciationAssessment
+                                .accuracyScore,
+                            )}
+                          >
+                            {conversation.pronunciationAssessment.accuracyScore}
+                          </span>
+                        </div>
+                        <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
+                          <span className="text-zinc-400 text-xs">
+                            Completeness Score:
+                          </span>{' '}
+                          <span
+                            className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
+                            data-score-color={scoreColor(
+                              conversation.pronunciationAssessment
+                                .completenessScore,
+                            )}
+                          >
+                            {
+                              conversation.pronunciationAssessment
+                                .completenessScore
+                            }
+                          </span>
+                        </div>
+                        <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
+                          <span className="text-zinc-400 text-xs">
+                            Fluency Score:
+                          </span>{' '}
+                          <span
+                            className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
+                            data-score-color={scoreColor(
+                              conversation.pronunciationAssessment.fluencyScore,
+                            )}
+                          >
+                            {conversation.pronunciationAssessment.fluencyScore}
+                          </span>
+                        </div>
+                        <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
+                          <span className="text-zinc-400 text-xs">
+                            Pron Score:
+                          </span>{' '}
+                          <span
+                            className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
+                            data-score-color={scoreColor(
+                              conversation.pronunciationAssessment.pronScore,
+                            )}
+                          >
+                            {conversation.pronunciationAssessment.pronScore}
+                          </span>
+                        </div>
+                        <div className="mb-4 dark:bg-zinc-900 p-1 rounded-md">
+                          <span className="text-zinc-400 text-xs">
+                            Prosody Score:
+                          </span>{' '}
+                          <span
+                            className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
+                            data-score-color={scoreColor(
+                              conversation.pronunciationAssessment.prosodyScore,
+                            )}
+                          >
+                            {conversation.pronunciationAssessment.prosodyScore}
+                          </span>
+                        </div>
                         {conversation.pronunciationAssessment.words.map((w) => (
                           <span
                             key={w.id}
                             data-score-color={scoreColor(w.accuracyScore)}
-                            className={`${scoreStyle} capitalize border inline-block p-[1px] px-2 m-[1.5px] rounded-md  data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400`}
+                            className={`${scoreStyle} capitalize border inline-block p-[1px] px-2 m-[1.5px] rounded-md  data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400 group`}
                           >
                             {w.word}{' '}
+                            <span className="inline-block rounded-md  px-1 ">
+                              {w.accuracyScore}
+                            </span>
                           </span>
                         ))}
-                      </p>
+                      </div>
                     ) : (
                       <p className="text-sm mb-1">{conversation.text}</p>
                     )}

@@ -10,5 +10,6 @@ dotenv.config({
 const sql = postgres(process.env.DRIZZLE_DATABASE_URL!)
 
 export const db = drizzle(sql, {
+  logger: true,
   schema,
 })

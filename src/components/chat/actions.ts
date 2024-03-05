@@ -8,8 +8,8 @@ import {
   Word,
 } from '@/lib/db/drizzle/@types'
 import { db } from '@/lib/db/drizzle/query'
-import { conversations, users } from '@/lib/db/drizzle/schema'
-import { InferInsertModel, eq } from 'drizzle-orm'
+import { conversations, users, words } from '@/lib/db/drizzle/schema'
+import { InferInsertModel, asc, desc, eq, sql } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { cache } from 'react'
 
@@ -43,6 +43,36 @@ const getConversations = cache(
     return conversationsData
   },
 )
+export const getWordMetrics = cache(async function getWords(
+  orderProp: 'desc' | 'asc' = 'desc',
+): Promise<
+  {
+    word: string
+    wordCount: number
+  }[]
+> {
+  const sq = db
+    .select({
+      word: words.word,
+    })
+    .from(words)
+    .as('sq')
+
+  const order = {
+    desc,
+    asc,
+  }
+  const wordsData = await db
+    .select({
+      word: sql`${words.word}`.mapWith(String),
+      wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(Number),
+    })
+    .from(sq)
+    .groupBy(sql`word`)
+    .orderBy(order[orderProp](sql`wordCount`))
+
+  return wordsData
+})
 
 export { getConversations }
 

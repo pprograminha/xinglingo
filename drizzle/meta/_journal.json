@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1709420468027,
-      "tag": "0000_left_jasper_sitwell",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1709513611658,
-      "tag": "0001_bizarre_wendell_rand",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1709514313057,
-      "tag": "0002_safe_alex_wilder",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1709517208215,
-      "tag": "0003_cold_doctor_octopus",
+      "when": 1709587758922,
+      "tag": "0000_organic_baron_strucker",
       "breakpoints": true
     }
   ]

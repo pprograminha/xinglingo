@@ -2,10 +2,10 @@ export const scoreColor = (score: number) => {
   if (score >= 1 && score < 50) {
     return 'red'
   }
-  if (score >= 50 && score < 70) {
+  if (score >= 50 && score < 100) {
     return 'yellow'
   }
-  if (score >= 70) {
+  if (score === 100) {
     return 'green'
   }
   return 'red'
