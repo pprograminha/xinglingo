@@ -1,4 +1,4 @@
-import type { RecognitionResult } from '@/components/pronunciation-assessment/form'
+import type { RecognitionResult } from '@/components/pronunciation-assessment/ponunciation-assesment-dash'
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
 import { applyCommonConfigurationTo } from './apply-common-configuration'
 import { getAudioConfig } from './get-audio-config'

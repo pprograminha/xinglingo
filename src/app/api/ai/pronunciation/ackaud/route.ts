@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RecognitionResult } from '@/components/pronunciation-assessment/form'
+import { RecognitionResult } from '@/components/pronunciation-assessment/ponunciation-assesment-dash'
 import { db } from '@/lib/db/drizzle/query'
 import {
   phonemes,
