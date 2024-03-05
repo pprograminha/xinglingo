@@ -3,12 +3,12 @@
 import { getAudioConfigFromDefaultMicrophone } from '@/app/api/ai/pronunciation/ackaud/services/get-audio-config-from-default-mic'
 import { getSpeechRecognitionResult } from '@/app/api/ai/pronunciation/ackaud/services/get-speech-recognition-result'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
-import { Mic, Pause, X } from 'lucide-react'
+import { Mic, Pause } from 'lucide-react'
 import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { toast as sonner } from 'sonner'
 import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
-import { toast as sonner } from 'sonner'
 import { RecognitionResult } from './ponunciation-assesment-dash'
 
 type RecognitionData = {
@@ -18,16 +18,10 @@ type RecognitionData = {
 }
 
 type MicrophoneProps = {
-  onReset: () => void
   onRecognition: (data: RecognitionData) => void
 }
 
-type ResetControlsData = {
-  exclude: {
-    setIsRecording?: boolean
-  }
-}
-export function Microphone({ onReset, onRecognition }: MicrophoneProps) {
+export function Microphone({ onRecognition }: MicrophoneProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [textareaValue, setTextareaValue] = useState('')
@@ -40,46 +34,38 @@ export function Microphone({ onReset, onRecognition }: MicrophoneProps) {
 
   const stopRecording = useCallback(() => {
     setIsRecording(false)
+    setTextareaValue('')
     setAudioTranscript('')
+    if (speechRecognizer) {
+      try {
+        speechRecognizer.close()
+      } catch {}
+    }
     if (recognitionRef.current) recognitionRef.current.stop()
-  }, [])
-
-  const resetControls = useCallback(
-    (data?: ResetControlsData) => {
-      if (!data?.exclude.setIsRecording) {
-        setIsRecording(false)
-      }
-      onReset()
-      setAudioTranscript('')
-
-      if (!conversation) {
-        setTextareaValue('')
-      }
-
-      if (speechRecognizer) {
-        try {
-          speechRecognizer.close()
-        } catch {}
-      }
-    },
-    [onReset, speechRecognizer, conversation],
-  )
+  }, [speechRecognizer])
 
   const startRecording = useCallback(
     async (text?: string) => {
       setIsLoading(true)
-      sonner('Wait a few minutes', {
-        duration: 20000,
-        action: {
-          label: 'Undo',
-          onClick: () => {},
-        },
-      })
-      resetControls({
-        exclude: {
-          setIsRecording: true,
-        },
-      })
+      const recursive = () => {
+        sonner('Wait a few minutes', {
+          duration: 5000,
+
+          action: {
+            label: 'Undo',
+            onClick: () => {},
+          },
+          position: 'bottom-left',
+          onAutoClose: () => {
+            setIsLoading((l) => {
+              if (l) recursive()
+              return l
+            })
+          },
+        })
+      }
+      recursive()
+
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition
 
@@ -129,6 +115,7 @@ export function Microphone({ onReset, onRecognition }: MicrophoneProps) {
         })
         sonner('Wait a little bit more', {
           duration: 5000,
+          position: 'bottom-left',
           action: {
             label: 'Undo',
             onClick: () => {},
@@ -151,7 +138,7 @@ export function Microphone({ onReset, onRecognition }: MicrophoneProps) {
       setIsLoading(false)
       stopRecording()
     },
-    [resetControls, onRecognition, stopRecording, conversation, textareaValue],
+    [onRecognition, stopRecording, conversation, textareaValue],
   )
 
   const toggleRecordingHandler = useCallback(() => {
@@ -233,16 +220,6 @@ export function Microphone({ onReset, onRecognition }: MicrophoneProps) {
                 className="mt-10 flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-16 h-16 focus:outline-none"
               >
                 <Pause className="w-8 h-8" />
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLoading(false)
-                  resetControls()
-                }}
-                className="mt-10 flex items-center justify-center bg-zinc-400 hover:bg-zinc-500 rounded-full w-16 h-16 focus:outline-none"
-              >
-                <X className="w-8 h-8" />
               </button>
             </div>
           ) : (

@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { isGreen, isRed, isYellow } from '@/lib/score-color'
 import { getDaysInMonth, isSameDay, isSameMonth, isSameYear } from 'date-fns'
 import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
@@ -35,17 +36,20 @@ export default async function DashboardPage() {
 
   const currentDate = new Date()
 
-  const wordsSameYear = allWords
-    .filter((w) => isSameYear(w.createdAt, currentDate))
-    .filter((w) => w.accuracyScore === 100)
+  const wordsSameYear = (is: (n: number) => boolean) =>
+    allWords
+      .filter((w) => isSameYear(w.createdAt, currentDate))
+      .filter((w) => is(w.accuracyScore))
 
-  const wordsSameMonth = allWords
-    .filter((w) => isSameMonth(w.createdAt, currentDate))
-    .filter((w) => w.accuracyScore === 100)
+  const wordsSameMonth = (is: (n: number) => boolean) =>
+    allWords
+      .filter((w) => isSameMonth(w.createdAt, currentDate))
+      .filter((w) => is(w.accuracyScore))
 
-  const wordsSameDay = allWords
-    .filter((w) => isSameDay(w.createdAt, currentDate))
-    .filter((w) => w.accuracyScore === 100)
+  const wordsSameDay = (is: (n: number) => boolean) =>
+    allWords
+      .filter((w) => isSameDay(w.createdAt, currentDate))
+      .filter((w) => is(w.accuracyScore))
 
   const wordsPerYear = 5000
   const wordsPerMonth = Math.round(wordsPerYear / 12)
@@ -81,51 +85,89 @@ export default async function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Annual Words
+                      Total Annual{' '}
+                      <span className="text-green-400">Green Words</span>
                     </CardTitle>
                     <WholeWord />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameYear.length}
+                      {wordsSameYear(isGreen).length}
+                    </div>
+                    <div className="my-2">
+                      <p className="text-xs font-bold rounded-md mb-1 inline-block ">
+                        <span className="text-yellow-200">Yellow Words</span>:{' '}
+                        {wordsSameYear(isYellow).length}
+                      </p>
+                      <br />
+                      <p className="text-xs font-bold rounded-md inline-block">
+                        <span className="text-red-400">Red Words</span>:{' '}
+                        {wordsSameYear(isRed).length}
+                      </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Annual goal: {wordsPerYear} words,{' '}
-                      {sub(wordsPerYear, wordsSameYear.length)} remaining
+                      {sub(wordsPerYear, wordsSameYear(isGreen).length)}{' '}
+                      remaining
                     </p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Monthly Words
+                      Total Monthly{' '}
+                      <span className="text-green-400">Green Words</span>
                     </CardTitle>
                     <WholeWord />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameMonth.length}
+                      {wordsSameMonth(isGreen).length}
+                    </div>
+                    <div className="my-2">
+                      <p className="text-xs font-bold rounded-md mb-1 inline-block ">
+                        <span className="text-yellow-200">Yellow Words</span>:{' '}
+                        {wordsSameMonth(isYellow).length}
+                      </p>
+                      <br />
+                      <p className="text-xs font-bold rounded-md inline-block">
+                        <span className="text-red-400">Red Words</span>:{' '}
+                        {wordsSameMonth(isRed).length}
+                      </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Monthly goal: {wordsPerMonth} words,{' '}
-                      {wordsPerMonth - wordsSameMonth.length} remaining
+                      {sub(wordsPerMonth, wordsSameMonth(isGreen).length)}{' '}
+                      remaining
                     </p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Daily Words
+                      Total Daily{' '}
+                      <span className="text-green-400">Green Words</span>
                     </CardTitle>
                     <WholeWord />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameDay.length}
+                      {wordsSameDay(isGreen).length}
+                    </div>
+                    <div className="my-2">
+                      <p className="text-xs font-bold rounded-md mb-1 inline-block ">
+                        <span className="text-yellow-200">Yellow Words</span>:{' '}
+                        {wordsSameDay(isYellow).length}
+                      </p>
+                      <br />
+                      <p className="text-xs font-bold rounded-md inline-block">
+                        <span className="text-red-400">Red Words</span>:{' '}
+                        {wordsSameDay(isRed).length}
+                      </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Daily goal: {wordsPerDay} words,{' '}
-                      {wordsPerDay - wordsSameDay.length} remaining
+                      {sub(wordsPerDay, wordsSameDay(isGreen).length)} remaining
                     </p>
                   </CardContent>
                 </Card>
@@ -136,7 +178,7 @@ export default async function DashboardPage() {
                     <CardTitle>Overview</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview wordsSameYear={wordsSameYear} />
+                    <Overview wordsSameYear={wordsSameYear(isGreen)} />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">

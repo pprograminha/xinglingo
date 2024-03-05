@@ -150,7 +150,8 @@ export function Conversations({
                           <span className="inline-flex group-data-[me=true]:flex-row-reverse">
                             <span>🧩</span>
                             <span>
-                              {conversation.pronunciationAssessment ? (
+                              {conversation.pronunciationAssessment &&
+                              $getWords(conversation).length > 0 ? (
                                 <>
                                   {$getWords(conversation).map((w) => (
                                     <span

@@ -163,9 +163,6 @@ export function PronunciationAssessmentDash() {
   return (
     <>
       <Microphone
-        onReset={() => {
-          setRecognition(null)
-        }}
         onRecognition={(data) => {
           createPronunciationAssessmentHandler(data)
         }}
