@@ -6,22 +6,26 @@ import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { Mic, Pause } from 'lucide-react'
 import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { toast as sonner } from 'sonner'
 import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
 import { RecognitionResult } from './ponunciation-assesment-dash'
+import Image from 'next/image'
 
 type RecognitionData = {
   referenceText?: string
   conversationId?: string
-  speechRecognitionResult: RecognitionResult
+  speechRecognitionResult: RecognitionResult | null
 }
 
 type MicrophoneProps = {
   onRecognition: (data: RecognitionData) => void
+  pronunciationAssessmentIsLoading: boolean
 }
 
-export function Microphone({ onRecognition }: MicrophoneProps) {
+export function Microphone({
+  onRecognition,
+  pronunciationAssessmentIsLoading,
+}: MicrophoneProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [textareaValue, setTextareaValue] = useState('')
@@ -47,25 +51,9 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
   const startRecording = useCallback(
     async (text?: string) => {
       setIsLoading(true)
-      const recursive = () => {
-        sonner('Wait a few minutes', {
-          duration: 5000,
-
-          action: {
-            label: 'Undo',
-            onClick: () => {},
-          },
-          position: 'bottom-left',
-          onAutoClose: () => {
-            setIsLoading((l) => {
-              if (l) recursive()
-              return l
-            })
-          },
-        })
-      }
-      recursive()
-
+      onRecognition({
+        speechRecognitionResult: null,
+      })
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition
 
@@ -112,14 +100,6 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
           speechRecognitionResult: result,
           referenceText: textareaValue,
           conversationId: conversation?.id,
-        })
-        sonner('Wait a little bit more', {
-          duration: 5000,
-          position: 'bottom-left',
-          action: {
-            label: 'Undo',
-            onClick: () => {},
-          },
         })
       } else if (
         result &&
@@ -192,6 +172,7 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
               )}
             </div>
           </div>
+
           <p className="my-1 text-xs text-zinc-700">{audioTranscript}</p>
 
           <Textarea
@@ -209,7 +190,16 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
           />
         </div>
 
-        <div className="flex items-center w-full">
+        <div className="flex items-center w-full relative">
+          {(isLoading || pronunciationAssessmentIsLoading) && (
+            <Image
+              src="/assets/loading.gif"
+              width="160"
+              className="absolute top-0 right-0"
+              height="160"
+              alt="Thank you"
+            />
+          )}
           {isRecording ? (
             <div className="flex gap-2 items-center justify-center w-full">
               <button
@@ -217,7 +207,7 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
                 onClick={() => {
                   toggleRecordingHandler()
                 }}
-                className="mt-10 flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-16 h-16 focus:outline-none"
+                className="mt-4 flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-16 h-16 focus:outline-none"
               >
                 <Pause className="w-8 h-8" />
               </button>
@@ -227,7 +217,7 @@ export function Microphone({ onRecognition }: MicrophoneProps) {
               disabled={isLoading || (!textareaValue && !conversation)}
               type="button"
               onClick={() => toggleRecordingHandler()}
-              className="mt-10 m-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-300  bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
+              className="mt-4 m-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-300  bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
             >
               <Mic className="w-8 h-8" />
             </button>

@@ -100,11 +100,12 @@ export type RecognitionResult = {
 type CreatePronunciationAssessmentHandlerData = {
   referenceText?: string
   conversationId?: string
-  speechRecognitionResult: RecognitionResult
+  speechRecognitionResult: RecognitionResult | null
 }
 
 export function PronunciationAssessmentDash() {
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { toggleRecord } = useRecordConversation()
 
@@ -113,6 +114,7 @@ export function PronunciationAssessmentDash() {
     conversationId,
     referenceText,
   }: CreatePronunciationAssessmentHandlerData) {
+    setIsLoading(true)
     const formData = new FormData()
 
     if (referenceText) {
@@ -135,7 +137,10 @@ export function PronunciationAssessmentDash() {
 
       await response.json()
 
-      if (speechRecognitionResult.RecognitionStatus === 'Success') {
+      if (
+        speechRecognitionResult &&
+        speechRecognitionResult.RecognitionStatus === 'Success'
+      ) {
         setRecognition(speechRecognitionResult)
         toast({
           title: 'Audio successfully loaded correctly',
@@ -147,6 +152,8 @@ export function PronunciationAssessmentDash() {
         title: 'Failed when trying to create pronunciation assessment.',
         variant: 'destructive',
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -161,11 +168,13 @@ export function PronunciationAssessmentDash() {
     ).length || 0
 
   return (
-    <>
+    <div className="min-h-[300px] h-[calc(100vh_-_220px)] overflow-y-auto">
       <Microphone
         onRecognition={(data) => {
+          if (data.speechRecognitionResult === null) return setRecognition(null)
           createPronunciationAssessmentHandler(data)
         }}
+        pronunciationAssessmentIsLoading={isLoading}
       />
 
       {recognitionData && (
@@ -307,6 +316,6 @@ export function PronunciationAssessmentDash() {
           </Table>
         </>
       )}
-    </>
+    </div>
   )
 }

@@ -91,7 +91,7 @@ export function Conversations({
       <p className="text-xs">Words: {words.length}</p>
       <div
         data-center={conversations.length === 0}
-        className="data-[center=true]:flex h-full data-[center=true]:items-center data-[center=true]:justify-center"
+        className="data-[center=true]:flex flex-col h-[75vh] data-[center=true]:items-center data-[center=true]:justify-center"
       >
         {conversations.length === 0 && (
           <Bone className="w-16 h-16 animate-bounce" />
@@ -112,7 +112,7 @@ export function Conversations({
             <TabsContent
               value={String(channnelIndex)}
               ref={conversationsContainerRef}
-              className="flex flex-col overflow-y-auto overflow-x-hidden h-[70vh] pr-4"
+              className="flex flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh_-_280px)] min-h-[200px] pr-4"
             >
               {dayConversations.map((conversation) => (
                 <HoverCard key={conversation.id}>
@@ -172,23 +172,25 @@ export function Conversations({
                           </span>
                         </p>
                       </div>
-
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        data-on={recConversation?.id === conversation.id}
-                        onClick={() => {
-                          if (recConversation?.id !== conversation.id)
-                            toggleRecord(conversation)
-                        }}
-                        className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
-                      >
-                        {recConversation?.id === conversation.id ? (
-                          <Mic />
-                        ) : (
-                          <MicOff />
-                        )}
-                      </Button>
+                      {channnelIndex !==
+                        groupConversationsPerDay.length - 1 && (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          data-on={recConversation?.id === conversation.id}
+                          onClick={() => {
+                            if (recConversation?.id !== conversation.id)
+                              toggleRecord(conversation)
+                          }}
+                          className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+                        >
+                          {recConversation?.id === conversation.id ? (
+                            <Mic />
+                          ) : (
+                            <MicOff />
+                          )}
+                        </Button>
+                      )}
                     </div>
                   </HoverCardTrigger>
                   <HoverCardContent

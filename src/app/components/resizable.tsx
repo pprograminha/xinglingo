@@ -23,10 +23,10 @@ export function ResizableHome() {
   return (
     <ResizablePanelGroup
       direction={isMd ? 'horizontal' : 'vertical'}
-      className="min-h-screen"
+      className="h-screen"
     >
       <ResizablePanel
-        className="md:min-w-[400px] min-w-[200px] min-h-[1000px]"
+        className="md:min-w-[400px] min-w-[200px]"
         defaultSize={50}
       >
         <div className="md:min-h-screen h-full">
@@ -36,7 +36,7 @@ export function ResizableHome() {
       {isMd && <ResizableHandle withHandle />}
       <ResizablePanel
         defaultSize={50}
-        className="md:min-w-[400px] min-w-[200px] min-h-[625.77px]"
+        className="md:min-w-[400px] min-w-[200px]"
       >
         <ChatContainer />
       </ResizablePanel>
