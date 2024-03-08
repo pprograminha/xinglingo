@@ -172,8 +172,7 @@ export function Conversations({
                           </span>
                         </p>
                       </div>
-                      {channnelIndex !==
-                        groupConversationsPerDay.length - 1 && (
+                      {channnelIndex === 0 && (
                         <Button
                           variant="outline"
                           size="icon"

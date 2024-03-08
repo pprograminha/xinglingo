@@ -43,17 +43,19 @@ const getConversations = cache(
     return conversationsData
   },
 )
-export const getWordMetrics = cache(async function getWords(
+export const getWordsList = cache(async function getWords(
   orderProp: 'desc' | 'asc' = 'desc',
 ): Promise<
   {
     word: string
     wordCount: number
+    avgAccuracyScore: number
   }[]
 > {
   const sq = db
     .select({
       word: words.word,
+      accuracyScore: words.accuracyScore,
     })
     .from(words)
     .as('sq')
@@ -66,6 +68,10 @@ export const getWordMetrics = cache(async function getWords(
     .select({
       word: sql`${words.word}`.mapWith(String),
       wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(Number),
+      avgAccuracyScore:
+        sql<number>`avg(${words.accuracyScore}) as avgAccuracyScore`.mapWith(
+          Number,
+        ),
     })
     .from(sq)
     .groupBy(sql`word`)

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-import { getConversations, getWordMetrics } from '@/components/chat/actions'
+import { getConversations, getWordsList } from '@/components/chat/actions'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,11 +11,17 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { isGreen, isRed, isYellow } from '@/lib/score-color'
-import { getDaysInMonth, isSameDay, isSameMonth, isSameYear } from 'date-fns'
+import {
+  eachWeekendOfMonth,
+  getDaysInMonth,
+  isSameDay,
+  isSameMonth,
+  isSameYear,
+} from 'date-fns'
 import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
 import { Overview } from './components/overview'
-import { WordMetrics } from './components/word-metrics'
+import { WordsList } from './components/words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -25,9 +31,9 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function DashboardPage() {
-  const [conversations, wordMetrics] = await Promise.all([
+  const [conversations, wordsList] = await Promise.all([
     getConversations(),
-    getWordMetrics(),
+    getWordsList(),
   ])
 
   const allWords = conversations
@@ -53,7 +59,10 @@ export default async function DashboardPage() {
 
   const wordsPerYear = 5000
   const wordsPerMonth = Math.round(wordsPerYear / 12)
-  const wordsPerDay = Math.round(wordsPerMonth / getDaysInMonth(currentDate))
+  const wordsPerDay = Math.round(
+    wordsPerMonth /
+      (getDaysInMonth(currentDate) - eachWeekendOfMonth(currentDate).length),
+  )
 
   const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
 
@@ -175,21 +184,25 @@ export default async function DashboardPage() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                   <CardHeader>
-                    <CardTitle>Overview</CardTitle>
+                    <CardTitle>Month Words</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview wordsSameYear={wordsSameYear(isGreen)} />
+                    <Overview
+                      greenWords={wordsSameYear(isGreen)}
+                      yellowWords={wordsSameYear(isYellow)}
+                      redWords={wordsSameYear(isRed)}
+                    />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">
                   <CardHeader>
-                    <CardTitle>Word Metrics</CardTitle>
+                    <CardTitle>Words List</CardTitle>
                     <CardDescription>
-                      Words: {wordMetrics.reduce((c, w) => c + w.wordCount, 0)}
+                      Words: {wordsList.reduce((c, w) => c + w.wordCount, 0)}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <WordMetrics wordMetrics={wordMetrics} />
+                    <WordsList wordsList={wordsList} />
                   </CardContent>
                 </Card>
               </div>
