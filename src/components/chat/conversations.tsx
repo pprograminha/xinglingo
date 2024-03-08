@@ -13,6 +13,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { getConversations } from './actions'
 import { scoreColor, scoreStyle } from '@/lib/score-color'
+import { useSwitch } from '@/hooks/use-switch'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
@@ -26,6 +27,7 @@ export function Conversations({
   const [conversations, setConversations] =
     useState<TConversations>(defaultConversations)
 
+  const { toggle: toggleMode } = useSwitch()
   const [channnelIndex, setChannelIndex] = useState(0)
   const { conversation: recConversation, toggleRecord } =
     useRecordConversation()
@@ -88,10 +90,10 @@ export function Conversations({
 
   return (
     <div className="flex-grow">
-      <p className="text-xs">Words: {words.length}</p>
+      <p className="text-xs md:inline hidden">Words: {words.length}</p>
       <div
         data-center={conversations.length === 0}
-        className="data-[center=true]:flex flex-col h-[75vh] data-[center=true]:items-center data-[center=true]:justify-center"
+        className="data-[center=true]:flex flex-col data-[center=true]:items-center data-[center=true]:justify-center"
       >
         {conversations.length === 0 && (
           <Bone className="w-16 h-16 animate-bounce" />
@@ -101,7 +103,7 @@ export function Conversations({
             defaultValue="0"
             onValueChange={(e) => setChannelIndex(Number(e))}
           >
-            <h1 className="mt-3">Channels: </h1>
+            <h1 className="mt-3 md:inline hidden">Channels: </h1>
             <TabsList className="my-3">
               {[...groupConversationsPerDay].map((c, index) => (
                 <TabsTrigger value={String(index)} key={String(index)}>
@@ -112,7 +114,7 @@ export function Conversations({
             <TabsContent
               value={String(channnelIndex)}
               ref={conversationsContainerRef}
-              className="flex flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh_-_280px)] min-h-[200px] pr-4"
+              className="flex flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh_-_280px)]  min-h-[200px] pr-4"
             >
               {dayConversations.map((conversation) => (
                 <HoverCard key={conversation.id}>
@@ -178,8 +180,10 @@ export function Conversations({
                           size="icon"
                           data-on={recConversation?.id === conversation.id}
                           onClick={() => {
-                            if (recConversation?.id !== conversation.id)
+                            if (recConversation?.id !== conversation.id) {
                               toggleRecord(conversation)
+                              toggleMode(['chat', 'pronunciation'])
+                            }
                           }}
                           className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
                         >

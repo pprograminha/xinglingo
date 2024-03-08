@@ -8,12 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { scoreColor, scoreStyle } from '@/lib/score-color'
-import { Info } from 'lucide-react'
-import { useState } from 'react'
-import { Microphone } from './microphone'
-import { toast } from '../ui/use-toast'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
+import { scoreColor, scoreStyle } from '@/lib/score-color'
+import { Info, RotateCcw } from 'lucide-react'
+import { useState } from 'react'
+import { Button } from '../ui/button'
+import { toast } from '../ui/use-toast'
+import { Microphone } from './microphone'
 
 type PronunciationAssessment = {
   AccuracyScore: number
@@ -107,7 +108,8 @@ export function PronunciationAssessmentDash() {
   const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { toggleRecord } = useRecordConversation()
+  const { toggleRecord, oldConversation, conversation, retryRecord } =
+    useRecordConversation()
 
   async function createPronunciationAssessmentHandler({
     speechRecognitionResult,
@@ -168,7 +170,15 @@ export function PronunciationAssessmentDash() {
     ).length || 0
 
   return (
-    <div className="min-h-[300px] h-[calc(100vh_-_220px)] overflow-y-auto">
+    <div className="min-h-[300px] md:h-[calc(100vh_-_220px)] overflow-y-auto">
+      {oldConversation && !conversation && (
+        <Button
+          className="w-full dark:bg-red-400 scale-50 dark:hover:bg-red-500 dark:text-white mb-4 flex gap-2 items-center"
+          onClick={() => retryRecord()}
+        >
+          Retry <RotateCcw className="w-4" />
+        </Button>
+      )}
       <Microphone
         onRecognition={(data) => {
           if (data.speechRecognitionResult === null) return setRecognition(null)

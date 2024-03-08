@@ -1,6 +1,5 @@
 'use client'
 import ChatContainer from '@/components/chat'
-import { Loading } from '@/components/loading'
 import { PronunciationAssessment } from '@/components/pronunciation-assessment'
 import {
   ResizableHandle,
@@ -8,22 +7,16 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
-import { useEffect, useState } from 'react'
 
 export function ResizableHome() {
   const isMd = useBreakpoint('md')
-  const [isClient, setIsClient] = useState(false)
 
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  if (!isClient) return <Loading />
+  if (!isMd) return null
 
   return (
     <ResizablePanelGroup
-      direction={isMd ? 'horizontal' : 'vertical'}
-      className="h-screen"
+      direction="horizontal"
+      className="h-screen md:block hidden"
     >
       <ResizablePanel
         className="md:min-w-[400px] min-w-[200px]"
@@ -33,7 +26,7 @@ export function ResizableHome() {
           <PronunciationAssessment />
         </div>
       </ResizablePanel>
-      {isMd && <ResizableHandle withHandle />}
+      <ResizableHandle withHandle />
       <ResizablePanel
         defaultSize={50}
         className="md:min-w-[400px] min-w-[200px]"

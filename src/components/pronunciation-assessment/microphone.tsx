@@ -217,7 +217,7 @@ export function Microphone({
               disabled={isLoading || (!textareaValue && !conversation)}
               type="button"
               onClick={() => toggleRecordingHandler()}
-              className="mt-4 m-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-300  bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
+              className="mt-4 m-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-200  bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
             >
               <Mic className="w-8 h-8" />
             </button>

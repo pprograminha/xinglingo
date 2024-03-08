@@ -4,7 +4,7 @@ import { Conversation } from '@/lib/db/drizzle/@types'
 import * as Ably from 'ably'
 import { AblyProvider, useChannel } from 'ably/react'
 import { Bone } from 'lucide-react'
-import { Suspense, useMemo, useState } from 'react'
+import { HTMLAttributes, Suspense, useMemo, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -14,7 +14,11 @@ import {
 } from '../ui/card'
 import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
-export default function ChatContainer() {
+import { cn } from '@/lib/utils'
+
+type ChatContainerProps = HTMLAttributes<HTMLDivElement>
+
+export default function ChatContainer(props: ChatContainerProps) {
   const client = new Ably.Realtime.Promise({
     authUrl: '/api/ably/token',
     authMethod: 'POST',
@@ -22,11 +26,14 @@ export default function ChatContainer() {
 
   return (
     <AblyProvider client={client}>
-      <Chat />
+      <Chat {...props} />
     </AblyProvider>
   )
 }
-const Chat = () => {
+
+type ChatProps = HTMLAttributes<HTMLDivElement>
+
+const Chat = ({ className, ...props }: ChatProps) => {
   const [messageText, setMessageText] = useState<string>('')
 
   const { channel } = useChannel('status-updates')
@@ -41,12 +48,18 @@ const Chat = () => {
 
   return (
     <>
-      <Card className="w-full rounded-none md:h-full flex flex-col">
-        <CardHeader>
+      <Card
+        className={cn(
+          'w-full rounded-none md:min-h-screen min-h-[calc(100vh_-_82px)] flex flex-col',
+          className,
+        )}
+        {...props}
+      >
+        <CardHeader className="md:flex hidden">
           <CardTitle>Chat</CardTitle>
           <CardDescription>Define the topic and chat</CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow flex flex-col">
+        <CardContent className="flex-grow flex flex-col md:pt-0 pt-3">
           <Suspense
             fallback={
               <div className="pr-4 h-[40vh] flex items-center justify-center flex-grow">
