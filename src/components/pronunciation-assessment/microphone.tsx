@@ -10,6 +10,7 @@ import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
 import { RecognitionResult } from './ponunciation-assesment-dash'
 import Image from 'next/image'
+import { Button } from '../ui/button'
 
 type RecognitionData = {
   referenceText?: string
@@ -195,32 +196,32 @@ export function Microphone({
             <Image
               src="/assets/loading.gif"
               width="160"
-              className="absolute top-0 right-0"
+              className="absolute top-0 -right-5"
               height="160"
               alt="Thank you"
             />
           )}
           {isRecording ? (
             <div className="flex gap-2 items-center justify-center w-full">
-              <button
+              <Button
                 type="button"
                 onClick={() => {
                   toggleRecordingHandler()
                 }}
-                className="mt-4 flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-16 h-16 focus:outline-none"
+                className="mt-4 flex items-center justify-center bg-red-400 dark:text-white dark:bg-red-400 hover:bg-red-500 rounded-full w-16 h-16"
               >
                 <Pause className="w-8 h-8" />
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
+            <Button
               disabled={isLoading || (!textareaValue && !conversation)}
               type="button"
               onClick={() => toggleRecordingHandler()}
-              className="mt-4 m-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-200  bg-blue-400 hover:bg-blue-500 rounded-full w-16 h-16 focus:outline-none"
+              className="mt-4 mx-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-200 dark:disabled:bg-blue-200 dark:disabled:text-white  disabled:text-white  dark:bg-blue-400 bg-blue-400 dark:hover:bg-blue-500  dark:text-white  hover:bg-blue-500 rounded-full w-16 h-16"
             >
               <Mic className="w-8 h-8" />
-            </button>
+            </Button>
           )}
         </div>
       </div>
