@@ -3,6 +3,7 @@ import { getSpeechRecognitionResult } from '@/app/api/ai/pronunciation/ackaud/se
 import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { toast } from '@/components/ui/use-toast'
 import { Conversation } from '@/lib/db/drizzle/@types'
+import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
 import { create } from 'zustand'
 
 type StartRecordingData = {
@@ -22,6 +23,7 @@ interface RecordConversationState {
   isLoading: boolean
 
   speechRecognitionResult: RecognitionResult | null
+  speechRecognizer: SpeechRecognizer | null
   toggleRecord: (conversation?: Conversation | null) => void
   retryRecord: () => void
   startRecording: (data: StartRecordingData) => Promise<void>
@@ -41,6 +43,7 @@ export const useRecordConversation = create<RecordConversationState>(
     isLoading: false,
 
     speechRecognitionResult: null,
+    speechRecognizer: null,
 
     retryRecord: () => {
       const state = get()
@@ -60,6 +63,11 @@ export const useRecordConversation = create<RecordConversationState>(
 
     stopRecording: (data?: StopRecordingData) => {
       const omitLoading = data?.omit?.loading
+      const state = get()
+
+      if (omitLoading && state.speechRecognizer) {
+        state.speechRecognizer.close()
+      }
 
       set({
         isRecording: false,
@@ -120,6 +128,10 @@ export const useRecordConversation = create<RecordConversationState>(
           audioConfig: getAudioConfigFromDefaultMicrophone(),
         },
       )
+
+      set({
+        speechRecognizer,
+      })
 
       const speechRecognitionResult = await getResult()
 
@@ -186,7 +198,6 @@ export const useRecordConversation = create<RecordConversationState>(
 
       if (recognition) recognition.stop()
 
-      speechRecognizer.close()
       state.stopRecording()
     },
 
