@@ -65,7 +65,7 @@ export function Microphone() {
           />
         </div>
 
-        <div className="flex items-center w-full relative">
+        <div className="flex items-center w-full relative overflow-hidden">
           {isLoading && (
             <Image
               src="/assets/loading.gif"
