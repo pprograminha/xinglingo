@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
+import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { useSwitch } from '@/hooks/use-switch'
 import { uid } from '@/lib/get-uid'
@@ -15,8 +16,6 @@ import { Button } from '../ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { getConversations } from './actions'
-import { useBreakpoint } from '@/hooks/use-breakpoint'
-import { open } from 'fs'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
