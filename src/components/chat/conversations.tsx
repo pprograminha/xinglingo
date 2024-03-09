@@ -1,8 +1,10 @@
 'use client'
 
 import { useRecordConversation } from '@/hooks/use-record-conversation'
+import { useSwitch } from '@/hooks/use-switch'
 import { uid } from '@/lib/get-uid'
 import { getWords } from '@/lib/get-words'
+import { scoreColor, scoreStyle } from '@/lib/score-color'
 import * as Ably from 'ably'
 import { useChannel } from 'ably/react'
 import { format, isSameDay } from 'date-fns'
@@ -12,8 +14,6 @@ import { Button } from '../ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { getConversations } from './actions'
-import { scoreColor, scoreStyle } from '@/lib/score-color'
-import { useSwitch } from '@/hooks/use-switch'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
@@ -29,13 +29,26 @@ export function Conversations({
 
   const { toggle: toggleMode } = useSwitch()
   const [channnelIndex, setChannelIndex] = useState(0)
-  const { conversation: recConversation, toggleRecord } =
-    useRecordConversation()
+  const {
+    conversation: recConversation,
+    isLoading,
+    startRecording,
+  } = useRecordConversation()
+
   useChannel('status-updates', (conversation: Ably.Types.Message) => {
-    setConversations((prev) => [
-      ...prev,
-      conversation.data as TConversations['0'],
-    ])
+    setConversations((cs) => {
+      const conversationIndex = cs.findIndex(
+        (c) => c.id === conversation.data.id,
+      )
+
+      if (conversationIndex !== -1) {
+        cs[conversationIndex] = conversation.data
+
+        return [...cs]
+      }
+
+      return [...cs, conversation.data]
+    })
   })
 
   const conversationsContainerRef = useRef<HTMLDivElement | null>(null)
@@ -178,10 +191,14 @@ export function Conversations({
                         <Button
                           variant="outline"
                           size="icon"
+                          disabled={isLoading}
                           data-on={recConversation?.id === conversation.id}
                           onClick={() => {
                             if (recConversation?.id !== conversation.id) {
-                              toggleRecord(conversation)
+                              startRecording({
+                                referenceText: conversation.text,
+                                conversation,
+                              })
                               toggleMode(['chat', 'pronunciation'])
                             }
                           }}

@@ -11,9 +11,7 @@ import {
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { scoreColor, scoreStyle } from '@/lib/score-color'
 import { Info, RotateCcw } from 'lucide-react'
-import { useState } from 'react'
 import { Button } from '../ui/button'
-import { toast } from '../ui/use-toast'
 import { Microphone } from './microphone'
 
 type PronunciationAssessment = {
@@ -98,68 +96,15 @@ export type RecognitionResult = {
   NBest: NBest[]
 }
 
-type CreatePronunciationAssessmentHandlerData = {
-  referenceText?: string
-  conversationId?: string
-  speechRecognitionResult: RecognitionResult | null
-}
-
 export function PronunciationAssessmentDash() {
-  const [recognition, setRecognition] = useState<RecognitionResult | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const { toggleRecord, oldConversation, conversation, retryRecord } =
-    useRecordConversation()
-
-  async function createPronunciationAssessmentHandler({
+  const {
     speechRecognitionResult,
-    conversationId,
-    referenceText,
-  }: CreatePronunciationAssessmentHandlerData) {
-    setIsLoading(true)
-    const formData = new FormData()
+    previousConversation,
+    isLoading,
+    retryRecord,
+  } = useRecordConversation()
 
-    if (referenceText) {
-      formData.append('referenceText', referenceText)
-    }
-    if (conversationId) {
-      formData.append('conversationId', conversationId)
-    }
-
-    formData.append(
-      'speechRecognitionResult',
-      JSON.stringify(speechRecognitionResult),
-    )
-
-    try {
-      const response = await fetch('/api/ai/pronunciation/ackaud', {
-        body: formData,
-        method: 'POST',
-      })
-
-      await response.json()
-
-      if (
-        speechRecognitionResult &&
-        speechRecognitionResult.RecognitionStatus === 'Success'
-      ) {
-        setRecognition(speechRecognitionResult)
-        toast({
-          title: 'Audio successfully loaded correctly',
-        })
-        toggleRecord()
-      }
-    } catch {
-      toast({
-        title: 'Failed when trying to create pronunciation assessment.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const recognitionData = recognition?.NBest[0]
+  const recognitionData = speechRecognitionResult?.NBest[0]
 
   const cellStyle =
     'data-[score-color=green]:text-green-600 dark:data-[score-color=green]:text-green-700 data-[score-color=red]:text-red-500 data-[score-color=yellow]:text-yellow-500 dark:data-[score-color=yellow]:text-yellow-400'
@@ -171,7 +116,7 @@ export function PronunciationAssessmentDash() {
 
   return (
     <div className="min-h-[300px] md:h-[calc(100vh_-_220px)] overflow-y-auto">
-      {oldConversation && !conversation && (
+      {previousConversation && !isLoading && (
         <Button
           className="w-full dark:bg-red-400 scale-50 dark:hover:bg-red-500 dark:text-white mb-4 flex gap-2 items-center"
           onClick={() => retryRecord()}
@@ -179,13 +124,7 @@ export function PronunciationAssessmentDash() {
           Retry <RotateCcw className="w-4" />
         </Button>
       )}
-      <Microphone
-        onRecognition={(data) => {
-          if (data.speechRecognitionResult === null) return setRecognition(null)
-          createPronunciationAssessmentHandler(data)
-        }}
-        pronunciationAssessmentIsLoading={isLoading}
-      />
+      <Microphone />
 
       {recognitionData && (
         <>

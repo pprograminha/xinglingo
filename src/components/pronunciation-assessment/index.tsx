@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 import { ModeToggle } from '../mode-toggle'
 import { Button } from '../ui/button'
-import { PronunciationAssessmentDash } from './ponunciation-assesment-dash'
+import { PronunciationAssessmentDash } from './pronunciation-assesment-dash'
 
 type PronunciationAssessmentProps = HTMLAttributes<HTMLDivElement>
 

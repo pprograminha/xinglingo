@@ -1,150 +1,24 @@
 'use client'
 
-import { getAudioConfigFromDefaultMicrophone } from '@/app/api/ai/pronunciation/ackaud/services/get-audio-config-from-default-mic'
-import { getSpeechRecognitionResult } from '@/app/api/ai/pronunciation/ackaud/services/get-speech-recognition-result'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { Mic, Pause } from 'lucide-react'
-import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Textarea } from '../ui/textarea'
-import { toast } from '../ui/use-toast'
-import { RecognitionResult } from './ponunciation-assesment-dash'
 import Image from 'next/image'
+import { useState } from 'react'
 import { Button } from '../ui/button'
+import { Textarea } from '../ui/textarea'
 
-type RecognitionData = {
-  referenceText?: string
-  conversationId?: string
-  speechRecognitionResult: RecognitionResult | null
-}
-
-type MicrophoneProps = {
-  onRecognition: (data: RecognitionData) => void
-  pronunciationAssessmentIsLoading: boolean
-}
-
-export function Microphone({
-  onRecognition,
-  pronunciationAssessmentIsLoading,
-}: MicrophoneProps) {
-  const [isRecording, setIsRecording] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+export function Microphone() {
   const [textareaValue, setTextareaValue] = useState('')
-  const [speechRecognizer, setSpeechRecognizer] =
-    useState<SpeechRecognizer | null>(null)
-  const [audioTranscript, setAudioTranscript] = useState('')
 
-  const { conversation } = useRecordConversation()
-  const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const {
+    conversation,
+    audioTranscript,
+    isRecording,
+    isLoading,
+    stopRecording,
+    startRecording,
+  } = useRecordConversation()
 
-  const stopRecording = useCallback(() => {
-    setIsRecording(false)
-    setTextareaValue('')
-    setAudioTranscript('')
-    if (speechRecognizer) {
-      try {
-        speechRecognizer.close()
-      } catch {}
-    }
-    if (recognitionRef.current) recognitionRef.current.stop()
-  }, [speechRecognizer])
-
-  const startRecording = useCallback(
-    async (text?: string) => {
-      setIsLoading(true)
-      onRecognition({
-        speechRecognitionResult: null,
-      })
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition
-
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition()
-        recognitionRef.current.continuous = true
-        recognitionRef.current.interimResults = true
-
-        recognitionRef.current.onresult = (event) => {
-          const transcriptCollection: string[] = []
-
-          for (let index = 0; index < event.results.length; index++) {
-            const element = event.results.item(index)
-
-            transcriptCollection.push(element.item(0).transcript)
-          }
-
-          setAudioTranscript(transcriptCollection.join(' '))
-        }
-
-        recognitionRef.current.start()
-      } else {
-        toast({
-          title: 'SpeechRecognition API is not supported in this browser.',
-          variant: 'destructive',
-        })
-      }
-
-      const { getResult, speechRecognizer } = await getSpeechRecognitionResult(
-        {
-          audioText: text || textareaValue,
-        },
-        {
-          audioConfig: getAudioConfigFromDefaultMicrophone(),
-        },
-      )
-
-      setSpeechRecognizer(speechRecognizer)
-
-      const result = await getResult()
-
-      if (result && result.RecognitionStatus === 'Success') {
-        onRecognition({
-          speechRecognitionResult: result,
-          referenceText: textareaValue,
-          conversationId: conversation?.id,
-        })
-      } else if (
-        result &&
-        result.RecognitionStatus === 'InitialSilenceTimeout'
-      ) {
-        toast({
-          title: 'Initial silence timeout! Please try again.',
-          variant: 'destructive',
-        })
-      } else {
-        toast({
-          title: 'Did not catch audio properly! Please try again.',
-          variant: 'destructive',
-        })
-      }
-      setIsLoading(false)
-      stopRecording()
-    },
-    [onRecognition, stopRecording, conversation, textareaValue],
-  )
-
-  const toggleRecordingHandler = useCallback(() => {
-    setIsRecording(!isRecording)
-    if (!isRecording) {
-      startRecording(conversation?.text)
-    } else {
-      stopRecording()
-    }
-  }, [startRecording, stopRecording, isRecording, conversation])
-
-  useEffect(() => {
-    if (conversation !== undefined) {
-      if (conversation) {
-        startRecording(conversation.text)
-        setTextareaValue(conversation.text)
-        setIsRecording(true)
-      } else {
-        stopRecording()
-        setIsRecording(false)
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversation])
   return (
     <div className="flex items-center justify-center">
       <div className="w-full">
@@ -192,7 +66,7 @@ export function Microphone({
         </div>
 
         <div className="flex items-center w-full relative">
-          {(isLoading || pronunciationAssessmentIsLoading) && (
+          {isLoading && (
             <Image
               src="/assets/loading.gif"
               width="160"
@@ -206,7 +80,11 @@ export function Microphone({
               <Button
                 type="button"
                 onClick={() => {
-                  toggleRecordingHandler()
+                  stopRecording({
+                    omit: {
+                      loading: true,
+                    },
+                  })
                 }}
                 className="mt-4 flex items-center justify-center bg-red-400 dark:text-white dark:bg-red-400 hover:bg-red-500 rounded-full w-16 h-16"
               >
@@ -217,7 +95,12 @@ export function Microphone({
             <Button
               disabled={isLoading || (!textareaValue && !conversation)}
               type="button"
-              onClick={() => toggleRecordingHandler()}
+              onClick={() =>
+                startRecording({
+                  referenceText: textareaValue || conversation?.text || '',
+                  conversation,
+                })
+              }
               className="mt-4 mx-auto flex items-center justify-center disabled:cursor-not-allowed disabled:bg-blue-200 dark:disabled:bg-blue-200 dark:disabled:text-white  disabled:text-white  dark:bg-blue-400 bg-blue-400 dark:hover:bg-blue-500  dark:text-white  hover:bg-blue-500 rounded-full w-16 h-16"
             >
               <Mic className="w-8 h-8" />

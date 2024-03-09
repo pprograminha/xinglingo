@@ -13,7 +13,7 @@ import { InferInsertModel, asc, desc, eq, sql } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { cache } from 'react'
 
-type Response = (Conversation & {
+export type Conversations = (Conversation & {
   pronunciationAssessment:
     | (PronunciationAssessment & {
         words: (Word & {
@@ -24,7 +24,7 @@ type Response = (Conversation & {
 })[]
 
 const getConversations = cache(
-  async function getConversations(): Promise<Response> {
+  async function getConversations(): Promise<Conversations> {
     const conversationsData = await db.query.conversations.findMany({
       with: {
         author: true,
@@ -43,6 +43,28 @@ const getConversations = cache(
     return conversationsData
   },
 )
+export const getConversation = async (
+  conversationId: string,
+): Promise<Conversations['0'] | undefined> => {
+  const conversationsData = await db.query.conversations.findFirst({
+    where: (conversations, { eq }) => eq(conversations.id, conversationId),
+    with: {
+      author: true,
+      pronunciationAssessment: {
+        with: {
+          words: {
+            with: {
+              phonemes: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return conversationsData
+}
+
 export const getWordsList = cache(async function getWords(
   orderProp: 'desc' | 'asc' = 'desc',
 ): Promise<

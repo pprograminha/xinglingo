@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RecognitionResult } from '@/components/pronunciation-assessment/ponunciation-assesment-dash'
+import * as Ably from 'ably/promises'
+import { Conversations, getConversation } from '@/components/chat/actions'
+import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { db } from '@/lib/db/drizzle/query'
 import {
   phonemes,
@@ -9,6 +11,7 @@ import {
 import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { z } from 'zod'
+import { env } from '@/env'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -42,15 +45,18 @@ export async function POST(req: Request) {
 
     const nbest = speechRecognitionResult.NBest[0]
 
+    let conversation: Conversations['0'] | null | undefined = null
+
     if (nbest) {
       let popularPronunciationAssessment = true
 
       if (conversationId) {
-        const conversation = await db.query.conversations.findFirst({
+        conversation = await db.query.conversations.findFirst({
           where: (conversations, { eq }) =>
             eq(conversations.id, conversationId),
 
           with: {
+            author: true,
             pronunciationAssessment: {
               with: {
                 words: {
@@ -184,7 +190,20 @@ export async function POST(req: Request) {
       }
     }
 
-    return Response.json({ ok: 1 })
+    if (conversation) {
+      const client = new Ably.Rest(env.ABLY_API_KEY)
+
+      const channel = client.channels.get('status-updates')
+
+      await channel.publish(
+        'update-from-server',
+        await getConversation(conversation.id),
+      )
+    }
+
+    return Response.json({
+      ok: 1,
+    })
   } catch (error) {
     console.error(error)
 
