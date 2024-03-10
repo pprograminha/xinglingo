@@ -12,6 +12,7 @@ import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { z } from 'zod'
 import { env } from '@/env'
+import { PronunciationAssessment } from '@/lib/db/drizzle/@types'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
 
   try {
     if (safeParse.success === false) {
-      throw new Error('Zod Validation Error')
+      throw new Error('ZodValidationError')
     }
     const conversationId = safeParse.data.conversationId
     const referenceText = safeParse.data.referenceText
@@ -70,66 +71,134 @@ export async function POST(req: Request) {
         })
 
         if (conversation && conversation.pronunciationAssessment) {
-          await db
-            .delete(pronunciationsAssessment)
-            .where(
-              eq(
-                pronunciationsAssessment.id,
-                conversation.pronunciationAssessment.id,
-              ),
-            )
-
-          const newPronunciationsAssessmentId = crypto.randomUUID()
-
-          const [newPronunciationsAssessment] = await db
-            .insert(pronunciationsAssessment)
-            .values([
-              {
-                id: newPronunciationsAssessmentId,
-                accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
-                fluencyScore: nbest.PronunciationAssessment.FluencyScore,
-                prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
-                pronScore: nbest.PronunciationAssessment.PronScore,
-                completenessScore:
-                  nbest.PronunciationAssessment.CompletenessScore,
-                conversationId,
-              },
-            ])
-            .returning()
-
           try {
-            const insertWords = nbest.Words.map((w) => ({
-              id: crypto.randomUUID(),
-              accuracyScore: w.PronunciationAssessment.AccuracyScore,
-              word: w.Word,
-              pronunciationAssessmentId: newPronunciationsAssessment.id,
-            }))
-
-            const fullWords = insertWords.map((w, i) => {
-              return {
-                ...w,
-                W: nbest.Words[i],
-              }
-            })
-
-            const insertPhonemes = fullWords
-              .map((w) =>
-                w.W.Phonemes.map((p) => ({
-                  id: crypto.randomUUID(),
-                  accuracyScore: p.PronunciationAssessment.AccuracyScore,
-                  phoneme: p.Phoneme,
-                  wordId: w.id,
-                })),
-              )
-              .flat()
-            await db.insert(words).values(insertWords)
-            await db.insert(phonemes).values(insertPhonemes)
-          } catch {
             await db
               .delete(pronunciationsAssessment)
               .where(
-                eq(pronunciationsAssessment.id, newPronunciationsAssessment.id),
+                eq(
+                  pronunciationsAssessment.id,
+                  conversation.pronunciationAssessment.id,
+                ),
               )
+          } catch {
+            throw new Error('DeletePronunciationAssessmentError')
+          }
+
+          const newPronunciationsAssessmentId = crypto.randomUUID()
+
+          let newPronunciationsAssessment: PronunciationAssessment | null = null
+
+          try {
+            ;[newPronunciationsAssessment] = await db
+              .insert(pronunciationsAssessment)
+              .values([
+                {
+                  id: newPronunciationsAssessmentId,
+                  accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
+                  fluencyScore: nbest.PronunciationAssessment.FluencyScore,
+                  prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
+                  pronScore: nbest.PronunciationAssessment.PronScore,
+                  completenessScore:
+                    nbest.PronunciationAssessment.CompletenessScore,
+                  conversationId,
+                },
+              ])
+              .returning()
+          } catch {
+            throw new Error('InsertPronunciationAssessmentError')
+          }
+
+          if (!newPronunciationsAssessment) {
+            throw new Error('InsertPronunciationAssessmentError')
+          }
+
+          const insertWords = nbest.Words.map((w) => ({
+            id: crypto.randomUUID(),
+            accuracyScore: w.PronunciationAssessment.AccuracyScore,
+            word: w.Word,
+            pronunciationAssessmentId: newPronunciationsAssessment!.id,
+          }))
+
+          if (insertWords.length === 0) {
+            try {
+              await db
+                .delete(pronunciationsAssessment)
+                .where(
+                  eq(
+                    pronunciationsAssessment.id,
+                    newPronunciationsAssessment.id,
+                  ),
+                )
+            } catch {}
+
+            throw new Error('WordsLengthError')
+          }
+
+          const fullWords = insertWords.map((w, i) => {
+            return {
+              ...w,
+              W: nbest.Words[i],
+            }
+          })
+
+          const insertPhonemes = fullWords
+            .map((w) =>
+              w.W.Phonemes.map((p) => ({
+                id: crypto.randomUUID(),
+                accuracyScore: p.PronunciationAssessment.AccuracyScore,
+                phoneme: p.Phoneme,
+                wordId: w.id,
+              })),
+            )
+            .flat()
+
+          if (insertPhonemes.length === 0) {
+            try {
+              await db
+                .delete(pronunciationsAssessment)
+                .where(
+                  eq(
+                    pronunciationsAssessment.id,
+                    newPronunciationsAssessment.id,
+                  ),
+                )
+            } catch {}
+
+            throw new Error('PhonemesLengthError')
+          }
+
+          try {
+            await db.insert(words).values(insertWords)
+          } catch {
+            try {
+              await db
+                .delete(pronunciationsAssessment)
+                .where(
+                  eq(
+                    pronunciationsAssessment.id,
+                    newPronunciationsAssessment.id,
+                  ),
+                )
+            } catch {}
+
+            throw new Error('InsertWordsError')
+          }
+
+          try {
+            await db.insert(phonemes).values(insertPhonemes)
+          } catch {
+            try {
+              await db
+                .delete(pronunciationsAssessment)
+                .where(
+                  eq(
+                    pronunciationsAssessment.id,
+                    newPronunciationsAssessment.id,
+                  ),
+                )
+            } catch {}
+
+            throw new Error('InsertPhonemesError')
           }
 
           popularPronunciationAssessment = false
@@ -137,68 +206,74 @@ export async function POST(req: Request) {
       }
 
       if (popularPronunciationAssessment) {
-        const [pronunciationAssessment] = await db
-          .insert(pronunciationsAssessment)
-          .values([
-            {
-              id: crypto.randomUUID(),
-              accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
-              fluencyScore: nbest.PronunciationAssessment.FluencyScore,
-              prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
-              pronScore: nbest.PronunciationAssessment.PronScore,
-              completenessScore:
-                nbest.PronunciationAssessment.CompletenessScore,
-              ...(conversationId!
-                ? {
-                    conversationId,
-                  }
-                : {
-                    text: referenceText!,
-                  }),
-            },
-          ])
-          .returning()
+        try {
+          const [pronunciationAssessment] = await db
+            .insert(pronunciationsAssessment)
+            .values([
+              {
+                id: crypto.randomUUID(),
+                accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
+                fluencyScore: nbest.PronunciationAssessment.FluencyScore,
+                prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
+                pronScore: nbest.PronunciationAssessment.PronScore,
+                completenessScore:
+                  nbest.PronunciationAssessment.CompletenessScore,
+                ...(conversationId!
+                  ? {
+                      conversationId,
+                    }
+                  : {
+                      text: referenceText!,
+                    }),
+              },
+            ])
+            .returning()
 
-        const insertWords = nbest.Words.map((w) => ({
-          id: crypto.randomUUID(),
-          accuracyScore: w.PronunciationAssessment.AccuracyScore,
-          word: w.Word,
-          pronunciationAssessmentId: pronunciationAssessment.id,
-        }))
+          const insertWords = nbest.Words.map((w) => ({
+            id: crypto.randomUUID(),
+            accuracyScore: w.PronunciationAssessment.AccuracyScore,
+            word: w.Word,
+            pronunciationAssessmentId: pronunciationAssessment.id,
+          }))
 
-        await db.insert(words).values(insertWords)
+          await db.insert(words).values(insertWords)
 
-        const fullWords = insertWords.map((w, i) => {
-          return {
-            ...w,
-            W: nbest.Words[i],
-          }
-        })
+          const fullWords = insertWords.map((w, i) => {
+            return {
+              ...w,
+              W: nbest.Words[i],
+            }
+          })
 
-        const insertPhonemes = fullWords
-          .map((w) =>
-            w.W.Phonemes.map((p) => ({
-              id: crypto.randomUUID(),
-              accuracyScore: p.PronunciationAssessment.AccuracyScore,
-              phoneme: p.Phoneme,
-              wordId: w.id,
-            })),
-          )
-          .flat()
+          const insertPhonemes = fullWords
+            .map((w) =>
+              w.W.Phonemes.map((p) => ({
+                id: crypto.randomUUID(),
+                accuracyScore: p.PronunciationAssessment.AccuracyScore,
+                phoneme: p.Phoneme,
+                wordId: w.id,
+              })),
+            )
+            .flat()
 
-        await db.insert(phonemes).values(insertPhonemes)
+          await db.insert(phonemes).values(insertPhonemes)
+        } catch {
+          throw new Error('PopularPronunciationAssessmentError')
+        }
       }
     }
 
     if (conversation) {
-      const client = new Ably.Rest(env.ABLY_API_KEY)
+      try {
+        const client = new Ably.Rest(env.ABLY_API_KEY)
 
-      const channel = client.channels.get('status-updates')
+        const channel = client.channels.get('status-updates')
 
-      await channel.publish(
-        'update-from-server',
-        await getConversation(conversation.id),
-      )
+        await channel.publish(
+          'update-from-server',
+          await getConversation(conversation.id),
+        )
+      } catch {}
     }
 
     return Response.json({
