@@ -3,6 +3,7 @@ import { getSpeechRecognitionResult } from '@/app/api/ai/pronunciation/ackaud/se
 import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { toast } from '@/components/ui/use-toast'
 import { Conversation } from '@/lib/db/drizzle/@types'
+import { iOS } from '@/lib/ios'
 import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
 import { create } from 'zustand'
 
@@ -98,7 +99,7 @@ export const useRecordConversation = create<RecordConversationState>(
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition
 
-      if (SpeechRecognition) {
+      if (SpeechRecognition && !iOS()) {
         recognition = new SpeechRecognition()
         recognition.continuous = true
         recognition.interimResults = true
