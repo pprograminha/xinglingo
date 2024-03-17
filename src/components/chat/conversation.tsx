@@ -84,10 +84,6 @@ export function Conversation({
           ) || w.word,
     })) || []
 
-  console.log({
-    t: conversation.text,
-  })
-
   return (
     <HoverCard
       {...(!isMd
