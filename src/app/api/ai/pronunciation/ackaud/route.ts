@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Ably from 'ably/promises'
-import { Conversations, getConversation } from '@/components/chat/actions'
 import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { db } from '@/lib/db/drizzle/query'
 import {
@@ -12,7 +11,23 @@ import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { z } from 'zod'
 import { env } from '@/env'
-import { PronunciationAssessment } from '@/lib/db/drizzle/@types'
+import {
+  Conversation,
+  Phoneme,
+  PronunciationAssessment,
+  Word,
+} from '@/lib/db/drizzle/@types'
+import { getConversation } from '@/components/chat/actions/get-conversation'
+
+type Conversations = (Conversation & {
+  pronunciationAssessment:
+    | (PronunciationAssessment & {
+        words: (Word & {
+          phonemes: Phoneme[]
+        })[]
+      })
+    | null
+})[]
 
 export async function POST(req: Request) {
   const formData = await req.formData()

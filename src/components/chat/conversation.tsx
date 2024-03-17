@@ -4,23 +4,47 @@
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { useSwitch } from '@/hooks/use-switch'
+import {
+  Conversation,
+  Phoneme,
+  PronunciationAssessment,
+  Word,
+} from '@/lib/db/drizzle/@types'
 import { uid } from '@/lib/get-uid'
 import { scoreColor, scoreStyle } from '@/lib/score-color'
-import { format } from 'date-fns'
-import { Mic, MicOff } from 'lucide-react'
+import { useChat } from 'ai/react'
+import { format, isSameDay } from 'date-fns'
+import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
-import { Conversations } from './actions'
+import { createConversation } from './actions/create-conversation'
+import { deleteConversation } from './actions/delete-conversation'
+import { TextToHTML } from '../text-to-html'
+import { Collapsible } from '../collapsible'
+
+type Conversations = (Conversation & {
+  pronunciationAssessment:
+    | (PronunciationAssessment & {
+        words: (Word & {
+          phonemes: Phoneme[]
+        })[]
+      })
+    | null
+})[]
 
 type ConversationProps = {
   conversation: Conversations['0']
   channnelIndex: number
+  onNewConversations: (newConversations: Conversations) => void
+  removeConversation: (conversationId: string) => void
 }
 
 export function Conversation({
   conversation,
   channnelIndex,
+  onNewConversations,
+  removeConversation,
 }: ConversationProps) {
   const { toggle: toggleMode } = useSwitch()
   const {
@@ -28,6 +52,21 @@ export function Conversation({
     isLoading,
     startRecording,
   } = useRecordConversation()
+  const { append, isLoading: openaiIsLoading } = useChat({
+    onFinish(message) {
+      createConversation({
+        text: message.content,
+      }).then((conversation) => {
+        onNewConversations([{ ...conversation, pronunciationAssessment: null }])
+      })
+    },
+    api: '/api/ai/chat',
+    body: {
+      model: 'gpt-3.5-turbo',
+      temperature: 0.8,
+      max_length: 400,
+    },
+  })
 
   const isMd = useBreakpoint('md')
   const [isOpen, setIsOpen] = useState(false)
@@ -44,6 +83,10 @@ export function Conversation({
               w.word.toLowerCase().replace(/[^a-z0-9']/g, ''),
           ) || w.word,
     })) || []
+
+  console.log({
+    t: conversation.text,
+  })
 
   return (
     <HoverCard
@@ -87,29 +130,43 @@ export function Conversation({
                 {conversation.author?.fullName}
               </span>
               <span className="inline-flex group-data-[me=true]:flex-row-reverse">
-                <span>🧩</span>
-                <span>
-                  {conversation.pronunciationAssessment &&
-                  $getWords(conversation).length > 0 ? (
-                    <>
-                      {$getWords(conversation).map((w) => (
-                        <span
-                          key={w.id}
-                          data-score-color={scoreColor(w.accuracyScore)}
-                          className="inline-block border-b mx-[2px] data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
-                        >
-                          {w.w}
-                        </span>
-                      ))}
-                    </>
-                  ) : (
-                    conversation.text
-                  )}
-                </span>
+                {!conversation.author ? (
+                  <>
+                    {conversation.text.length > 1000 ? (
+                      <Collapsible>
+                        <TextToHTML text={conversation.text} />
+                      </Collapsible>
+                    ) : (
+                      <TextToHTML text={conversation.text} />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span>🧩</span>
+                    <span>
+                      {conversation.pronunciationAssessment &&
+                      $getWords(conversation).length > 0 ? (
+                        <>
+                          {$getWords(conversation).map((w) => (
+                            <span
+                              key={w.id}
+                              data-score-color={scoreColor(w.accuracyScore)}
+                              className="inline-block border-b mx-[2px] data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
+                            >
+                              {w.w}
+                            </span>
+                          ))}
+                        </>
+                      ) : (
+                        conversation.text
+                      )}
+                    </span>
+                  </>
+                )}
               </span>
             </p>
           </div>
-          {channnelIndex === 0 && (
+          {channnelIndex === 0 && conversation.authorId && (
             <Button
               variant="outline"
               size="icon"
@@ -133,7 +190,34 @@ export function Conversation({
       </HoverCardTrigger>
       <HoverCardContent
         align={conversation.authorId === uid() ? 'end' : 'start'}
+        {...(!conversation.authorId &&
+          isMd && {
+            side: 'left',
+          })}
       >
+        {isSameDay(new Date(), conversation.createdAt) &&
+          conversation.authorId && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full mb-4"
+              disabled={openaiIsLoading || isLoading}
+              onClick={() =>
+                append({
+                  content: conversation.text,
+                  role: 'user',
+                })
+              }
+            >
+              {openaiIsLoading ? (
+                <Loader2 className="animate-spin w-4 h-4" />
+              ) : (
+                <>
+                  Ai tools <Sparkles className="w-4 ml-1" />
+                </>
+              )}
+            </Button>
+          )}
         {conversation.pronunciationAssessment ? (
           <div className="text-sm mb-1">
             <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
@@ -205,11 +289,26 @@ export function Conversation({
             ))}
           </div>
         ) : (
-          <p className="text-sm mb-1">{conversation.text}</p>
+          <div className="text-sm mb-1 overflow-y-auto max-h-60 ">
+            <TextToHTML text={conversation.text} />
+          </div>
         )}
         <p className="text-zinc-500 text-xs">
           Created at: {format(conversation.createdAt, 'yyyy/MM/dd HH:mm:ss')}
         </p>
+        {channnelIndex === 0 && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full mt-4"
+            onClick={() => {
+              deleteConversation(conversation.id)
+              removeConversation(conversation.id)
+            }}
+          >
+            Delete <Trash2 className="w-4 ml-1" />
+          </Button>
+        )}
       </HoverCardContent>
     </HoverCard>
   )

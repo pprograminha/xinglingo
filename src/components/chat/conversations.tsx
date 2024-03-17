@@ -8,8 +8,8 @@ import { isSameDay } from 'date-fns'
 import { Bone } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import { getConversations } from './actions'
 import { Conversation } from './conversation'
+import { getConversations } from './actions/get-conversations'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
@@ -48,7 +48,6 @@ export function Conversations({
   )
 
   const groupConversationsPerDay = conversations
-    .filter((c) => c.author)
     .reduce((allConversations, conversation) => {
       for (const allConversationIndex in allConversations) {
         const dayConversations = allConversations[Number(allConversationIndex)]
@@ -94,6 +93,7 @@ export function Conversations({
             onValueChange={(e) => setChannelIndex(Number(e))}
           >
             <h1 className="mt-3 md:inline hidden">Channels: </h1>
+            <br />
             <TabsList className="my-3">
               {[...groupConversationsPerDay].map((c, index) => (
                 <TabsTrigger value={String(index)} key={String(index)}>
@@ -109,6 +109,35 @@ export function Conversations({
               {dayConversations.map((conversation) => (
                 <Conversation
                   key={conversation.id}
+                  removeConversation={(cId) =>
+                    setConversations((cs) => {
+                      const conversationIndex = cs.findIndex(
+                        (c) => c.id === cId,
+                      )
+
+                      if (conversationIndex !== -1)
+                        cs.splice(conversationIndex, 1)
+
+                      return [...cs]
+                    })
+                  }
+                  onNewConversations={(newConversations) => {
+                    setConversations((cs) => {
+                      newConversations.forEach((nc) => {
+                        const conversationIndex = cs.findIndex(
+                          (c) => c.id === nc.id,
+                        )
+
+                        if (conversationIndex !== -1) {
+                          cs[channnelIndex] = nc
+                        } else {
+                          cs.push(nc)
+                        }
+                      })
+
+                      return [...cs]
+                    })
+                  }}
                   channnelIndex={channnelIndex}
                   conversation={conversation}
                 />

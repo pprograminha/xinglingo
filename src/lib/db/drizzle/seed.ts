@@ -7,8 +7,8 @@ import { NewUser, User } from './@types'
 const newUsers: NewUser[] = [
   {
     id: crypto.randomUUID(),
-    fullName: process.env.S_USER_FULLNAME!,
-    email: process.env.S_USER_EMAIL!,
+    fullName: process.env.USER_FULLNAME!,
+    email: process.env.USER_EMAIL!,
   },
 ]
 
@@ -16,7 +16,7 @@ async function seed() {
   const [user] = await db
     .select()
     .from(users)
-    .where(eq(users.email, process.env.S_USER_EMAIL!))
+    .where(eq(users.email, process.env.USER_EMAIL!))
 
   let insertedUsers: User[] = []
 

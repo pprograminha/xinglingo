@@ -6,8 +6,11 @@ const nodeEnv = z.enum(['development', 'production', 'test'])
 export const env = createEnv({
   server: {
     ABLY_API_KEY: z.string().min(1),
-    S_USER_FULLNAME: z.string().min(1),
-    S_USER_EMAIL: z.string().min(1),
+    USER_FULLNAME: z.string().min(1),
+    USER_EMAIL: z.string().min(1),
+    OPENAI_API_KEY: z.string().min(1),
+    OPENAI_PROMPT: z.string().min(1),
+    OPENAI_MODEL: z.string().min(1),
     DRIZZLE_DATABASE_URL: z.string().min(1),
   },
   client: {

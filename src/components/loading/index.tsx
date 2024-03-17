@@ -7,6 +7,7 @@ export function Loading() {
         src="/assets/loading.gif"
         width="200"
         height="200"
+        unoptimized
         alt="Thank you"
       />
     </div>

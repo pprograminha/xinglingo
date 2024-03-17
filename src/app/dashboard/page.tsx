@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 
-import { getConversations, getWordsList } from '@/components/chat/actions'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -22,6 +21,8 @@ import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
 import { Overview } from './components/overview'
 import { WordsList } from './components/words-list'
+import { getConversations } from '@/components/chat/actions/get-conversations'
+import { getWordsList } from '@/components/chat/actions/get-words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',

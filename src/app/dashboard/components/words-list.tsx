@@ -1,4 +1,4 @@
-import { getWordsList } from '@/components/chat/actions'
+import { getWordsList } from '@/components/chat/actions/get-words-list'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { scoreColor } from '@/lib/score-color'
 import { ArrowDown01, ArrowUp10 } from 'lucide-react'
@@ -7,9 +7,6 @@ type WordsListProps = {
   wordsList: Awaited<ReturnType<typeof getWordsList>>
 }
 export function WordsList({ wordsList }: WordsListProps) {
-  console.log({
-    wordsList,
-  })
   return (
     <div className="space-y-8">
       <ScrollArea className="h-[800px] w-full pr-4">
