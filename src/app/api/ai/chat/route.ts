@@ -1,10 +1,6 @@
-import OpenAI from 'openai'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { env } from '@/env'
-
-const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY,
-})
+import { openai } from '@/lib/openai'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 export const runtime = 'edge'
 

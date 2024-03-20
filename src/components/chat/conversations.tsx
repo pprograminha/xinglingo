@@ -44,7 +44,10 @@ export function Conversations({
   const conversationsContainerRef = useRef<HTMLDivElement | null>(null)
 
   const words = getWords(
-    conversations.map((c) => c.text.toLowerCase()).join(' '),
+    conversations
+      .filter((c) => c.authorId)
+      .map((c) => c.text.toLowerCase())
+      .join(' '),
   )
 
   const groupConversationsPerDay = conversations

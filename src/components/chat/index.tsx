@@ -15,6 +15,7 @@ import {
 import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
 import { cn } from '@/lib/utils'
+import { PhraseGenerator } from './phrase-generator'
 
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 
@@ -70,12 +71,13 @@ const Chat = ({ className, ...props }: ChatProps) => {
             {c}
           </Suspense>
 
-          <div className="flex items-center pt-0">
+          <div className="flex items-center pt-0 space-x-2">
             <ChatForm
               onMessageText={setMessageText}
               onPublicFromClientHandler={publicFromClientHandler}
               messageText={messageText}
             />
+            <PhraseGenerator onPhrase={(phrase) => setMessageText(phrase)} />
           </div>
         </CardContent>
       </Card>

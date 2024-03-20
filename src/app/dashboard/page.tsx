@@ -38,6 +38,7 @@ export default async function DashboardPage() {
   ])
 
   const allWords = conversations
+    .filter((c) => c.authorId)
     .map((c) => c.pronunciationAssessment?.words || [])
     .flat()
 

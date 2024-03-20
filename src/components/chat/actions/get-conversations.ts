@@ -21,6 +21,7 @@ type Conversations = (Conversation & {
 export const getConversations =
   async function getConversations(): Promise<Conversations> {
     const conversationsData = await db.query.conversations.findMany({
+      // where: ({ authorId }, { isNotNull }) => isNotNull(authorId),
       with: {
         author: true,
         pronunciationAssessment: {
