@@ -16,6 +16,7 @@ export async function generatePhraseWithAi(): Promise<string | null> {
         A frase deverá ser criada de forma aleatória considerando as condições acima.
         Quanto mais palavras abaixo maior será a frase.
         As vezes gere a frase como se fosse uma expressão.
+        Evite ao máximo criar a frase com as palavras abaixo (Isso é extremamente importante)!!!
 
     
         Palavras:
