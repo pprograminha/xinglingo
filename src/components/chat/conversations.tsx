@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Conversation } from './conversation'
 import { getConversations } from './actions/get-conversations'
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
@@ -98,11 +99,19 @@ export function Conversations({
             <h1 className="mt-3 md:inline hidden">Channels: </h1>
             <br />
             <TabsList className="my-3">
-              {[...groupConversationsPerDay].map((c, index) => (
-                <TabsTrigger value={String(index)} key={String(index)}>
-                  {index + 1}
-                </TabsTrigger>
-              ))}
+              <Carousel className="overflow-hidden w-[calc(100vw_-_100px)] md:w-[300px]">
+                <CarouselContent className="pl-4">
+                  {[...groupConversationsPerDay].map((c, index) => (
+                    <TabsTrigger
+                      className="md:basis-1/12 basis-1/4 flex items-center justify-center"
+                      key={String(index)}
+                      value={String(index)}
+                    >
+                      <CarouselItem className="!p-0">{index + 1}</CarouselItem>
+                    </TabsTrigger>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </TabsList>
             <TabsContent
               value={String(channnelIndex)}

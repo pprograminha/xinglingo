@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+import { getConversations } from '@/components/chat/actions/get-conversations'
+import { getWordsList } from '@/components/chat/actions/get-words-list'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { isGreen, isRed, isYellow } from '@/lib/score-color'
 import {
   eachWeekendOfMonth,
+  getDate,
   getDaysInMonth,
   isSameDay,
   isSameMonth,
@@ -21,15 +24,13 @@ import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
 import { Overview } from './components/overview'
 import { WordsList } from './components/words-list'
-import { getConversations } from '@/components/chat/actions/get-conversations'
-import { getWordsList } from '@/components/chat/actions/get-words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
   description: 'EnglishAi dashboard',
 }
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const [conversations, wordsList] = await Promise.all([
@@ -39,34 +40,42 @@ export default async function DashboardPage() {
 
   const allWords = conversations
     .filter((c) => c.authorId)
-    .map((c) => c.pronunciationAssessment?.words || [])
-    .flat()
+    .flatMap((c) => c.pronunciationAssessment?.words || [])
 
   const currentDate = new Date()
+  const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
 
-  const wordsSameYear = (is: (n: number) => boolean) =>
+  const wordsSameYear = (filter: (accuracyScore: number) => boolean) =>
     allWords
       .filter((w) => isSameYear(w.createdAt, currentDate))
-      .filter((w) => is(w.accuracyScore))
+      .filter((w) => filter(w.accuracyScore))
 
-  const wordsSameMonth = (is: (n: number) => boolean) =>
+  const wordsSameMonth = (filter: (accuracyScore: number) => boolean) =>
     allWords
       .filter((w) => isSameMonth(w.createdAt, currentDate))
-      .filter((w) => is(w.accuracyScore))
+      .filter((w) => filter(w.accuracyScore))
 
-  const wordsSameDay = (is: (n: number) => boolean) =>
+  const wordsSameDay = (filter: (accuracyScore: number) => boolean) =>
     allWords
       .filter((w) => isSameDay(w.createdAt, currentDate))
-      .filter((w) => is(w.accuracyScore))
+      .filter((w) => filter(w.accuracyScore))
 
   const wordsPerYear = 5000
-  const wordsPerMonth = Math.round(wordsPerYear / 12)
-  const wordsPerDay = Math.round(
-    wordsPerMonth /
-      (getDaysInMonth(currentDate) - eachWeekendOfMonth(currentDate).length),
+  const wordsPerYearRemaining = sub(wordsPerYear, wordsSameYear(isGreen).length)
+
+  const wordsPerMonth = Math.round(wordsPerYearRemaining / 12)
+  const wordsPerMonthRemaining = sub(
+    wordsPerMonth,
+    wordsSameMonth(isGreen).length,
   )
 
-  const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
+  const wordsPerDay = Math.round(
+    wordsPerMonthRemaining /
+      (getDaysInMonth(currentDate) -
+        getDate(currentDate) -
+        eachWeekendOfMonth(currentDate).filter((d) => d >= currentDate).length),
+  )
+  const wordsPerDayRemaining = sub(wordsPerDay, wordsSameDay(isGreen).length)
 
   return (
     <>
@@ -117,8 +126,7 @@ export default async function DashboardPage() {
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Annual goal: {wordsPerYear} words,{' '}
-                      {sub(wordsPerYear, wordsSameYear(isGreen).length)}{' '}
+                      Annual goal: {wordsPerYear} words, {wordsPerYearRemaining}{' '}
                       remaining
                     </p>
                   </CardContent>
@@ -148,8 +156,7 @@ export default async function DashboardPage() {
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Monthly goal: {wordsPerMonth} words,{' '}
-                      {sub(wordsPerMonth, wordsSameMonth(isGreen).length)}{' '}
-                      remaining
+                      {wordsPerMonthRemaining} remaining
                     </p>
                   </CardContent>
                 </Card>
@@ -177,8 +184,8 @@ export default async function DashboardPage() {
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Daily goal: {wordsPerDay} words,{' '}
-                      {sub(wordsPerDay, wordsSameDay(isGreen).length)} remaining
+                      Daily goal: {wordsPerDay} words, {wordsPerDayRemaining}{' '}
+                      remaining
                     </p>
                   </CardContent>
                 </Card>

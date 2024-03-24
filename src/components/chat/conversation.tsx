@@ -100,66 +100,65 @@ export function Conversation({
       >
         <div
           data-me={conversation.authorId === uid()}
-          className="cursor-pointer  inline-flex data-[me=true]:flex-row-reverse justify-start gap-3 my-2 text-sm flex-1 group hover:animate-shadow-pop-bl rounded-lg p-2"
+          className="cursor-pointer w-full inline-flex flex-col  justify-start gap-3 my-2 text-sm flex-1 group hover:animate-shadow-pop-bl rounded-lg p-2"
         >
-          <div className="inline-flex group-data-[me=true]:flex-row-reverse justify-start gap-3 text-sm">
-            <div className="rounded-full bg-zinc-900 dark:bg-gray-100 border p-1 shrink-0 w-10 h-10 flex items-center justify-center">
-              <svg
-                stroke="none"
-                className="dark:fill-black fill-white"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                height={20}
-                width={20}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
-                ></path>
-              </svg>
+          <div className="inline-flex flex-col justify-start gap-3 text-sm">
+            <div className="flex group-data-[me=true]:flex-row-reverse gap-3 items-center w-full">
+              <div className="rounded-full bg-zinc-900 dark:bg-gray-100 border p-1 shrink-0 w-10 h-10 flex items-center justify-center">
+                <svg
+                  stroke="none"
+                  className="dark:fill-black fill-white"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  height={20}
+                  width={20}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+                  ></path>
+                </svg>
+              </div>
+              <p className="leading-relaxed group-data-[me=true]:text-right">
+                <span className="block font-bold text-gray-400  group-data-[me=false]:border group-data-[me=false]:rounded-md group-data-[me=false]:px-1 group-data-[me=false]:text-xs group-data-[me=false]:font-normal">
+                  {conversation.author?.fullName || 'Teodor AI'}
+                </span>
+              </p>
             </div>
-            <p className="leading-relaxed group-data-[me=true]:text-right">
-              <span className="block font-bold text-gray-400">
-                {conversation.author?.fullName}
-              </span>
-              <span className="inline-flex group-data-[me=true]:flex-row-reverse">
-                {!conversation.author ? (
-                  <>
-                    {conversation.text.length > 1000 ? (
-                      <Collapsible>
-                        <TextToHTML text={conversation.text} />
-                      </Collapsible>
-                    ) : (
+            <p className="inline-flex group-data-[me=true]:flex-row-reverse">
+              {!conversation.author ? (
+                <>
+                  {conversation.text.length > 1000 ? (
+                    <Collapsible>
                       <TextToHTML text={conversation.text} />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <span>🧩</span>
-                    <span>
-                      {conversation.pronunciationAssessment &&
-                      $getWords(conversation).length > 0 ? (
-                        <>
-                          {$getWords(conversation).map((w) => (
-                            <span
-                              key={w.id}
-                              data-score-color={scoreColor(w.accuracyScore)}
-                              className="inline-block border-b mx-[2px] data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
-                            >
-                              {w.w}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        conversation.text
-                      )}
-                    </span>
-                  </>
-                )}
-              </span>
+                    </Collapsible>
+                  ) : (
+                    <TextToHTML text={conversation.text} />
+                  )}
+                </>
+              ) : (
+                <span>
+                  {conversation.pronunciationAssessment &&
+                  $getWords(conversation).length > 0 ? (
+                    <>
+                      {$getWords(conversation).map((w) => (
+                        <span
+                          key={w.id}
+                          data-score-color={scoreColor(w.accuracyScore)}
+                          className="inline-block border-b mx-[2px] data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
+                        >
+                          {w.w}
+                        </span>
+                      ))}
+                    </>
+                  ) : (
+                    conversation.text
+                  )}
+                </span>
+              )}
             </p>
           </div>
           {channnelIndex === 0 && conversation.authorId && (
@@ -177,7 +176,7 @@ export function Conversation({
                   toggleMode(['chat', 'pronunciation'])
                 }
               }}
-              className="flex-shrink-0 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+              className="flex-shrink-0 w-full md:w-9 group-data-[me=true]:ml-auto dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
             >
               {recConversation?.id === conversation.id ? <Mic /> : <MicOff />}
             </Button>
@@ -186,6 +185,7 @@ export function Conversation({
       </HoverCardTrigger>
       <HoverCardContent
         align={conversation.authorId === uid() ? 'end' : 'start'}
+        className="md:max-h-max max-h-[150px] overflow-y-auto"
         {...(!conversation.authorId &&
           isMd && {
             side: 'left',

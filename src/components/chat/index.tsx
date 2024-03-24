@@ -60,7 +60,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
           <CardTitle>Chat</CardTitle>
           <CardDescription>Define the topic and chat</CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow flex flex-col md:pt-0 pt-3">
+        <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0">
           <Suspense
             fallback={
               <div className="pr-4 h-[40vh] flex items-center justify-center flex-grow">

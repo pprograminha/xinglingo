@@ -2,13 +2,7 @@
 
 import { Word } from '@/lib/db/drizzle/@types'
 import { Separator } from '@radix-ui/react-separator'
-import {
-  getMonth,
-  isSameDay,
-  lastDayOfWeek,
-  startOfDay,
-  subDays,
-} from 'date-fns'
+import { getDay, getMonth, isSameWeek, startOfDay } from 'date-fns'
 import {
   Bar,
   BarChart,
@@ -31,79 +25,44 @@ type OverviewProps = {
 export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
   const currentDate = startOfDay(new Date())
 
-  const isDayOfWeek = (d: Date, n: number) =>
-    isSameDay(d, subDays(lastDayOfWeek(currentDate), n))
+  const weekGreenWords = greenWords.filter((w) =>
+    isSameWeek(w.createdAt, currentDate),
+  )
+  const weekRedWords = redWords.filter((w) =>
+    isSameWeek(w.createdAt, currentDate),
+  )
+  const weekYellowWords = yellowWords.filter((w) =>
+    isSameWeek(w.createdAt, currentDate),
+  )
 
-  const daysOfWeek = [
-    {
-      name: 'Mon',
-      green: greenWords.filter((w) => isDayOfWeek(w.createdAt, 6)).length,
-      red: redWords.filter((w) => isDayOfWeek(w.createdAt, 6)).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 6)).length,
-    },
-    {
-      name: 'Tue',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 5)),
-      ).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 5)).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 5)),
-      ).length,
-    },
-    {
-      name: 'Wed',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 4)),
-      ).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 4)),
-      ).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 4)).length,
-    },
-    {
-      name: 'Thu',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 3)),
-      ).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 3)),
-      ).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 3)).length,
-    },
-    {
-      name: 'Fri',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 2)),
-      ).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 2)),
-      ).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 2)).length,
-    },
-    {
-      name: 'Sat',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 1)),
-      ).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, subDays(lastDayOfWeek(currentDate), 1)),
-      ).length,
-      yellow: yellowWords.filter((w) => isDayOfWeek(w.createdAt, 1)).length,
-    },
-    {
-      name: 'Sun',
-      green: greenWords.filter((w) =>
-        isSameDay(w.createdAt, lastDayOfWeek(w.createdAt)),
-      ).length,
-      yellow: yellowWords.filter((w) =>
-        isSameDay(w.createdAt, lastDayOfWeek(w.createdAt)),
-      ).length,
-      red: redWords.filter((w) =>
-        isSameDay(w.createdAt, lastDayOfWeek(w.createdAt)),
-      ).length,
-    },
-  ]
+  const day = {
+    Sun: 0,
+    Mon: 1,
+    Tue: 2,
+    Wed: 3,
+    Thu: 4,
+    Fri: 5,
+    Sat: 6,
+  }
+
+  const getWordColors = (weekDay: keyof typeof day) => {
+    const score = (words: Word[]) =>
+      words.filter((w) => getDay(w.createdAt) === day[weekDay]).length
+
+    return {
+      green: score(weekGreenWords),
+      red: score(weekRedWords),
+      yellow: score(weekYellowWords),
+    }
+  }
+
+  const daysOfWeek = Object.keys(day) as (keyof typeof day)[]
+
+  const daysOfWeekWithScores = daysOfWeek.map((d) => ({
+    name: d,
+    ...getWordColors(d),
+  }))
+
   const months = [
     {
       name: 'Jan',
@@ -184,7 +143,7 @@ export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
       <Separator className="dark:bg-white/10 h-px my-10" />
       <h1 className="ml-5 mb-5 font-bold">Daily Words</h1>
       <ResponsiveContainer width="100%" height={350}>
-        <LineChart data={daysOfWeek} barSize={20}>
+        <LineChart data={daysOfWeekWithScores} barSize={20}>
           <CartesianGrid strokeDasharray="3 3" strokeOpacity={0} />
           <XAxis
             dataKey="name"
