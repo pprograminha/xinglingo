@@ -1,4 +1,4 @@
-import { getWordsList } from '@/components/chat/actions/get-words-list'
+import { getWordsList } from '@/actions/conversations/get-words-list'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { scoreColor } from '@/lib/score-color'
 import { ArrowDown01, ArrowUp10 } from 'lucide-react'
@@ -6,6 +6,7 @@ import { ArrowDown01, ArrowUp10 } from 'lucide-react'
 type WordsListProps = {
   wordsList: Awaited<ReturnType<typeof getWordsList>>
 }
+
 export function WordsList({ wordsList }: WordsListProps) {
   return (
     <div className="space-y-8">

@@ -17,7 +17,7 @@ import {
   PronunciationAssessment,
   Word,
 } from '@/lib/db/drizzle/@types'
-import { getConversation } from '@/components/chat/actions/get-conversation'
+import { getConversation } from '@/actions/conversations/get-conversation'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:

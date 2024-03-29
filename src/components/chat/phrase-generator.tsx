@@ -1,7 +1,7 @@
 import { Loader2, Sparkles } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
 import { Button, ButtonProps } from '../ui/button'
-import { generatePhraseWithAi } from './actions/generate-phrase-with-ai'
+import { generatePhraseWithAi } from '../../actions/conversations/generate-phrase-with-ai'
 import { toast } from '../ui/use-toast'
 
 type ChatFormProps = {

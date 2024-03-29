@@ -1,4 +1,4 @@
-import { getConversations } from './actions/get-conversations'
+import { getConversations } from '../../actions/conversations/get-conversations'
 import { Conversations } from './conversations'
 
 export async function ConversationContainer() {

@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
-import { getConversations } from '@/components/chat/actions/get-conversations'
-import { getWordsList } from '@/components/chat/actions/get-words-list'
+import { getConversations } from '@/actions/conversations/get-conversations'
+import { getWordsList } from '@/actions/conversations/get-words-list'
 import { Button } from '@/components/ui/button'
 import {
   Card,

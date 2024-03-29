@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { z } from 'zod'
 import { Button, ButtonProps } from '../ui/button'
 import { Input } from '../ui/input'
-import { createConversation } from './actions/create-conversation'
+import { createConversation } from '../../actions/conversations/create-conversation'
 
 type ChatFormProps = {
   onPublicFromClientHandler: (conversation: Conversation) => void

@@ -9,7 +9,7 @@ import { Bone } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Conversation } from './conversation'
-import { getConversations } from './actions/get-conversations'
+import { getConversations } from '../../actions/conversations/get-conversations'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
