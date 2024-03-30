@@ -16,6 +16,7 @@ import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
 import { cn } from '@/lib/utils'
 import { PhraseGenerator } from './phrase-generator'
+import { useAuth } from '@/hooks/use-auth'
 
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 
@@ -36,6 +37,7 @@ type ChatProps = HTMLAttributes<HTMLDivElement>
 
 const Chat = ({ className, ...props }: ChatProps) => {
   const [messageText, setMessageText] = useState<string>('')
+  const { uid } = useAuth()
 
   const { channel } = useChannel('status-updates')
 
@@ -58,7 +60,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
       >
         <CardHeader className="md:flex hidden">
           <CardTitle>Chat</CardTitle>
-          <CardDescription>Define the topic and chat</CardDescription>
+          <CardDescription>Aprenda conversando com a AI</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0">
           <Suspense
@@ -76,6 +78,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
               onMessageText={setMessageText}
               onPublicFromClientHandler={publicFromClientHandler}
               messageText={messageText}
+              uid={uid}
             />
             <PhraseGenerator onPhrase={(phrase) => setMessageText(phrase)} />
           </div>

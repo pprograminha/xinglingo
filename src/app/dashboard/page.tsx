@@ -27,7 +27,7 @@ import { WordsList } from './components/words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
-  description: 'EnglishAi dashboard',
+  description: 'LingoAI dashboard',
 }
 
 export const dynamic = 'force-dynamic'

@@ -1,11 +1,11 @@
+import { Toaster as Sonner } from '@/components/ui/sonner'
+import { Toaster } from '@/components/ui/toaster'
+import { WhoYou } from '@/components/who-you'
+import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
-import { cn } from '@/lib/utils'
-import { ThemeProvider } from '@/providers/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
-import { Toaster as Sonner } from '@/components/ui/sonner'
-import { WhoYou } from '@/components/who-you'
+import { Wrapper } from './wrapper'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -13,7 +13,7 @@ const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: 'EnglishAI',
+  title: 'LingoAI',
   description: 'English pronunciation Ai Speech',
 }
 
@@ -23,7 +23,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-br" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+      </head>
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',
@@ -32,11 +35,11 @@ export default function RootLayout({
       >
         <Toaster />
         <Sonner />
-        <ThemeProvider>
+        <Wrapper>
           {children}
 
           <WhoYou />
-        </ThemeProvider>
+        </Wrapper>
       </body>
     </html>
   )

@@ -83,7 +83,7 @@ export function Conversations({
 
   return (
     <div className="flex-grow">
-      <p className="text-xs md:inline hidden">Words: {words.length}</p>
+      <p className="text-xs md:inline hidden">Palavras: {words.length}</p>
       <div
         data-center={conversations.length === 0}
         className="data-[center=true]:flex flex-col data-[center=true]:items-center data-[center=true]:justify-center"
@@ -96,7 +96,7 @@ export function Conversations({
             defaultValue="0"
             onValueChange={(e) => setChannelIndex(Number(e))}
           >
-            <h1 className="mt-3 md:inline hidden">Channels: </h1>
+            <h1 className="mt-3 md:inline hidden">Canais: </h1>
             <br />
             <TabsList className="my-3">
               <Carousel className="overflow-hidden w-[calc(100vw_-_100px)] md:w-[300px]">

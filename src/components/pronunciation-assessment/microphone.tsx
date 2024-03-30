@@ -31,14 +31,12 @@ export function Microphone() {
                 ) : (
                   <div className="flex items-center gap-2">
                     <div className="rounded-full w-2 h-2 bg-blue-400 animate-pulse" />
-                    Enter the text before starting recording
+                    Insira o texto antes de iniciar a gravação
                   </div>
                 )}
               </p>
               {isRecording && (
-                <p className="text-sm text-muted-foreground">
-                  Start speaking...
-                </p>
+                <p className="text-sm text-muted-foreground">Escutando...</p>
               )}
             </div>
             <div className="flex flex-col gap-2 items-center">

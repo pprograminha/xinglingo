@@ -8,6 +8,13 @@
       "when": 1709587758922,
       "tag": "0000_organic_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1711833054163,
+      "tag": "0001_small_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }

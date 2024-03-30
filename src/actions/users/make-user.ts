@@ -5,16 +5,23 @@ import { users } from '@/lib/db/drizzle/schema'
 import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 
-export async function makeUser({ email, fullName }: Omit<NewUser, 'id'>) {
+export async function makeUser({
+  email,
+  fullName,
+  image = null,
+}: Omit<NewUser, 'id'>) {
   const [user] = await db.select().from(users).where(eq(users.email, email))
 
-  if (user && user.fullName !== fullName) {
+  if (user && (user.fullName !== fullName || user.image !== image)) {
     await db
       .update(users)
       .set({
         fullName,
+        image,
       })
       .where(eq(users.email, email))
+
+    if (image) user.image = image
 
     user.fullName = fullName
   }
@@ -26,6 +33,7 @@ export async function makeUser({ email, fullName }: Omit<NewUser, 'id'>) {
     .values([
       {
         email,
+        image,
         fullName,
         id: crypto.randomUUID(),
       },

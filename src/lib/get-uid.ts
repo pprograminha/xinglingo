@@ -1,1 +1,1 @@
-export const uid = () => localStorage.getItem('@englishai:user-id')
+export const uid = () => localStorage.getItem('@lingoai:user-id')

@@ -1,4 +1,4 @@
-export const isRed = (score: number) => score >= 1 && score < 50
+export const isRed = (score: number) => score >= 0 && score < 50
 export const isYellow = (score: number) => score >= 50 && score < 95
 export const isGreen = (score: number) => score >= 95
 

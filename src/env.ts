@@ -12,11 +12,16 @@ export const env = createEnv({
     OPENAI_PROMPT: z.string().min(1),
     OPENAI_MODEL: z.string().min(1),
     DRIZZLE_DATABASE_URL: z.string().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
+    GOOGLE_CLIENT_ID: z.string().min(1),
+    NEXTAUTH_URL: z.string().min(1),
+    NEXTAUTH_SECRET: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_AZURE_SPEECH_SUBSCRITION_KEY: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_REGION: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE: z.string().min(1),
+    NEXT_PUBLIC_APP_URL: z.string().min(1),
   },
   shared: {
     NODE_ENV: nodeEnv,
@@ -27,6 +32,7 @@ export const env = createEnv({
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE:
       process.env.NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_AZURE_SPEECH_REGION:
       process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION,
     NEXT_PUBLIC_AZURE_SPEECH_SUBSCRITION_KEY:

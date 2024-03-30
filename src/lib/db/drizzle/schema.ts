@@ -10,7 +10,9 @@ import {
 export const users = pgTable('users', {
   id: uuid('id').primaryKey(),
   fullName: text('fullName').notNull(),
-  email: text('email').notNull(),
+  email: text('email').notNull().unique(),
+  image: text('image').unique(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
