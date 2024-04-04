@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { toast } from '../ui/use-toast'
 
-export function WhoYou() {
+export function GoogleAuth() {
   const [isOpen, setIsOpen] = useState(false)
 
   const { status } = useSession({

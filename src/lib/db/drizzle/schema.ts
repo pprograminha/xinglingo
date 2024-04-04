@@ -1,20 +1,35 @@
 import { relations } from 'drizzle-orm'
 import {
   doublePrecision,
+  pgEnum,
   pgTable,
   text,
   timestamp,
   uuid,
 } from 'drizzle-orm/pg-core'
 
+export const userRoleEnum = pgEnum('role', [
+  'superadmin',
+  'admin',
+  'subscriber',
+  'user',
+])
+
 export const users = pgTable('users', {
   id: uuid('id').primaryKey(),
   fullName: text('fullName').notNull(),
   email: text('email').notNull().unique(),
   image: text('image').unique(),
+  role: userRoleEnum('role').default('user').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
+
+export const conversationRoleEnum = pgEnum('role', [
+  'assistant',
+  'tool',
+  'user',
+])
 
 export const conversations = pgTable('conversations', {
   id: uuid('id').primaryKey(),
@@ -22,6 +37,7 @@ export const conversations = pgTable('conversations', {
   authorId: uuid('authorId').references(() => users.id, {
     onDelete: 'cascade',
   }),
+  role: conversationRoleEnum('role').default('user').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -31,6 +47,9 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
 
   text: text('text'),
   conversationId: uuid('conversationId').references(() => conversations.id, {
+    onDelete: 'set null',
+  }),
+  creatorId: uuid('creatorId').references(() => users.id, {
     onDelete: 'cascade',
   }),
   accuracyScore: doublePrecision('accuracyScore').notNull(),
@@ -82,6 +101,7 @@ export const wordsRelations = relations(words, ({ many, one }) => ({
 
 export const usersRelations = relations(users, ({ many }) => ({
   conversations: many(conversations),
+  pronunciationsAssessment: many(pronunciationsAssessment),
 }))
 
 export const conversationsRelations = relations(conversations, ({ one }) => ({
@@ -95,6 +115,10 @@ export const conversationsRelations = relations(conversations, ({ one }) => ({
 export const pronunciationsAssessmentRelations = relations(
   pronunciationsAssessment,
   ({ one, many }) => ({
+    user: one(users, {
+      fields: [pronunciationsAssessment.creatorId],
+      references: [users.id],
+    }),
     conversation: one(conversations, {
       fields: [pronunciationsAssessment.conversationId],
       references: [conversations.id],

@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { openai } from '@/lib/openai'
+import { openai } from '@/lib/ai/openai'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 export const runtime = 'edge'

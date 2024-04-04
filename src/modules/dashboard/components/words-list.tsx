@@ -4,7 +4,7 @@ import { scoreColor } from '@/lib/score-color'
 import { ArrowDown01, ArrowUp10 } from 'lucide-react'
 
 type WordsListProps = {
-  wordsList: Awaited<ReturnType<typeof getWordsList>>
+  wordsList: Awaited<ReturnType<typeof getWordsList>>['words']
 }
 
 export function WordsList({ wordsList }: WordsListProps) {

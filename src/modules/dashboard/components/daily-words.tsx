@@ -1,6 +1,6 @@
 'use client'
 
-import { Word } from '@/lib/db/drizzle/@types'
+import { getWordsList } from '@/actions/conversations/get-words-list'
 import { Separator } from '@radix-ui/react-separator'
 import { getDay, getMonth, isSameWeek, startOfDay } from 'date-fns'
 import {
@@ -16,13 +16,44 @@ import {
   YAxis,
 } from 'recharts'
 
-type OverviewProps = {
-  greenWords: Word[]
-  yellowWords: Word[]
-  redWords: Word[]
+type Words = Awaited<ReturnType<typeof getWordsList>>
+
+type DailyWordsProps = {
+  greenWords: Words['green']['words']
+  yellowWords: Words['yellow']['words']
+  redWords: Words['red']['words']
 }
 
-export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
+const day = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+}
+
+const month = {
+  Jan: 0,
+  Feb: 1,
+  Mar: 2,
+  Apr: 3,
+  May: 4,
+  Jun: 5,
+  Jul: 6,
+  Aug: 7,
+  Sep: 8,
+  Oct: 9,
+  Nov: 10,
+  Dec: 11,
+}
+
+export function DailyWords({
+  greenWords,
+  redWords,
+  yellowWords,
+}: DailyWordsProps) {
   const currentDate = startOfDay(new Date())
 
   const weekGreenWords = greenWords.filter((w) =>
@@ -35,18 +66,8 @@ export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
     isSameWeek(w.createdAt, currentDate),
   )
 
-  const day = {
-    Sun: 0,
-    Mon: 1,
-    Tue: 2,
-    Wed: 3,
-    Thu: 4,
-    Fri: 5,
-    Sat: 6,
-  }
-
   const getWordColors = (weekDay: keyof typeof day) => {
-    const score = (words: Word[]) =>
+    const score = (words: Words['words']) =>
       words.filter((w) => getDay(w.createdAt) === day[weekDay]).length
 
     return {
@@ -63,56 +84,12 @@ export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
     ...getWordColors(d),
   }))
 
-  const months = [
-    {
-      name: 'Jan',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 0).length,
-    },
-    {
-      name: 'Feb',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 1).length,
-    },
-    {
-      name: 'Mar',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 2).length,
-    },
-    {
-      name: 'Apr',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 3).length,
-    },
-    {
-      name: 'May',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 4).length,
-    },
-    {
-      name: 'Jun',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 5).length,
-    },
-    {
-      name: 'Jul',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 6).length,
-    },
-    {
-      name: 'Aug',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 7).length,
-    },
-    {
-      name: 'Sep',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 8).length,
-    },
-    {
-      name: 'Oct',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 9).length,
-    },
-    {
-      name: 'Nov',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 10).length,
-    },
-    {
-      name: 'Dec',
-      total: greenWords.filter((w) => getMonth(w.createdAt) === 11).length,
-    },
-  ]
+  const monthEntries = Object.entries(month) as [keyof typeof month, number][]
+
+  const months = monthEntries.map(([m, mAsNum]) => ({
+    name: m,
+    total: greenWords.filter((w) => getMonth(w.createdAt) === mAsNum).length,
+  }))
 
   return (
     <div className="gap-2 flex flex-col">
@@ -163,12 +140,6 @@ export function Overview({ greenWords, redWords, yellowWords }: OverviewProps) {
           <Line type="monotone" dataKey="green" stroke="#82ca9d" />
           <Line type="monotone" dataKey="yellow" stroke="#c9d884" />
           <Line type="monotone" dataKey="red" stroke="#d88484" />
-          {/* <Bar
-            dataKey="total"
-            fill="currentColor"
-            radius={[4, 4, 0, 0]}
-            className="fill-primary"
-          /> */}
         </LineChart>
       </ResponsiveContainer>
     </div>
