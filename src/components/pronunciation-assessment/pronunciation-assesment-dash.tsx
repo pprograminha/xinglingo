@@ -115,7 +115,7 @@ export function PronunciationAssessmentDash() {
     ).length || 0
 
   return (
-    <div className="min-h-[300px] md:h-[calc(100vh_-_220px)] overflow-y-auto">
+    <div className="min-h-[300px] md:h-[calc(100vh_-_420px)] overflow-y-auto">
       {previousConversation && !isLoading && (
         <Button
           className="w-full dark:bg-red-400 scale-50 dark:hover:bg-red-500 dark:text-white mb-4 flex gap-2 items-center"

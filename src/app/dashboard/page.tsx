@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 
-import { getConversations } from '@/actions/conversations/get-conversations'
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,19 +10,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { isGreen, isRed, isYellow } from '@/lib/score-color'
-import {
-  eachWeekendOfMonth,
-  getDate,
-  getDaysInMonth,
-  isSameDay,
-  isSameMonth,
-  isSameYear,
-} from 'date-fns'
+import { DailyWords } from '@/modules/dashboard/components/daily-words'
+import { WordsList } from '@/modules/dashboard/components/words-list'
 import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
-import { Overview } from './components/overview'
-import { WordsList } from './components/words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -33,49 +23,20 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const [conversations, wordsList] = await Promise.all([
-    getConversations(),
-    getWordsList(),
-  ])
-
-  const allWords = conversations
-    .filter((c) => c.authorId)
-    .flatMap((c) => c.pronunciationAssessment?.words || [])
-
-  const currentDate = new Date()
-  const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
-
-  const wordsSameYear = (filter: (accuracyScore: number) => boolean) =>
-    allWords
-      .filter((w) => isSameYear(w.createdAt, currentDate))
-      .filter((w) => filter(w.accuracyScore))
-
-  const wordsSameMonth = (filter: (accuracyScore: number) => boolean) =>
-    allWords
-      .filter((w) => isSameMonth(w.createdAt, currentDate))
-      .filter((w) => filter(w.accuracyScore))
-
-  const wordsSameDay = (filter: (accuracyScore: number) => boolean) =>
-    allWords
-      .filter((w) => isSameDay(w.createdAt, currentDate))
-      .filter((w) => filter(w.accuracyScore))
-
-  const wordsPerYear = 5000
-  const wordsPerYearRemaining = sub(wordsPerYear, wordsSameYear(isGreen).length)
-
-  const wordsPerMonth = Math.round(wordsPerYearRemaining / 12)
-  const wordsPerMonthRemaining = sub(
-    wordsPerMonth,
-    wordsSameMonth(isGreen).length,
-  )
-
-  const wordsPerDay = Math.round(
-    wordsPerMonthRemaining /
-      (getDaysInMonth(currentDate) -
-        getDate(currentDate) -
-        eachWeekendOfMonth(currentDate).filter((d) => d >= currentDate).length),
-  )
-  const wordsPerDayRemaining = sub(wordsPerDay, wordsSameDay(isGreen).length)
+  const {
+    words: wordsList,
+    count: {
+      wordsPerDay,
+      wordsPerDayRemaining,
+      wordsPerMonth,
+      wordsPerMonthRemaining,
+      wordsPerYear,
+      wordsPerYearRemaining,
+    },
+    green,
+    red,
+    yellow,
+  } = await getWordsList()
 
   return (
     <>
@@ -112,17 +73,17 @@ export default async function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameYear(isGreen).length}
+                      {green.wordsSameYear.length}
                     </div>
                     <div className="my-2">
                       <p className="text-xs font-bold rounded-md mb-1 inline-block ">
                         <span className="text-yellow-200">Yellow Words</span>:{' '}
-                        {wordsSameYear(isYellow).length}
+                        {yellow.wordsSameYear.length}
                       </p>
                       <br />
                       <p className="text-xs font-bold rounded-md inline-block">
                         <span className="text-red-400">Red Words</span>:{' '}
-                        {wordsSameYear(isRed).length}
+                        {red.wordsSameYear.length}
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -141,17 +102,17 @@ export default async function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameMonth(isGreen).length}
+                      {green.wordsSameMonth.length}
                     </div>
                     <div className="my-2">
                       <p className="text-xs font-bold rounded-md mb-1 inline-block ">
                         <span className="text-yellow-200">Yellow Words</span>:{' '}
-                        {wordsSameMonth(isYellow).length}
+                        {yellow.wordsSameMonth.length}
                       </p>
                       <br />
                       <p className="text-xs font-bold rounded-md inline-block">
                         <span className="text-red-400">Red Words</span>:{' '}
-                        {wordsSameMonth(isRed).length}
+                        {red.wordsSameMonth.length}
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -170,17 +131,17 @@ export default async function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      {wordsSameDay(isGreen).length}
+                      {green.wordsSameDay.length}
                     </div>
                     <div className="my-2">
                       <p className="text-xs font-bold rounded-md mb-1 inline-block ">
                         <span className="text-yellow-200">Yellow Words</span>:{' '}
-                        {wordsSameDay(isYellow).length}
+                        {yellow.wordsSameDay.length}
                       </p>
                       <br />
                       <p className="text-xs font-bold rounded-md inline-block">
                         <span className="text-red-400">Red Words</span>:{' '}
-                        {wordsSameDay(isRed).length}
+                        {red.wordsSameDay.length}
                       </p>
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -196,10 +157,10 @@ export default async function DashboardPage() {
                     <CardTitle>Month Words</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview
-                      greenWords={wordsSameYear(isGreen)}
-                      yellowWords={wordsSameYear(isYellow)}
-                      redWords={wordsSameYear(isRed)}
+                    <DailyWords
+                      greenWords={green.words}
+                      yellowWords={yellow.words}
+                      redWords={red.words}
                     />
                   </CardContent>
                 </Card>

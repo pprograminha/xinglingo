@@ -1,5 +1,4 @@
 import { Conversation } from '@/lib/db/drizzle/@types'
-import { uid } from '@/lib/get-uid'
 import { Loader2 } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
 import { z } from 'zod'
@@ -31,6 +30,7 @@ export const ChatForm = ({
   onPublicFromClientHandler,
   onMessageText,
   messageText,
+  uid,
 }: ChatFormProps) => {
   async function createConversationForm(formData: FormData) {
     const messageText = z.string().safeParse(formData.get('text'))

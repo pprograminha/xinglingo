@@ -65,7 +65,7 @@ export function Conversation({
     api: '/api/ai/chat',
     body: {
       model: 'gpt-3.5-turbo',
-      temperature: 0.8,
+      temperature: 0.6,
       max_length: 400,
     },
   })
