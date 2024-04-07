@@ -116,7 +116,7 @@ export function Conversations({
             <TabsContent
               value={String(channnelIndex)}
               ref={conversationsContainerRef}
-              className="flex flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh_-_280px)]  min-h-[200px] pr-4"
+              className="flex flex-col overflow-y-auto overflow-x-hidden h-full  min-h-[200px] pr-4"
             >
               {dayConversations.map((conversation) => (
                 <Conversation

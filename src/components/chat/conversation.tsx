@@ -4,7 +4,7 @@
 import { useAuth } from '@/hooks/use-auth'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
-import { useSwitch } from '@/hooks/use-switch'
+import { usePronunciation } from '@/hooks/use-pronunciation'
 import {
   Conversation as TypeConversation,
   Phoneme,
@@ -47,7 +47,7 @@ export function Conversation({
   onNewConversations,
   removeConversation,
 }: ConversationProps) {
-  const { toggle: toggleMode } = useSwitch()
+  const { openPronunciation } = usePronunciation()
   const { uid } = useAuth()
   const {
     conversation: recConversation,
@@ -187,7 +187,7 @@ export function Conversation({
                     referenceText: conversation.text,
                     conversation,
                   })
-                  toggleMode(['chat', 'pronunciation'])
+                  openPronunciation()
                 }
               }}
               className="flex-shrink-0 w-full md:w-9 group-data-[me=true]:ml-auto dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
@@ -200,10 +200,7 @@ export function Conversation({
       <HoverCardContent
         align={conversation.authorId === uid() ? 'end' : 'start'}
         className="md:max-h-max max-h-[150px] overflow-y-auto"
-        {...(!conversation.authorId &&
-          isMd && {
-            side: 'left',
-          })}
+        side='bottom'
       >
         {isSameDay(new Date(), conversation.createdAt) &&
           conversation.authorId && (

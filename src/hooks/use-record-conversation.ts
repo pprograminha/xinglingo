@@ -1,6 +1,6 @@
 import { getAudioConfigFromDefaultMicrophone } from '@/app/api/ai/pronunciation/ackaud/services/get-audio-config-from-default-mic'
 import { getSpeechRecognitionResult } from '@/app/api/ai/pronunciation/ackaud/services/get-speech-recognition-result'
-import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
+import { RecognitionResult } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { toast } from '@/components/ui/use-toast'
 import { Conversation } from '@/lib/db/drizzle/@types'
 import { iOS } from '@/lib/ios'
@@ -94,7 +94,7 @@ export const useRecordConversation = create<RecordConversationState>(
         })
         return
       }
-      
+
       set({
         isRecording: true,
         isLoading: true,
