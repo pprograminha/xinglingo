@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Ably from 'ably/promises'
-import { RecognitionResult } from '@/components/pronunciation-assessment/pronunciation-assesment-dash'
 import { db } from '@/lib/db/drizzle/query'
 import {
   phonemes,
@@ -19,6 +18,7 @@ import {
 } from '@/lib/db/drizzle/@types'
 import { getConversation } from '@/actions/conversations/get-conversation'
 import { getAuth } from '@/lib/auth/get-auth'
+import { RecognitionResult } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:

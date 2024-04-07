@@ -10,8 +10,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DailyWords } from '@/modules/dashboard/components/daily-words'
-import { WordsList } from '@/modules/dashboard/components/words-list'
+import { DailyWords } from '@/app/dashboard/components/daily-words'
+import { WordsList } from '@/app/dashboard/components/words-list'
 import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
 
