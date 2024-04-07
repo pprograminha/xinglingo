@@ -6,6 +6,7 @@ export default withAuth({
     error: '/error',
   },
 })
+
 export const config = {
   matcher: ['/((?!_next/static|_next/image|api|favicon.ico|assets).*)'],
 }

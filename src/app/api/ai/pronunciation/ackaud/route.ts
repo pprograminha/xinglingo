@@ -18,6 +18,7 @@ import {
   Word,
 } from '@/lib/db/drizzle/@types'
 import { getConversation } from '@/actions/conversations/get-conversation'
+import { getAuth } from '@/lib/auth/get-auth'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:
@@ -31,6 +32,11 @@ type Conversations = (Conversation & {
 
 export async function POST(req: Request) {
   const formData = await req.formData()
+  const { user } = await getAuth()
+
+  if (!user) {
+    throw new Error('UserError')
+  }
 
   const speechRecognitionResult = JSON.parse(
     formData.get('speechRecognitionResult') as string,
@@ -109,6 +115,7 @@ export async function POST(req: Request) {
               .values([
                 {
                   id: newPronunciationsAssessmentId,
+                  creatorId: user.id,
                   accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
                   fluencyScore: nbest.PronunciationAssessment.FluencyScore,
                   prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
@@ -227,6 +234,7 @@ export async function POST(req: Request) {
             .values([
               {
                 id: crypto.randomUUID(),
+                creatorId: user.id,
                 accuracyScore: nbest.PronunciationAssessment.AccuracyScore,
                 fluencyScore: nbest.PronunciationAssessment.FluencyScore,
                 prosodyScore: nbest.PronunciationAssessment.ProsodyScore,
