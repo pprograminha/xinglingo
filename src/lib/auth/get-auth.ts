@@ -18,14 +18,14 @@ interface GenericFunction {
   (...props: any): any;
 }
 
-export async function withAuth<T extends GenericFunction>(callback: T, friendlyReturn: Awaited<ReturnType<T>> |  '¨*&x6.1' = '¨*&x6.1') {
+export async function withAuth<T extends GenericFunction>(callback: T, friendlyReturn: Awaited<ReturnType<T>> |  '@' = '@') {
   const {user} = await getAuth()
-  
+
   if(!user) {
-    if(friendlyReturn !==  '¨*&x6.1') return () => friendlyReturn as ReturnType<T>
+    if(friendlyReturn !==  '@') return () => friendlyReturn as ReturnType<T>
 
     throw new Error(callback.name)
   }
- 
+
   return callback
 }
