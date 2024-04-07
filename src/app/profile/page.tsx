@@ -1,6 +1,6 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { getAuth } from '@/lib/auth/get-auth'
-import { DailyWords } from '@/modules/dashboard/components/daily-words'
+import { DailyWords } from '@/app/dashboard/components/daily-words'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
@@ -14,9 +14,9 @@ const UserProfile = async () => {
   })
 
   return (
-    <section className="h-screen">
-      <div className="w-full lg:w-4/6 px-4 pb-8 mx-auto">
-        <div className="relative flex flex-col min-w-0 break-words bg-white dark:bg-zinc-950 w-full mb-6 shadow-xl rounded-lg mt-24">
+    <div className='h-full p-2 md:p-4 w-full bg-white dark:bg-zinc-900'>
+      <div className="mx-auto h-full overflow-y-auto  bg-white dark:bg-zinc-950 border border-zinc-200  dark:border-zinc-800 w-full shadow-xl rounded-lg ">
+        <div className="relative flex flex-col min-w-0 break-words ">
           <div className="px-6">
             <div className="flex flex-wrap justify-center">
               <div className="w-full px-4 flex justify-center">
@@ -27,7 +27,7 @@ const UserProfile = async () => {
                       src={user.image}
                       width="150"
                       height="150"
-                      className="shadow-xl rounded-full -mt-16"
+                      className="shadow-xl rounded-full mt-4"
                     />
                   )}
                 </div>
@@ -76,14 +76,6 @@ const UserProfile = async () => {
                   ).toFixed(2)}
                 </span>
               </div>
-              <div className="mb-2 text-zinc-600 mt-10">
-                <i className="fas fa-briefcase mr-2 text-lg text-zinc-400" />
-                Solution Manager - Creative Tim Officer
-              </div>
-              <div className="mb-2 text-zinc-600">
-                <i className="fas fa-university mr-2 text-lg text-zinc-400" />
-                University of Computer Science
-              </div>
             </div>
             <div className="mt-10 py-10 border-t border-zinc-200 text-center">
               <div className="flex flex-wrap justify-center">
@@ -99,7 +91,8 @@ const UserProfile = async () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
+
   )
 }
 
