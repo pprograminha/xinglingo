@@ -6,7 +6,7 @@ import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { useSwitch } from '@/hooks/use-switch'
 import {
-  Conversation,
+  Conversation as TypeConversation,
   Phoneme,
   PronunciationAssessment,
   Word,
@@ -20,11 +20,11 @@ import { createConversation } from '../../actions/conversations/create-conversat
 import { deleteConversation } from '../../actions/conversations/delete-conversation'
 import { Collapsible } from '../collapsible'
 import { TextToHTML } from '../text-to-html'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
-type Conversations = (Conversation & {
+type Conversations = (TypeConversation & {
   pronunciationAssessment:
     | (PronunciationAssessment & {
         words: (Word & {
@@ -59,7 +59,7 @@ export function Conversation({
       createConversation({
         text: message.content,
       }).then((conversation) => {
-        onNewConversations([{ ...conversation, pronunciationAssessment: null }])
+        if(conversation) onNewConversations([{ ...conversation, pronunciationAssessment: null }])
       })
     },
     api: '/api/ai/chat',

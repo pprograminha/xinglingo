@@ -40,8 +40,10 @@ export const ChatForm = ({
         text: messageText.data,
         authorId: uid(),
       })
+      
       onMessageText('')
-      onPublicFromClientHandler(conversation)
+
+      if(conversation) onPublicFromClientHandler(conversation)
 
       return conversation
     }

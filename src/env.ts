@@ -41,3 +41,4 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
   },
 })
+

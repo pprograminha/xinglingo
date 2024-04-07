@@ -5,6 +5,7 @@ import { toast } from '@/components/ui/use-toast'
 import { Conversation } from '@/lib/db/drizzle/@types'
 import { iOS } from '@/lib/ios'
 import { SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
+import { getSession } from 'next-auth/react'
 import { create } from 'zustand'
 
 type StartRecordingData = {
@@ -85,6 +86,15 @@ export const useRecordConversation = create<RecordConversationState>(
       referenceText,
       conversation,
     }: StartRecordingData) => {
+      const session = await getSession()
+
+      if(!session) {
+        toast({
+          title: 'Você precisa ser um assinante :('
+        })
+        return
+      }
+      
       set({
         isRecording: true,
         isLoading: true,
