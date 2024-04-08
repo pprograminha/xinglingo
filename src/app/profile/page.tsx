@@ -14,7 +14,7 @@ const UserProfile = async () => {
   })
 
   return (
-    <div className='h-full p-2 md:p-4 w-full bg-white dark:bg-zinc-900'>
+    <div className="h-full p-2 md:p-4 w-full bg-white dark:bg-zinc-900">
       <div className="mx-auto h-full overflow-y-auto  bg-white dark:bg-zinc-950 border border-zinc-200  dark:border-zinc-800 w-full shadow-xl rounded-lg ">
         <div className="relative flex flex-col min-w-0 break-words ">
           <div className="px-6">
@@ -92,7 +92,6 @@ const UserProfile = async () => {
         </div>
       </div>
     </div>
-
   )
 }
 

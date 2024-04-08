@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetOverlay, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { AlignJustify } from 'lucide-react'
 import type { Metadata } from 'next'
 import { SideBar } from './components/sidebar'
@@ -17,15 +17,22 @@ export default function RootLayout({
     <section className="h-screen flex relative">
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="outline" className='lg:hidden bg-transparent dark:bg-transparent border-0 absolute z-20 top-5 left-5'>
-            <AlignJustify className='w-5' />
+          <Button
+            size="icon"
+            variant="outline"
+            className="lg:hidden bg-transparent dark:bg-transparent border-0 absolute z-20 top-5 left-5"
+          >
+            <AlignJustify className="w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-[400px] flex flex-col h-full border-r-1 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 lg:hidden" side="left">
+        <SheetContent
+          className="w-[400px] flex flex-col h-full border-r-1 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 lg:hidden"
+          side="left"
+        >
           <SideBar />
         </SheetContent>
       </Sheet>
-      <SideBar className='hidden lg:flex ' />
+      <SideBar className="hidden lg:flex " />
       {children}
     </section>
   )

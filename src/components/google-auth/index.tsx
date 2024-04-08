@@ -1,17 +1,11 @@
 'use client'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { signIn, useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { toast } from '../ui/use-toast'
-import Image from 'next/image'
 
 export function GoogleAuth() {
   const [isOpen, setIsOpen] = useState(false)
@@ -101,10 +95,10 @@ export function GoogleAuth() {
             </div>
             <div className="mt-32 space-y-4 text-center text-zinc-600 dark:text-zinc-400 sm:-mb-8">
               <p className="text-xs">
-                By proceeding, you agree to our{" "}
+                By proceeding, you agree to our{' '}
                 <a href="#" className="underline">
                   Terms of Use
-                </a>{" "}
+                </a>{' '}
                 and confirm you have read our
                 <a href="#" className="underline">
                   Privacy and Cookie Statement
@@ -115,11 +109,11 @@ export function GoogleAuth() {
                 This site is protected by reCAPTCHA and the
                 <a href="#" className="underline">
                   Google Privacy Policy
-                </a>{" "}
+                </a>{' '}
                 and
                 <a href="#" className="underline">
                   Terms of Service
-                </a>{" "}
+                </a>{' '}
                 apply.
               </p>
             </div>

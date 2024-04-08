@@ -67,7 +67,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
           <PronunciationAssessmentDash />
         </DialogContent>
       </Dialog>
-      <div className='h-full pr-2 pb-2 md:pr-4 md:pb-4'>
+      <div className="h-full pr-2 pb-2 md:pr-4 md:pb-4">
         <Card
           className={cn(
             'w-full h-full flex flex-col border-0 rounded-lg',
@@ -101,7 +101,6 @@ const Chat = ({ className, ...props }: ChatProps) => {
             </div>
           </CardContent>
         </Card>
-
       </div>
     </>
   )

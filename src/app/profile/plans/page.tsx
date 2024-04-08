@@ -1,6 +1,6 @@
 const Plans = () => {
   return (
-    <div className='p-2 md:p-4 w-full'>
+    <div className="p-2 md:p-4 w-full">
       <div className="px-6 py-20 md:px-12 lg:px-20 h-full dark:bg-zinc-950 w-full border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-y-auto">
         <div className="m-auto text-center lg:w-7/12">
           <h2 className="text-2xl font-bold text-zinc-800 dark:text-white md:text-4xl">

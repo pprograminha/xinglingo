@@ -59,7 +59,10 @@ export function Conversation({
       createConversation({
         text: message.content,
       }).then((conversation) => {
-        if(conversation) onNewConversations([{ ...conversation, pronunciationAssessment: null }])
+        if (conversation)
+          onNewConversations([
+            { ...conversation, pronunciationAssessment: null },
+          ])
       })
     },
     api: '/api/ai/chat',
@@ -200,7 +203,7 @@ export function Conversation({
       <HoverCardContent
         align={conversation.authorId === uid() ? 'end' : 'start'}
         className="md:max-h-max max-h-[150px] overflow-y-auto"
-        side='bottom'
+        side="bottom"
       >
         {isSameDay(new Date(), conversation.createdAt) &&
           conversation.authorId && (
