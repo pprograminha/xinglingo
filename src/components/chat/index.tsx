@@ -70,16 +70,16 @@ const Chat = ({ className, ...props }: ChatProps) => {
       <div className="h-full pr-2 pb-2 md:pr-4 md:pb-4">
         <Card
           className={cn(
-            'w-full h-full flex flex-col border-0 rounded-lg',
+            'w-full h-full flex flex-col border-0 rounded-lg relative',
             className,
           )}
           {...props}
         >
-          <CardHeader className="md:flex hidden">
+          <CardHeader className="md:flex hidden z-20">
             <CardTitle>Chat</CardTitle>
             <CardDescription>Aprenda conversando com a AI</CardDescription>
           </CardHeader>
-          <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0">
+          <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0 z-20">
             <Suspense
               fallback={
                 <div className="pr-4 h-full flex items-center justify-center flex-grow">
@@ -100,6 +100,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
               <PhraseGenerator onPhrase={(phrase) => setMessageText(phrase)} />
             </div>
           </CardContent>
+          <div className='bg-[url("/assets/chat-bg.png")] !dark:bg-[url("/assets/chat-bg.png")] bg-auto z-10 absolute top-0 left-0 right-0 bottom-0 opacity-10' />
         </Card>
       </div>
     </>
