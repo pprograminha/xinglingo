@@ -20,10 +20,10 @@ type GetWordsProps = {
 }
 
 export const getWordsList = async (props?: GetWordsProps) => {
-  return (await withAuth(
-    async (props?: GetWordsProps) => {
+  return (
+    await withAuth(async (props?: GetWordsProps) => {
       const { sort = 'desc', user } = props || {}
-    
+
       const sqWithoutWhere = db
         .select({
           word: words.word,
@@ -31,7 +31,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
           createdAt: words.createdAt,
         })
         .from(words)
-    
+
       const sqWithWhere =
         user &&
         sqWithoutWhere
@@ -41,15 +41,15 @@ export const getWordsList = async (props?: GetWordsProps) => {
           )
           .where(eq(pronunciationsAssessment.creatorId, user.id))
           .as('sq')
-    
+
       let sq: typeof sqWithoutWhere | typeof sqWithWhere = sqWithoutWhere
-    
+
       if (sqWithWhere) {
         sq = sqWithWhere
       } else {
         sq = sqWithoutWhere.as('sq')
       }
-    
+
       const sorts = {
         desc,
         asc,
@@ -57,7 +57,9 @@ export const getWordsList = async (props?: GetWordsProps) => {
       const wordsData = await db
         .select({
           word: sql`${words.word}`.mapWith(String),
-          wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(Number),
+          wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(
+            Number,
+          ),
           avgAccuracyScore:
             sql<number>`avg(${words.accuracyScore}) as avgAccuracyScore`.mapWith(
               Number,
@@ -74,7 +76,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
         .from(sq)
         .groupBy(sql`word`)
         .orderBy(sorts[sort](sql`wordCount`))
-    
+
       const wordsSameDate = (
         scoreColor: string,
         isSame?: (d1: Date | string, d2: Date | string) => boolean,
@@ -82,31 +84,33 @@ export const getWordsList = async (props?: GetWordsProps) => {
         wordsData
           .filter((w) => !isSame || isSame(w.createdAt, currentDate))
           .filter((w) => w.scoreColor === scoreColor)
-    
+
       const currentDate = new Date()
       const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
-      const div = (n1: number, n2: number) => (n1 / n2 === Infinity ? 0 : n1 / n2)
-    
+      const div = (n1: number, n2: number) =>
+        n1 / n2 === Infinity ? 0 : n1 / n2
+
       const wordsPerYear = 5000
       const wordsPerYearCurrent = wordsSameDate('green', isSameYear).length
       const wordsPerYearRemaining = sub(
         wordsPerYear,
         wordsSameDate('green', isSameYear).length,
       )
-    
+
       const wordsPerMonth = Math.round(div(wordsPerYearRemaining, 12))
       const wordsPerMonthCurrent = wordsSameDate('green', isSameMonth).length
       const wordsPerMonthRemaining = sub(
         wordsPerMonth,
         wordsSameDate('green', isSameMonth).length,
       )
-    
+
       const wordsPerDay = Math.round(
         div(
           wordsPerMonthRemaining,
           getDaysInMonth(currentDate) -
             getDate(currentDate) -
-            eachWeekendOfMonth(currentDate).filter((d) => d >= currentDate).length,
+            eachWeekendOfMonth(currentDate).filter((d) => d >= currentDate)
+              .length,
         ),
       )
       const wordsPerDayCurrent = wordsSameDate('green', isSameDay).length
@@ -114,7 +118,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
         wordsPerDay,
         wordsSameDate('green', isSameDay).length,
       )
-    
+
       const response = {
         words: wordsData,
         green: {
@@ -147,8 +151,8 @@ export const getWordsList = async (props?: GetWordsProps) => {
           wordsPerDayRemaining,
         },
       }
-    
+
       return response
-    }
-  ))(props)
+    })
+  )(props)
 }

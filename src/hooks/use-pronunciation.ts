@@ -9,11 +9,11 @@ interface PronunciationState {
 export const usePronunciation = create<PronunciationState>((set) => ({
   isOpen: false,
   openPronunciation: () =>
-    set((state) => ({
-      isOpen: true
+    set(() => ({
+      isOpen: true,
     })),
   closePronunciation: () =>
-    set((state) => ({
-      isOpen: false
+    set(() => ({
+      isOpen: false,
     })),
 }))

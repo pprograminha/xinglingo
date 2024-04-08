@@ -11,12 +11,13 @@ export async function createConversation({
   text,
   authorId,
 }: Omit<InferInsertModel<typeof conversations>, 'id'>): Promise<
-  Conversation & {
-    author: User | null
-  } | null
+  | (Conversation & {
+      author: User | null
+    })
+  | null
 > {
-  return (await withAuth(
-    async () => {
+  return (
+    await withAuth(async () => {
       const [conversation] = (await db
         .insert(conversations)
         .values([
@@ -31,20 +32,21 @@ export async function createConversation({
           author: User | null
         },
       ]
-    
+
       if (conversation.authorId) {
         const [user] = await db
           .select()
           .from(users)
           .where(eq(users.id, conversation.authorId))
-    
+
         conversation.author = user
       }
-    
-      return conversation as   Conversation & {
-        author: User | null
-      } | null
-    },
-    null
-  ))()
+
+      return conversation as
+        | (Conversation & {
+            author: User | null
+          })
+        | null
+    }, null)
+  )()
 }

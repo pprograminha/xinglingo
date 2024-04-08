@@ -88,9 +88,9 @@ export const useRecordConversation = create<RecordConversationState>(
     }: StartRecordingData) => {
       const session = await getSession()
 
-      if(!session) {
+      if (!session) {
         toast({
-          title: 'Você precisa ser um assinante :('
+          title: 'Você precisa ser um assinante :(',
         })
         return
       }

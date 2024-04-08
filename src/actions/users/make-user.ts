@@ -12,7 +12,7 @@ export async function makeUser({
 }: Omit<NewUser, 'id'>) {
   const [user] = await db.select().from(users).where(eq(users.email, email))
 
-  if (user && (user.image !== image)) {
+  if (user && user.image !== image) {
     await db
       .update(users)
       .set({

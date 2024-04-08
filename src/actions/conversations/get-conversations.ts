@@ -19,9 +19,9 @@ type Conversations = (Conversation & {
     | null
 })[]
 
-export const getConversations = async () => {
-  return (await withAuth(
-    async () => {
+export const getConversations = async (): Promise<Conversations> => {
+  return (
+    await withAuth(async () => {
       const conversationsData = await db.query.conversations.findMany({
         // where: ({ authorId }, { isNotNull }) => isNotNull(authorId),
         with: {
@@ -37,9 +37,8 @@ export const getConversations = async () => {
           },
         },
       })
-  
+
       return conversationsData
-    },
-    []
-  ))()
+    }, [])
+  )()
 }

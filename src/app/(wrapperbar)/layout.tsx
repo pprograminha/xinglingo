@@ -1,7 +1,7 @@
-import { LogOut } from "@/components/logout"
-import { getAuth } from "@/lib/auth/get-auth"
-import Image from "next/image"
-import Link from "next/link"
+import { LogOut } from '@/components/logout'
+import { getAuth } from '@/lib/auth/get-auth'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default async function WrapperBarLayout({
   children,
@@ -25,7 +25,10 @@ export default async function WrapperBarLayout({
           />
 
           {user && (
-            <Link href="/profile" className="flex flex-row-reverse items-center gap-2">
+            <Link
+              href="/profile"
+              className="flex flex-row-reverse items-center gap-2"
+            >
               {user.image && (
                 <Image
                   src={user.image}

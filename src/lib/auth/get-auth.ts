@@ -15,14 +15,18 @@ export const getAuth = async () => {
 }
 
 interface GenericFunction {
-  (...props: any): any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (...props: any): any
 }
 
-export async function withAuth<T extends GenericFunction>(callback: T, friendlyReturn: Awaited<ReturnType<T>> |  '@' = '@') {
-  const {user} = await getAuth()
+export async function withAuth<T extends GenericFunction>(
+  callback: T,
+  friendlyReturn: Awaited<ReturnType<T>> | '@' = '@',
+) {
+  const { user } = await getAuth()
 
-  if(!user) {
-    if(friendlyReturn !==  '@') return () => friendlyReturn as ReturnType<T>
+  if (!user) {
+    if (friendlyReturn !== '@') return () => friendlyReturn as ReturnType<T>
 
     throw new Error(callback.name)
   }
