@@ -1,7 +1,7 @@
-import { LogOut } from '@/components/logout'
 import { getAuth } from '@/lib/auth/get-auth'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Channels } from '../components/channels'
 
 export default async function WrapperBarLayout({
   children,
@@ -11,8 +11,8 @@ export default async function WrapperBarLayout({
   const { user } = await getAuth()
   return (
     <main className="h-screen flex flex-row">
-      <div className="bg-zinc-900 w-16 flex items-end justify-center pb-4">
-        <LogOut />
+      <div className="bg-zinc-900 flex flex-col justify-between pb-2 md:pb-4 py-2 px-2">
+        <Channels />
       </div>
 
       <div className="flex flex-col h-full w-full">

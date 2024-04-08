@@ -2,9 +2,9 @@ import { Conversation } from '@/lib/db/drizzle/@types'
 import { Loader2 } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
 import { z } from 'zod'
-import { Button, ButtonProps } from '../ui/button'
-import { Input } from '../ui/input'
-import { createConversation } from '../../actions/conversations/create-conversation'
+import { Button, ButtonProps } from '../../../components/ui/button'
+import { Input } from '../../../components/ui/input'
+import { createConversation } from '../../../actions/conversations/create-conversation'
 import { useAuth } from '@/hooks/use-auth'
 
 type ChatFormProps = {

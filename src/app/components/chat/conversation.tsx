@@ -16,13 +16,21 @@ import { useChat } from 'ai/react'
 import { format, isSameDay } from 'date-fns'
 import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { createConversation } from '../../actions/conversations/create-conversation'
-import { deleteConversation } from '../../actions/conversations/delete-conversation'
-import { Collapsible } from '../collapsible'
-import { TextToHTML } from '../text-to-html'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Button } from '../ui/button'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
+import { createConversation } from '../../../actions/conversations/create-conversation'
+import { deleteConversation } from '../../../actions/conversations/delete-conversation'
+import { Collapsible } from '../../../components/collapsible'
+import { TextToHTML } from '../../../components/text-to-html'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '../../../components/ui/avatar'
+import { Button } from '../../../components/ui/button'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../../../components/ui/hover-card'
 
 type Conversations = (TypeConversation & {
   pronunciationAssessment:
@@ -36,14 +44,14 @@ type Conversations = (TypeConversation & {
 
 type ConversationProps = {
   conversation: Conversations['0']
-  channnelIndex: number
+  channelIndex: number
   onNewConversations: (newConversations: Conversations) => void
   removeConversation: (conversationId: string) => void
 }
 
 export function Conversation({
   conversation,
-  channnelIndex,
+  channelIndex,
   onNewConversations,
   removeConversation,
 }: ConversationProps) {
@@ -178,7 +186,7 @@ export function Conversation({
               )}
             </p>
           </div>
-          {channnelIndex === 0 && conversation.authorId && (
+          {channelIndex === 0 && conversation.authorId && (
             <Button
               variant="outline"
               size="icon"
@@ -306,7 +314,7 @@ export function Conversation({
         <p className="text-zinc-500 text-xs">
           Criado em: {format(conversation.createdAt, 'yyyy/MM/dd HH:mm:ss')}
         </p>
-        {channnelIndex === 0 && (
+        {channelIndex === 0 && (
           <Button
             size="sm"
             variant="outline"

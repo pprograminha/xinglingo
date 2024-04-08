@@ -8,6 +8,8 @@ import {
   Word,
 } from '@/lib/db/drizzle/@types'
 import { db } from '@/lib/db/drizzle/query'
+import { conversations } from '@/lib/db/drizzle/schema'
+import { desc } from 'drizzle-orm'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:
@@ -36,6 +38,7 @@ export const getConversations = async (): Promise<Conversations> => {
             },
           },
         },
+        orderBy: [desc(conversations.createdAt)],
       })
 
       return conversationsData

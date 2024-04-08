@@ -11,13 +11,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card'
+} from '../../../components/ui/card'
 import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
 import { cn } from '@/lib/utils'
 import { PhraseGenerator } from './phrase-generator'
 import { useAuth } from '@/hooks/use-auth'
-import { Dialog, DialogContent } from '../ui/dialog'
+import { Dialog, DialogContent } from '../../../components/ui/dialog'
 import { usePronunciation } from '@/hooks/use-pronunciation'
 import { PronunciationAssessmentDash } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
 
