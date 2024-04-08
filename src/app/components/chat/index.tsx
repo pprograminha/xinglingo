@@ -1,10 +1,13 @@
 'use client'
 
+import { PronunciationAssessmentDash } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
+import { useAuth } from '@/hooks/use-auth'
+import { usePronunciation } from '@/hooks/use-pronunciation'
 import { Conversation } from '@/lib/db/drizzle/@types'
+import { cn } from '@/lib/utils'
 import * as Ably from 'ably'
 import { AblyProvider, useChannel } from 'ably/react'
-import { Bone } from 'lucide-react'
-import { HTMLAttributes, Suspense, useMemo, useState } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -12,14 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from '../../../components/ui/card'
+import { Dialog, DialogContent } from '../../../components/ui/dialog'
 import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
-import { cn } from '@/lib/utils'
 import { PhraseGenerator } from './phrase-generator'
-import { useAuth } from '@/hooks/use-auth'
-import { Dialog, DialogContent } from '../../../components/ui/dialog'
-import { usePronunciation } from '@/hooks/use-pronunciation'
-import { PronunciationAssessmentDash } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
 
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 
@@ -51,8 +50,6 @@ const Chat = ({ className, ...props }: ChatProps) => {
     channel.publish('update-from-client', conversation)
   }
 
-  const c = useMemo(() => <ConversationContainer />, [])
-
   return (
     <>
       <Dialog
@@ -79,16 +76,8 @@ const Chat = ({ className, ...props }: ChatProps) => {
             <CardTitle>Chat</CardTitle>
             <CardDescription>Aprenda conversando com a AI</CardDescription>
           </CardHeader>
-          <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0 z-20">
-            <Suspense
-              fallback={
-                <div className="pr-4 h-full flex items-center justify-center flex-grow">
-                  <Bone className="w-16 h-16 animate-bounce" />
-                </div>
-              }
-            >
-              {c}
-            </Suspense>
+          <CardContent className="flex-grow flex flex-col pt-3 p-1 md:p-6 md:pt-0 z-20 ">
+            <ConversationContainer />
 
             <div className="flex items-center pt-0 space-x-2">
               <ChatForm

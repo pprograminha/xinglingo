@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
+import { useChannels } from '@/hooks/use-channels'
 import * as Ably from 'ably'
 import { useChannel } from 'ably/react'
 import { isSameDay } from 'date-fns'
-import { Bone } from 'lucide-react'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { getConversations } from '../../../actions/conversations/get-conversations'
 import { Conversation } from './conversation'
-import { useChannels } from '@/hooks/use-channels'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
@@ -95,14 +94,11 @@ export function Conversations({
   const dayConversations = groupConversationsPerDay[channelIndex] || []
 
   return (
-    <div className="flex-grow">
+    <div className="flex-grow overflow-y-auto overflow-x-hidden h-[50vh]">
       <div
         data-center={conversations.length === 0}
         className="data-[center=true]:flex flex-col data-[center=true]:items-center data-[center=true]:justify-center"
       >
-        {conversations.length === 0 && (
-          <Bone className="w-16 h-16 animate-bounce" />
-        )}
         {conversations.length > 0 && (
           <div className="flex flex-col">
             {dayConversations.map((conversation) => (
