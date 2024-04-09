@@ -42,12 +42,12 @@ const Chat = ({ className, ...props }: ChatProps) => {
   const { isOpen, closePronunciation } = usePronunciation()
   const { uid } = useAuth()
 
-  const { channel } = useChannel('status-updates')
+  const { channel } = useChannel('conversations')
 
-  const publicFromClientHandler = (conversation: Conversation) => {
+  const sendMessageHandler = (conversation: Conversation) => {
     if (channel === null) return
 
-    channel.publish('update-from-client', conversation)
+    channel.publish('conversation', conversation)
   }
 
   return (
@@ -82,7 +82,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
             <div className="flex items-center pt-0 space-x-2">
               <ChatForm
                 onMessageText={setMessageText}
-                onPublicFromClientHandler={publicFromClientHandler}
+                onSendMessageHandler={sendMessageHandler}
                 messageText={messageText}
                 uid={uid}
               />

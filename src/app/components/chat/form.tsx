@@ -8,7 +8,7 @@ import { createConversation } from '../../../actions/conversations/create-conver
 import { useAuth } from '@/hooks/use-auth'
 
 type ChatFormProps = {
-  onPublicFromClientHandler: (conversation: Conversation) => void
+  onSendMessageHandler: (conversation: Conversation) => void
   messageText: string
   onMessageText: (messageText: string) => void
   uid: ReturnType<typeof useAuth>['uid']
@@ -27,7 +27,7 @@ function ButtonAction(props: ButtonActionProps) {
 }
 
 export const ChatForm = ({
-  onPublicFromClientHandler,
+  onSendMessageHandler,
   onMessageText,
   messageText,
   uid,
@@ -43,7 +43,7 @@ export const ChatForm = ({
 
       onMessageText('')
 
-      if (conversation) onPublicFromClientHandler(conversation)
+      if (conversation) onSendMessageHandler(conversation)
 
       return conversation
     }

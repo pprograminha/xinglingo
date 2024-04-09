@@ -11,9 +11,7 @@ export default async function WrapperBarLayout({
   const { user } = await getAuth()
   return (
     <main className="h-screen flex flex-row">
-      <div className="bg-zinc-900 flex flex-col justify-between pb-2 md:pb-4 py-2 px-2">
-        <Channels />
-      </div>
+      <Channels />
 
       <div className="flex flex-col h-full w-full">
         <div className="bg-zinc-900 h-16 w-full flex justify-between items-center px-4">

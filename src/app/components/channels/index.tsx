@@ -10,14 +10,19 @@ export const Channels = ({ className, ...props }: ChannelsProps) => {
   const { channelIndex, onChannelIndex, groupConversationsPerDay } =
     useChannels()
 
-  const channels =
-    groupConversationsPerDay.length === 0
-      ? [1]
-      : Array.from({ length: groupConversationsPerDay.length }, (_, v) => v + 1)
+  const channels = Array.from(
+    { length: groupConversationsPerDay.length },
+    (_, v) => v + 1,
+  )
+
+  if (channels.length === 0) return <div className="md:pr-4 pr-2" />
 
   return (
-    <>
-      <ul className={cn('inline-flex flex-col gap-1', className)} {...props}>
+    <div
+      className="bg-zinc-900 flex flex-col justify-between pb-2 md:pb-4 py-2 px-2"
+      key="channel"
+    >
+      <ul className={cn('inline-flex flex-col gap-1 ', className)} {...props}>
         <div className="bg-zinc-600/15 py-2 flex flex-col gap-2 rounded-md overflow-y-auto overflow-x-hidden max-h-[calc(100vh_-_16px)] md:max-h-[calc(100vh_-_24px)]">
           {channels.map((channel, index) => (
             <li
@@ -62,6 +67,6 @@ export const Channels = ({ className, ...props }: ChannelsProps) => {
           ))}
         </div>
       </ul>
-    </>
+    </div>
   )
 }

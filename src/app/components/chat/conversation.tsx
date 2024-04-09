@@ -14,7 +14,14 @@ import {
 import { scoreColor, scoreStyle } from '@/lib/score-color'
 import { useChat } from 'ai/react'
 import { format, isSameDay } from 'date-fns'
-import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
+import {
+  AudioLines,
+  Loader2,
+  Mic,
+  MicOff,
+  Sparkles,
+  Trash2,
+} from 'lucide-react'
 import { useState } from 'react'
 import { createConversation } from '../../../actions/conversations/create-conversation'
 import { deleteConversation } from '../../../actions/conversations/delete-conversation'
@@ -153,7 +160,7 @@ export function Conversation({
                 </span>
               </p>
             </div>
-            <p className="inline-flex group-data-[me=true]:flex-row-reverse">
+            <div className="inline-flex group-data-[me=true]:flex-row-reverse">
               {!conversation.author ? (
                 <>
                   {conversation.text.length > 1000 ? (
@@ -184,28 +191,42 @@ export function Conversation({
                   )}
                 </span>
               )}
-            </p>
+            </div>
           </div>
-          {channelIndex === 0 && conversation.authorId && (
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={isLoading}
-              data-on={recConversation?.id === conversation.id}
-              onClick={() => {
-                if (recConversation?.id !== conversation.id) {
-                  startRecording({
-                    referenceText: conversation.text,
-                    conversation,
-                  })
-                  openPronunciation()
-                }
-              }}
-              className="flex-shrink-0 w-full md:w-9 group-data-[me=true]:ml-auto dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
-            >
-              {recConversation?.id === conversation.id ? <Mic /> : <MicOff />}
-            </Button>
-          )}
+          <div className="flex items-center w-20 gap-1 group-data-[me=true]:ml-auto">
+            {channelIndex === 0 && conversation.authorId && (
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={isLoading}
+                data-on={recConversation?.id === conversation.id}
+                onClick={() => {
+                  if (recConversation?.id !== conversation.id) {
+                    startRecording({
+                      referenceText: conversation.text,
+                      conversation,
+                    })
+                    openPronunciation()
+                  }
+                }}
+                className="flex-shrink-0 w-full md:w-9 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+              >
+                {recConversation?.id === conversation.id ? <Mic /> : <MicOff />}
+              </Button>
+            )}
+            {conversation.authorId && (
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={isLoading}
+                data-on={recConversation?.id === conversation.id}
+                onClick={() => {}}
+                className="flex-shrink-0 opacity-30 pointer-events-none w-full md:w-9 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+              >
+                {<AudioLines />}
+              </Button>
+            )}
+          </div>
         </div>
       </HoverCardTrigger>
       <HoverCardContent

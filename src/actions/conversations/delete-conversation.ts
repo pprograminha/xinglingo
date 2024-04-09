@@ -11,10 +11,10 @@ import { eq } from 'drizzle-orm'
 export async function deleteConversation(convesationId: string): Promise<void> {
   return (
     await withAuth(async () => {
-      await db.delete(conversations).where(eq(conversations.id, convesationId))
       await db
         .delete(pronunciationsAssessment)
         .where(eq(pronunciationsAssessment.conversationId, convesationId))
+      await db.delete(conversations).where(eq(conversations.id, convesationId))
     })
   )()
 }

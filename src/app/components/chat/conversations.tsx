@@ -4,7 +4,6 @@
 import { useChannels } from '@/hooks/use-channels'
 import * as Ably from 'ably'
 import { useChannel } from 'ably/react'
-import { isSameDay } from 'date-fns'
 import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { getConversations } from '../../../actions/conversations/get-conversations'
 import { Conversation } from './conversation'
@@ -13,39 +12,19 @@ type TConversations = Awaited<ReturnType<typeof getConversations>>
 
 type ConversationProps = {
   conversations: TConversations
+  getGroupConversationsPerDay: (
+    conversations: TConversations,
+  ) => TConversations[]
 }
 
 export function Conversations({
   conversations: defaultConversations,
+  getGroupConversationsPerDay,
 }: ConversationProps) {
-  const getGroupConversationsPerDay = (conversations: TConversations) => {
-    return conversations.reduce((allConversations, conversation) => {
-      for (const allConversationIndex in allConversations) {
-        const dayConversations = allConversations[Number(allConversationIndex)]
-
-        const dayConversationIndex = dayConversations.findLastIndex(
-          (dayConversations) =>
-            isSameDay(dayConversations.createdAt, conversation.createdAt),
-        )
-
-        if (dayConversationIndex !== -1) {
-          allConversations[allConversationIndex].push(conversation)
-
-          return allConversations
-        }
-      }
-
-      return [...allConversations, [conversation]]
-    }, [] as TConversations[])
-  }
-
   const { channelIndex, groupConversationsPerDay, onGroupConversationsPerDay } =
     useChannels()
 
   const [conversations, setConversations] = useState<TConversations>(() => {
-    onGroupConversationsPerDay(
-      getGroupConversationsPerDay(defaultConversations),
-    )
     return defaultConversations
   })
 
@@ -62,7 +41,8 @@ export function Conversations({
     }
     conversationsHandler(setStateAction)
   }
-  useChannel('status-updates', (conversation: Ably.Types.Message) => {
+
+  useChannel('conversations', (conversation: Ably.Types.Message) => {
     conversationsHandler((cs) => {
       const conversationIndex = cs.findIndex(
         (c) => c.id === conversation.data.id,
@@ -76,7 +56,7 @@ export function Conversations({
         conversations = [...cs]
       }
 
-      conversations = conversations || [...cs, conversation.data]
+      conversations = conversations || [conversation.data, ...cs]
 
       return conversations
     })
