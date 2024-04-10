@@ -1,4 +1,4 @@
-import { User } from '@/lib/db/drizzle/@types'
+import { User } from '@/lib/db/drizzle/types'
 import { useSession } from 'next-auth/react'
 
 export const useAuth = () => {

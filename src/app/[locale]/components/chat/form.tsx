@@ -1,17 +1,19 @@
-import { Conversation } from '@/lib/db/drizzle/@types'
+import { Conversation } from '@/lib/db/drizzle/types'
 import { Loader2 } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
 import { z } from 'zod'
-import { Button, ButtonProps } from '../../../components/ui/button'
-import { Input } from '../../../components/ui/input'
-import { createConversation } from '../../../actions/conversations/create-conversation'
+import { Button, ButtonProps } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { createConversation } from '@/actions/conversations/create-conversation'
 import { useAuth } from '@/hooks/use-auth'
+import { getTranslations } from 'next-intl/server'
 
 type ChatFormProps = {
   onSendMessageHandler: (conversation: Conversation) => void
   messageText: string
   onMessageText: (messageText: string) => void
   uid: ReturnType<typeof useAuth>['uid']
+  t: Awaited<ReturnType<typeof getTranslations>>
 }
 
 type ButtonActionProps = ButtonProps
@@ -31,6 +33,7 @@ export const ChatForm = ({
   onMessageText,
   messageText,
   uid,
+  t,
 }: ChatFormProps) => {
   async function createConversationForm(formData: FormData) {
     const messageText = z.string().safeParse(formData.get('text'))
@@ -57,12 +60,12 @@ export const ChatForm = ({
       action={createConversationForm}
     >
       <Input
-        placeholder="Digite sua mensagem"
+        placeholder={t('Enter your message')}
         name="text"
         value={messageText}
         onChange={(e) => onMessageText(e.target.value)}
       />
-      <ButtonAction disabled={!messageText}>Enviar</ButtonAction>
+      <ButtonAction disabled={!messageText}>{t('Send')}</ButtonAction>
     </form>
   )
 }

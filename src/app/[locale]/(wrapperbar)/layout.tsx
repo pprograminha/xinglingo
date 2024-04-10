@@ -2,6 +2,7 @@ import { getAuth } from '@/lib/auth/get-auth'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Channels } from '../components/channels'
+import { getTranslations } from 'next-intl/server'
 
 export default async function WrapperBarLayout({
   children,
@@ -9,6 +10,7 @@ export default async function WrapperBarLayout({
   children: React.ReactNode
 }>) {
   const { user } = await getAuth()
+  const t = await getTranslations()
   return (
     <main className="h-screen flex flex-row">
       <Channels />
@@ -38,7 +40,9 @@ export default async function WrapperBarLayout({
               )}
               <div className="flex flex-col text-right">
                 <span className="text-xs">{user.fullName}</span>
-                <span className="text-xs text-zinc-600">Ver perfil</span>
+                <span className="text-xs text-zinc-600">
+                  {t('View profile')}
+                </span>
               </div>
             </Link>
           )}

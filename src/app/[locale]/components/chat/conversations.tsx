@@ -4,45 +4,14 @@
 import { useChannels } from '@/hooks/use-channels'
 import * as Ably from 'ably'
 import { useChannel } from 'ably/react'
-import { SetStateAction, useEffect, useRef } from 'react'
-import { getConversations } from '../../../actions/conversations/get-conversations'
+import { useEffect, useRef } from 'react'
 import { Conversation } from './conversation'
 
-type TConversations = Awaited<ReturnType<typeof getConversations>>
-
 export function Conversations() {
-  const { currentChannelIndex, channels, setConversations } = useChannels()
-
-  const conversationsHandler = (
-    setStateAction: SetStateAction<TConversations>,
-  ) => {
-    if (typeof setStateAction === 'function') {
-      setConversations((cs) => {
-        return setStateAction(cs)
-      })
-      return
-    }
-    conversationsHandler(setStateAction)
-  }
+  const { currentChannelIndex, channels, upsertConversation } = useChannels()
 
   useChannel('status-updates', (conversation: Ably.Types.Message) => {
-    conversationsHandler((cs) => {
-      const conversationIndex = cs.findIndex(
-        (c) => c.id === conversation.data.id,
-      )
-
-      let conversations: TConversations | null = null
-
-      if (conversationIndex !== -1) {
-        cs[conversationIndex] = conversation.data
-
-        conversations = [...cs]
-      }
-
-      conversations = conversations || [conversation.data, ...cs]
-
-      return conversations
-    })
+    upsertConversation(conversation.data)
   })
 
   const conversationsContainerRef = useRef<HTMLDivElement | null>(null)

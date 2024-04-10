@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from './auth-options'
-import { User } from '../db/drizzle/@types'
+import { User } from '../db/drizzle/types'
 
 export const getAuth = async () => {
   const session = await getServerSession(authOptions)

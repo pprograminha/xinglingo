@@ -10,29 +10,26 @@ import {
   PronunciationAssessment,
   Conversation as TypeConversation,
   Word,
-} from '@/lib/db/drizzle/@types'
+} from '@/lib/db/drizzle/types'
 import { scoreColor, scoreStyle } from '@/lib/score-color'
 import { useChat } from 'ai/react'
 import { format, isSameDay } from 'date-fns'
 import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { createConversation } from '../../../actions/conversations/create-conversation'
-import { deleteConversation } from '../../../actions/conversations/delete-conversation'
-import { Collapsible } from '../../../components/collapsible'
-import { TextToHTML } from '../../../components/text-to-html'
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '../../../components/ui/avatar'
-import { Button } from '../../../components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '../../../components/ui/hover-card'
+} from '@/components/ui/hover-card'
 import { SpeechGenerator } from './speech-generator'
 import { useChannels } from '@/hooks/use-channels'
+import { createConversation } from '@/actions/conversations/create-conversation'
+import { deleteConversation } from '@/actions/conversations/delete-conversation'
+import { TextToHTML } from '@/components/text-to-html'
+import { Collapsible } from '@radix-ui/react-collapsible'
+import { useTranslations } from 'next-intl'
 
 type Conversations = (TypeConversation & {
   pronunciationAssessment:
@@ -52,6 +49,7 @@ export function Conversation({ conversation }: ConversationProps) {
   const { openPronunciation } = usePronunciation()
   const { removeConversation, upsertConversation, currentChannelIndex } =
     useChannels()
+  const t = useTranslations()
   const [isSounding, setIsSounding] = useState(false)
   const { uid } = useAuth()
   const {
@@ -236,7 +234,8 @@ export function Conversation({ conversation }: ConversationProps) {
                 <Loader2 className="animate-spin w-4 h-4" />
               ) : (
                 <>
-                  Ai tools <Sparkles className="w-4 ml-1" />
+                  {t('Translation and definition of vocabulary')}{' '}
+                  <Sparkles className="w-4 ml-1" />
                 </>
               )}
             </Button>
@@ -244,7 +243,9 @@ export function Conversation({ conversation }: ConversationProps) {
         {conversation.pronunciationAssessment ? (
           <div className="text-sm mb-1">
             <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
-              <span className="text-zinc-400 text-xs">Accuracy Score:</span>{' '}
+              <span className="text-zinc-400 text-xs">
+                {t('Accuracy Score')}:
+              </span>{' '}
               <span
                 className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
                 data-score-color={scoreColor(
@@ -255,7 +256,9 @@ export function Conversation({ conversation }: ConversationProps) {
               </span>
             </div>
             <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
-              <span className="text-zinc-400 text-xs">Completeness Score:</span>{' '}
+              <span className="text-zinc-400 text-xs">
+                {t('Completeness Score')}:
+              </span>{' '}
               <span
                 className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
                 data-score-color={scoreColor(
@@ -266,7 +269,9 @@ export function Conversation({ conversation }: ConversationProps) {
               </span>
             </div>
             <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
-              <span className="text-zinc-400 text-xs">Fluency Score:</span>{' '}
+              <span className="text-zinc-400 text-xs">
+                {t('Fluency Score')}:
+              </span>{' '}
               <span
                 className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
                 data-score-color={scoreColor(
@@ -277,7 +282,9 @@ export function Conversation({ conversation }: ConversationProps) {
               </span>
             </div>
             <div className="mb-1 dark:bg-zinc-900 p-1 rounded-md">
-              <span className="text-zinc-400 text-xs">Pron Score:</span>{' '}
+              <span className="text-zinc-400 text-xs">
+                {t('Pronunciation Score')}:
+              </span>{' '}
               <span
                 className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
                 data-score-color={scoreColor(
@@ -288,7 +295,9 @@ export function Conversation({ conversation }: ConversationProps) {
               </span>
             </div>
             <div className="mb-4 dark:bg-zinc-900 p-1 rounded-md">
-              <span className="text-zinc-400 text-xs">Prosody Score:</span>{' '}
+              <span className="text-zinc-400 text-xs">
+                {t('Prosody Score')}:
+              </span>{' '}
               <span
                 className="data-[score-color=red]:text-red-400 data-[score-color=green]:text-green-400 data-[score-color=yellow]:text-yellow-400"
                 data-score-color={scoreColor(
@@ -317,7 +326,8 @@ export function Conversation({ conversation }: ConversationProps) {
           </div>
         )}
         <p className="text-zinc-500 text-xs">
-          Criado em: {format(conversation.createdAt, 'yyyy/MM/dd HH:mm:ss')}
+          {t('Created at:')}{' '}
+          {format(conversation.createdAt, 'yyyy/MM/dd HH:mm:ss')}
         </p>
         {currentChannelIndex === 0 && (
           <Button
@@ -329,7 +339,7 @@ export function Conversation({ conversation }: ConversationProps) {
               removeConversation(conversation.id)
             }}
           >
-            Deletar <Trash2 className="w-4 ml-1" />
+            {t('Delete')} <Trash2 className="w-4 ml-1" />
           </Button>
         )}
       </HoverCardContent>

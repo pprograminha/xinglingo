@@ -5,7 +5,7 @@ import {
   Phoneme,
   PronunciationAssessment,
   Word,
-} from '@/lib/db/drizzle/@types'
+} from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 
 type Conversations = (Conversation & {

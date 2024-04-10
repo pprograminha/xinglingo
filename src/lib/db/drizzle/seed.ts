@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { db } from './query'
 import { users } from './schema'
-import { NewUser, User } from './@types'
+import { NewUser, User } from './types'
 
 const newUsers: NewUser[] = [
   {

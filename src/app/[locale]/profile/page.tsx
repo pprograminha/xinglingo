@@ -1,13 +1,16 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { getAuth } from '@/lib/auth/get-auth'
-import { DailyWords } from '@/app/dashboard/components/daily-words'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
+import { DailyWords } from '../dashboard/components/daily-words'
+import { getTranslations } from 'next-intl/server'
 
 const UserProfile = async () => {
   const { user } = await getAuth()
 
   if (!user) redirect('/')
+
+  const t = await getTranslations()
 
   const { green, red, yellow, words } = await getWordsList({
     user,
@@ -39,7 +42,7 @@ const UserProfile = async () => {
                       {green.words.length}
                     </span>
                     <span className="text-sm text-zinc-400">
-                      Palavras com melhores pontuações
+                      {t('Words with high scores')}
                     </span>
                   </div>
                   <div className="mr-4 p-3 text-center">
@@ -47,8 +50,7 @@ const UserProfile = async () => {
                       {yellow.words.length}
                     </span>
                     <span className="text-sm text-zinc-400">
-                      {' '}
-                      Palavras com pontuações medianas
+                      {t('Words with average scores')}
                     </span>
                   </div>
                   <div className="lg:mr-4 p-3 text-center">
@@ -56,8 +58,7 @@ const UserProfile = async () => {
                       {red.words.length}
                     </span>
                     <span className="text-sm text-zinc-400">
-                      {' '}
-                      Palavras com as piores pontuações
+                      {t('Words with low scores')}
                     </span>
                   </div>
                 </div>
@@ -68,7 +69,7 @@ const UserProfile = async () => {
                 {user.fullName}
               </h3>
               <div className="text-sm leading-normal mt-0 mb-2 text-zinc-400 font-bold uppercase">
-                Sua pontuação média é de{' '}
+                {t('Your average score is')}{' '}
                 <span>
                   {(
                     words.reduce((acc, w) => acc + w.avgAccuracyScore, 0) /

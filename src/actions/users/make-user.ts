@@ -1,5 +1,5 @@
 'use server'
-import { NewUser } from '@/lib/db/drizzle/@types'
+import { NewUser } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 import { users } from '@/lib/db/drizzle/schema'
 import { eq } from 'drizzle-orm'

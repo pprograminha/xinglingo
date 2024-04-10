@@ -1,5 +1,5 @@
 import { env } from 'process'
-import { Speech } from '../db/drizzle/@types'
+import { Speech } from '../db/drizzle/types'
 
 type SpeechClient = Speech['client']
 

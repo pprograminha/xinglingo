@@ -15,10 +15,10 @@ import {
   Phoneme,
   PronunciationAssessment,
   Word,
-} from '@/lib/db/drizzle/@types'
+} from '@/lib/db/drizzle/types'
 import { getConversation } from '@/actions/conversations/get-conversation'
 import { getAuth } from '@/lib/auth/get-auth'
-import { RecognitionResult } from '@/app/components/pronunciation-assessment/pronunciation-assesment-dash'
+import { RecognitionResult } from '@/app/[locale]/components/pronunciation-assessment/pronunciation-assesment-dash'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:

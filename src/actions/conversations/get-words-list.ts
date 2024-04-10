@@ -1,6 +1,6 @@
 'use server'
 import { withAuth } from '@/lib/auth/get-auth'
-import { User } from '@/lib/db/drizzle/@types'
+import { User } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 import { pronunciationsAssessment, words } from '@/lib/db/drizzle/schema'
 import {

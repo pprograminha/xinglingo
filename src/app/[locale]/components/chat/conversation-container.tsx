@@ -2,9 +2,11 @@
 import { useChannels } from '@/hooks/use-channels'
 import { Bone } from 'lucide-react'
 import { useEffect } from 'react'
-import { getConversations } from '../../../actions/conversations/get-conversations'
 import { Conversations } from './conversations'
+import { getConversations } from '@/actions/conversations/get-conversations'
+
 type Conversations = Awaited<ReturnType<typeof getConversations>>
+
 export function ConversationContainer() {
   const { setConversations, channels } = useChannels()
 

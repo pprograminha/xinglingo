@@ -10,10 +10,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DailyWords } from '@/app/dashboard/components/daily-words'
-import { WordsList } from '@/app/dashboard/components/words-list'
 import { ArrowLeft, WholeWord } from 'lucide-react'
 import Link from 'next/link'
+import { DailyWords } from './components/daily-words'
+import { WordsList } from './components/words-list'
 
 export const metadata: Metadata = {
   title: 'Dashboard',

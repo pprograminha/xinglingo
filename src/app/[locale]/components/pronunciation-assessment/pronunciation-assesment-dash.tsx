@@ -13,6 +13,7 @@ import { scoreColor, scoreStyle } from '@/lib/score-color'
 import { Info, RotateCcw } from 'lucide-react'
 import { Microphone } from './microphone'
 import { Button } from '@/components/ui/button'
+import { useTranslations } from 'next-intl'
 
 type PronunciationAssessment = {
   AccuracyScore: number
@@ -103,6 +104,7 @@ export function PronunciationAssessmentDash() {
     isLoading,
     retryRecord,
   } = useRecordConversation()
+  const t = useTranslations()
 
   const recognitionData = speechRecognitionResult?.NBest[0]
 
@@ -121,7 +123,8 @@ export function PronunciationAssessmentDash() {
           className="w-full dark:bg-red-400 scale-50 dark:hover:bg-red-500 dark:text-white mb-4 flex gap-2 items-center"
           onClick={() => retryRecord()}
         >
-          Retry <RotateCcw className="w-4" />
+          {t('Try the pronunciation assessment again')}{' '}
+          <RotateCcw className="w-4" />
         </Button>
       )}
       <Microphone />
@@ -137,7 +140,7 @@ export function PronunciationAssessmentDash() {
                   )}
                   className={`${scoreStyle}`}
                 >
-                  Accuracy Score
+                  {t('Accuracy Score')}
                 </TableHead>
                 <TableHead
                   data-score-color={scoreColor(
@@ -145,7 +148,7 @@ export function PronunciationAssessmentDash() {
                   )}
                   className={`${scoreStyle}`}
                 >
-                  Completeness Score
+                  {t('Completeness Score')}
                 </TableHead>
                 <TableHead
                   data-score-color={scoreColor(
@@ -153,7 +156,7 @@ export function PronunciationAssessmentDash() {
                   )}
                   className={`text-center ${scoreStyle}`}
                 >
-                  Pronunciation Score
+                  {t('Pronunciation Score')}
                 </TableHead>
                 <TableHead
                   data-score-color={scoreColor(
@@ -161,10 +164,12 @@ export function PronunciationAssessmentDash() {
                   )}
                   className={`text-right ${scoreStyle}`}
                 >
-                  Fluency Score
+                  {t('Fluency Score')}
                 </TableHead>
                 {omittedWords > 0 && (
-                  <TableHead className="text-right">Words Omitted</TableHead>
+                  <TableHead className="text-right">
+                    {t('Words Omitted')}
+                  </TableHead>
                 )}
               </TableRow>
             </TableHeader>

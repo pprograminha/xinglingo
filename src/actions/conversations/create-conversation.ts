@@ -1,7 +1,7 @@
 'use server'
 
 import { withAuth } from '@/lib/auth/get-auth'
-import { Conversation, User } from '@/lib/db/drizzle/@types'
+import { Conversation, User } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 import { conversations, users } from '@/lib/db/drizzle/schema'
 import { InferInsertModel, eq } from 'drizzle-orm'

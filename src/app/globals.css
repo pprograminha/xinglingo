@@ -5,7 +5,6 @@
     scrollbar-color: #181818 transparent;
     scrollbar-width: thin;
 
-    
     &::-webkit-scrollbar:hover {
         background-color: #181818;
     }
@@ -13,9 +12,12 @@
         width: 15px;
         background-color: transparent;
     }
-    
+
     &::-webkit-scrollbar-thumb {
         border-radius: 50rem;
         background-color: transparent;
     }
+}
+body {
+  background-color: #181818;
 }

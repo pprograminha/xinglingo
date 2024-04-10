@@ -3,6 +3,7 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { Separator } from '@radix-ui/react-separator'
 import { getDay, getMonth, isSameWeek, startOfDay } from 'date-fns'
+import { useTranslations } from 'next-intl'
 import {
   Bar,
   BarChart,
@@ -54,6 +55,7 @@ export function DailyWords({
   redWords,
   yellowWords,
 }: DailyWordsProps) {
+  const t = useTranslations()
   const currentDate = startOfDay(new Date())
 
   const weekGreenWords = greenWords.filter((w) =>
@@ -80,14 +82,14 @@ export function DailyWords({
   const daysOfWeek = Object.keys(day) as (keyof typeof day)[]
 
   const daysOfWeekWithScores = daysOfWeek.map((d) => ({
-    name: d,
+    name: t(d),
     ...getWordColors(d),
   }))
 
   const monthEntries = Object.entries(month) as [keyof typeof month, number][]
 
   const months = monthEntries.map(([m, mAsNum]) => ({
-    name: m,
+    name: t(m),
     total: greenWords.filter((w) => getMonth(w.createdAt) === mAsNum).length,
   }))
 

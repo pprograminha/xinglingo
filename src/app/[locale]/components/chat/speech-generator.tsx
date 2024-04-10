@@ -3,8 +3,8 @@ import { cn } from '@/lib/utils'
 import { AudioLines, Loader2 } from 'lucide-react'
 import { HtmlHTMLAttributes } from 'react'
 import { useFormStatus } from 'react-dom'
-import { Button, ButtonProps } from '../../../components/ui/button'
-import { toast } from '../../../components/ui/use-toast'
+import { Button, ButtonProps } from '@/components/ui/button'
+import { toast } from '@/components/ui/use-toast'
 import { Howl } from 'howler'
 
 type SpeechGeneratorProps = HtmlHTMLAttributes<HTMLButtonElement> & {
