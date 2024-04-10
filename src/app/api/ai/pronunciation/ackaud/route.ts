@@ -290,7 +290,7 @@ export async function POST(req: Request) {
       try {
         const client = new Ably.Rest(env.ABLY_API_KEY)
 
-        const channel = client.channels.get('conversations')
+        const channel = client.channels.get('status-updates')
 
         await channel.publish(
           'update-from-server',

@@ -42,7 +42,7 @@ export function Conversations({
     conversationsHandler(setStateAction)
   }
 
-  useChannel('conversations', (conversation: Ably.Types.Message) => {
+  useChannel('status-updates', (conversation: Ably.Types.Message) => {
     conversationsHandler((cs) => {
       const conversationIndex = cs.findIndex(
         (c) => c.id === conversation.data.id,
@@ -56,7 +56,7 @@ export function Conversations({
         conversations = [...cs]
       }
 
-      conversations = conversations || [conversation.data, ...cs]
+      conversations = conversations || [...cs, conversation.data]
 
       return conversations
     })

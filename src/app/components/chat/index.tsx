@@ -42,12 +42,12 @@ const Chat = ({ className, ...props }: ChatProps) => {
   const { isOpen, closePronunciation } = usePronunciation()
   const { uid } = useAuth()
 
-  const { channel } = useChannel('conversations')
+  const { channel } = useChannel('status-updates')
 
   const sendMessageHandler = (conversation: Conversation) => {
     if (channel === null) return
 
-    channel.publish('conversation', conversation)
+    channel.publish('update-from-client', conversation)
   }
 
   return (
