@@ -3,25 +3,18 @@
 
 import { useAuth } from '@/hooks/use-auth'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
-import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { usePronunciation } from '@/hooks/use-pronunciation'
+import { useRecordConversation } from '@/hooks/use-record-conversation'
 import {
-  Conversation as TypeConversation,
   Phoneme,
   PronunciationAssessment,
+  Conversation as TypeConversation,
   Word,
 } from '@/lib/db/drizzle/@types'
 import { scoreColor, scoreStyle } from '@/lib/score-color'
 import { useChat } from 'ai/react'
 import { format, isSameDay } from 'date-fns'
-import {
-  AudioLines,
-  Loader2,
-  Mic,
-  MicOff,
-  Sparkles,
-  Trash2,
-} from 'lucide-react'
+import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { createConversation } from '../../../actions/conversations/create-conversation'
 import { deleteConversation } from '../../../actions/conversations/delete-conversation'
@@ -38,6 +31,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '../../../components/ui/hover-card'
+import { SpeechGenerator } from './speech-generator'
 
 type Conversations = (TypeConversation & {
   pronunciationAssessment:
@@ -63,6 +57,7 @@ export function Conversation({
   removeConversation,
 }: ConversationProps) {
   const { openPronunciation } = usePronunciation()
+  const [isSounding, setIsSounding] = useState(false)
   const { uid } = useAuth()
   const {
     conversation: recConversation,
@@ -155,7 +150,7 @@ export function Conversation({
                 )}
               </div>
               <p className="leading-relaxed group-data-[me=true]:text-right">
-                <span className="block font-bold text-gray-400  group-data-[me=false]:border group-data-[me=false]:rounded-md group-data-[me=false]:px-1 group-data-[me=false]:text-xs group-data-[me=false]:font-normal">
+                <span className="block font-bold text-gray-400  group-data-[me=false]:border group-data-[me=false]:rounded-md group-data-[me=false]:px-1 group-data-[me=false]:text-xs text-xs md:text-md group-data-[me=false]:font-normal">
                   {conversation.author?.fullName || 'Teodor AI'}
                 </span>
               </p>
@@ -209,22 +204,18 @@ export function Conversation({
                     openPronunciation()
                   }
                 }}
-                className="flex-shrink-0 w-full md:w-9 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
+                className="flex-shrink-0 w-9 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
               >
                 {recConversation?.id === conversation.id ? <Mic /> : <MicOff />}
               </Button>
             )}
             {conversation.authorId && (
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={isLoading}
-                data-on={recConversation?.id === conversation.id}
-                onClick={() => {}}
-                className="flex-shrink-0 opacity-30 pointer-events-none w-full md:w-9 dark:data-[on=true]:border-red-500 data-[on=true]:border-red-500 data-[on=true]:animate-pulse data-[on=true]:duration-700 data-[on=true]:cursor-not-allowed"
-              >
-                {<AudioLines />}
-              </Button>
+              <SpeechGenerator
+                onSoundStart={() => setIsSounding(true)}
+                onSoundEnd={() => setIsSounding(false)}
+                conversationId={conversation.id}
+                data-on={isSounding}
+              />
             )}
           </div>
         </div>

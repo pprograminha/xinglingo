@@ -37,7 +37,7 @@ export default async function WrapperBarLayout({
                 />
               )}
               <div className="flex flex-col text-right">
-                <span>{user.fullName}</span>
+                <span className="text-xs">{user.fullName}</span>
                 <span className="text-xs text-zinc-600">Ver perfil</span>
               </div>
             </Link>

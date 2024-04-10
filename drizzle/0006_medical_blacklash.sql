@@ -1,0 +1,1 @@
+ALTER TABLE "speechs" ADD COLUMN "voice" text NOT NULL;

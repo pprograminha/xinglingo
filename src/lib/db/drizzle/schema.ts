@@ -3,6 +3,7 @@ import {
   doublePrecision,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -61,6 +62,36 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
+export const speechClientEnum = pgEnum('client', ['cloudflare-s3'])
+
+export const speechsToConversations = pgTable(
+  'speechsToConversations',
+  {
+    speechId: uuid('speechId')
+      .references(() => speechs.id, {
+        onDelete: 'cascade',
+      })
+      .notNull(),
+    conversationId: uuid('conversationId')
+      .references(() => conversations.id, {
+        onDelete: 'cascade',
+      })
+      .notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.speechId, t.conversationId] }),
+  }),
+)
+
+export const speechs = pgTable('speechs', {
+  id: uuid('id').primaryKey(),
+  speech: text('speech').notNull(),
+  voice: text('voice').notNull(),
+  speed: doublePrecision('speed').notNull().default(1),
+  client: speechClientEnum('client').default('cloudflare-s3').notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
 
 export const words = pgTable('words', {
   id: uuid('id').primaryKey(),
@@ -91,6 +122,20 @@ export const phonemes = pgTable('phonemes', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
+export const speechsToConversationsRelations = relations(
+  speechsToConversations,
+  ({ one }) => ({
+    speechs: one(speechs, {
+      fields: [speechsToConversations.speechId],
+      references: [speechs.id],
+    }),
+    conversations: one(conversations, {
+      fields: [speechsToConversations.conversationId],
+      references: [conversations.id],
+    }),
+  }),
+)
+
 export const wordsRelations = relations(words, ({ many, one }) => ({
   pronunciationAssessment: one(pronunciationsAssessment, {
     fields: [words.pronunciationAssessmentId],
@@ -104,13 +149,21 @@ export const usersRelations = relations(users, ({ many }) => ({
   pronunciationsAssessment: many(pronunciationsAssessment),
 }))
 
-export const conversationsRelations = relations(conversations, ({ one }) => ({
-  pronunciationAssessment: one(pronunciationsAssessment),
-  author: one(users, {
-    fields: [conversations.authorId],
-    references: [users.id],
-  }),
+export const speechsRelations = relations(speechs, ({ many }) => ({
+  speechsToConversations: many(speechsToConversations),
 }))
+
+export const conversationsRelations = relations(
+  conversations,
+  ({ one, many }) => ({
+    pronunciationAssessment: one(pronunciationsAssessment),
+    speechsToConversations: many(speechsToConversations),
+    author: one(users, {
+      fields: [conversations.authorId],
+      references: [users.id],
+    }),
+  }),
+)
 
 export const pronunciationsAssessmentRelations = relations(
   pronunciationsAssessment,

@@ -3,6 +3,7 @@ import {
   conversations,
   phonemes,
   pronunciationsAssessment,
+  speechs,
   users,
   words,
 } from './schema'
@@ -17,4 +18,5 @@ export type Phoneme = InferSelectModel<typeof phonemes>
 export type Conversation = InferSelectModel<typeof conversations> & {
   author: User | null
 }
+export type Speech = InferSelectModel<typeof speechs>
 export type NewUser = InferInsertModel<typeof users>

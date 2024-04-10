@@ -1,0 +1,1 @@
+ALTER TABLE "speechs" ALTER COLUMN "speech" SET NOT NULL;

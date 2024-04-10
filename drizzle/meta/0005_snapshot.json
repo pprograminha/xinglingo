@@ -1,0 +1,493 @@
+{
+  "id": "e40bbfd7-6d7c-4b7e-9657-6b3ebd9ccfca",
+  "prevId": "6eeca058-5a9c-4e83-b30b-a574dd2094c9",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "conversations": {
+      "name": "conversations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authorId": {
+          "name": "authorId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conversations_authorId_users_id_fk": {
+          "name": "conversations_authorId_users_id_fk",
+          "tableFrom": "conversations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "authorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "phonemes": {
+      "name": "phonemes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "phoneme": {
+          "name": "phoneme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wordId": {
+          "name": "wordId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "phonemes_wordId_words_id_fk": {
+          "name": "phonemes_wordId_words_id_fk",
+          "tableFrom": "phonemes",
+          "tableTo": "words",
+          "columnsFrom": [
+            "wordId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "pronunciationsAssessment": {
+      "name": "pronunciationsAssessment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conversationId": {
+          "name": "conversationId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creatorId": {
+          "name": "creatorId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "completenessScore": {
+          "name": "completenessScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fluencyScore": {
+          "name": "fluencyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pronScore": {
+          "name": "pronScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prosodyScore": {
+          "name": "prosodyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pronunciationsAssessment_conversationId_conversations_id_fk": {
+          "name": "pronunciationsAssessment_conversationId_conversations_id_fk",
+          "tableFrom": "pronunciationsAssessment",
+          "tableTo": "conversations",
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "pronunciationsAssessment_creatorId_users_id_fk": {
+          "name": "pronunciationsAssessment_creatorId_users_id_fk",
+          "tableFrom": "pronunciationsAssessment",
+          "tableTo": "users",
+          "columnsFrom": [
+            "creatorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "speechs": {
+      "name": "speechs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "speech": {
+          "name": "speech",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client": {
+          "name": "client",
+          "type": "client",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'cloudflare-s3'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "speechsToConversations": {
+      "name": "speechsToConversations",
+      "schema": "",
+      "columns": {
+        "speechId": {
+          "name": "speechId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conversationId": {
+          "name": "conversationId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "speechsToConversations_speechId_speechs_id_fk": {
+          "name": "speechsToConversations_speechId_speechs_id_fk",
+          "tableFrom": "speechsToConversations",
+          "tableTo": "speechs",
+          "columnsFrom": [
+            "speechId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "speechsToConversations_conversationId_conversations_id_fk": {
+          "name": "speechsToConversations_conversationId_conversations_id_fk",
+          "tableFrom": "speechsToConversations",
+          "tableTo": "conversations",
+          "columnsFrom": [
+            "conversationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "speechsToConversations_speechId_conversationId_pk": {
+          "name": "speechsToConversations_speechId_conversationId_pk",
+          "columns": [
+            "speechId",
+            "conversationId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fullName": {
+          "name": "fullName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        },
+        "users_image_unique": {
+          "name": "users_image_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "image"
+          ]
+        }
+      }
+    },
+    "words": {
+      "name": "words",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "word": {
+          "name": "word",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pronunciationAssessmentId": {
+          "name": "pronunciationAssessmentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accuracyScore": {
+          "name": "accuracyScore",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "words_pronunciationAssessmentId_pronunciationsAssessment_id_fk": {
+          "name": "words_pronunciationAssessmentId_pronunciationsAssessment_id_fk",
+          "tableFrom": "words",
+          "tableTo": "pronunciationsAssessment",
+          "columnsFrom": [
+            "pronunciationAssessmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "role": {
+      "name": "role",
+      "values": {
+        "superadmin": "superadmin",
+        "admin": "admin",
+        "subscriber": "subscriber",
+        "user": "user"
+      }
+    },
+    "client": {
+      "name": "client",
+      "values": {
+        "cloudflare-s3": "cloudflare-s3"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

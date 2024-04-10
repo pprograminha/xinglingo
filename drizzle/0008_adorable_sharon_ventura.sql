@@ -1,0 +1,1 @@
+ALTER TABLE "speechs" ADD COLUMN "speed" double precision DEFAULT 1 NOT NULL;
