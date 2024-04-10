@@ -7,13 +7,7 @@ import { HtmlHTMLAttributes } from 'react'
 type ChannelsProps = HtmlHTMLAttributes<HTMLUListElement>
 
 export const Channels = ({ className, ...props }: ChannelsProps) => {
-  const { channelIndex, onChannelIndex, groupConversationsPerDay } =
-    useChannels()
-
-  const channels = Array.from(
-    { length: groupConversationsPerDay.length },
-    (_, v) => v + 1,
-  )
+  const { currentChannelIndex, onChannelIndex, channels } = useChannels()
 
   if (channels.length === 0) return <div className="md:pr-4 pr-2" />
 
@@ -26,8 +20,8 @@ export const Channels = ({ className, ...props }: ChannelsProps) => {
         <div className="bg-zinc-600/15 py-2 flex flex-col gap-2 rounded-md overflow-y-auto overflow-x-hidden max-h-[calc(100vh_-_16px)] md:max-h-[calc(100vh_-_24px)]">
           {channels.map((channel, index) => (
             <li
-              key={channel}
-              data-selected={channelIndex === index}
+              key={channel.id}
+              data-selected={currentChannelIndex === channel.channelIndex}
               className="group"
             >
               <Button
@@ -61,7 +55,7 @@ export const Channels = ({ className, ...props }: ChannelsProps) => {
                   group-data-[selected=true]:dark:bg-green-700/20
                   group-data-[selected=true]:dark:text-green-300"
               >
-                <span className="text-sm inline font-bold">{channel}</span>
+                <span className="text-sm inline font-bold">{channel.id}</span>
               </Button>
             </li>
           ))}

@@ -32,6 +32,7 @@ import {
   HoverCardTrigger,
 } from '../../../components/ui/hover-card'
 import { SpeechGenerator } from './speech-generator'
+import { useChannels } from '@/hooks/use-channels'
 
 type Conversations = (TypeConversation & {
   pronunciationAssessment:
@@ -45,18 +46,12 @@ type Conversations = (TypeConversation & {
 
 type ConversationProps = {
   conversation: Conversations['0']
-  channelIndex: number
-  onNewConversations: (newConversations: Conversations) => void
-  removeConversation: (conversationId: string) => void
 }
 
-export function Conversation({
-  conversation,
-  channelIndex,
-  onNewConversations,
-  removeConversation,
-}: ConversationProps) {
+export function Conversation({ conversation }: ConversationProps) {
   const { openPronunciation } = usePronunciation()
+  const { removeConversation, upsertConversation, currentChannelIndex } =
+    useChannels()
   const [isSounding, setIsSounding] = useState(false)
   const { uid } = useAuth()
   const {
@@ -70,9 +65,7 @@ export function Conversation({
         text: message.content,
       }).then((conversation) => {
         if (conversation)
-          onNewConversations([
-            { ...conversation, pronunciationAssessment: null },
-          ])
+          upsertConversation({ ...conversation, pronunciationAssessment: null })
       })
     },
     api: '/api/ai/chat',
@@ -188,8 +181,8 @@ export function Conversation({
               )}
             </div>
           </div>
-          <div className="flex items-center w-20 gap-1 group-data-[me=true]:ml-auto">
-            {channelIndex === 0 && conversation.authorId && (
+          <div className="flex items-center w-20 gap-1 group-data-[me=true]:justify-end group-data-[me=true]:ml-auto">
+            {currentChannelIndex === 0 && conversation.authorId && (
               <Button
                 variant="outline"
                 size="icon"
@@ -326,7 +319,7 @@ export function Conversation({
         <p className="text-zinc-500 text-xs">
           Criado em: {format(conversation.createdAt, 'yyyy/MM/dd HH:mm:ss')}
         </p>
-        {channelIndex === 0 && (
+        {currentChannelIndex === 0 && (
           <Button
             size="sm"
             variant="outline"

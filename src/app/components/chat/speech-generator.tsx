@@ -6,6 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { Button, ButtonProps } from '../../../components/ui/button'
 import { toast } from '../../../components/ui/use-toast'
 import { Howl } from 'howler'
+
 type SpeechGeneratorProps = HtmlHTMLAttributes<HTMLButtonElement> & {
   conversationId: string
   onSoundEnd: () => void
@@ -57,9 +58,6 @@ export const SpeechGenerator = ({
         onSoundEnd()
       })
     } catch (error) {
-      console.log({
-        error,
-      })
       return toast({
         title: 'Falha ao tentar gerar a fala',
         variant: 'destructive',

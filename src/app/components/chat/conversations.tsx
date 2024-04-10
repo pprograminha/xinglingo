@@ -4,37 +4,20 @@
 import { useChannels } from '@/hooks/use-channels'
 import * as Ably from 'ably'
 import { useChannel } from 'ably/react'
-import { SetStateAction, useEffect, useRef, useState } from 'react'
+import { SetStateAction, useEffect, useRef } from 'react'
 import { getConversations } from '../../../actions/conversations/get-conversations'
 import { Conversation } from './conversation'
 
 type TConversations = Awaited<ReturnType<typeof getConversations>>
 
-type ConversationProps = {
-  conversations: TConversations
-  getGroupConversationsPerDay: (
-    conversations: TConversations,
-  ) => TConversations[]
-}
-
-export function Conversations({
-  conversations: defaultConversations,
-  getGroupConversationsPerDay,
-}: ConversationProps) {
-  const { channelIndex, groupConversationsPerDay, onGroupConversationsPerDay } =
-    useChannels()
-
-  const [conversations, setConversations] = useState<TConversations>(() => {
-    return defaultConversations
-  })
+export function Conversations() {
+  const { currentChannelIndex, channels, setConversations } = useChannels()
 
   const conversationsHandler = (
     setStateAction: SetStateAction<TConversations>,
   ) => {
     if (typeof setStateAction === 'function') {
       setConversations((cs) => {
-        onGroupConversationsPerDay(getGroupConversationsPerDay(cs))
-
         return setStateAction(cs)
       })
       return
@@ -56,7 +39,7 @@ export function Conversations({
         conversations = [...cs]
       }
 
-      conversations = conversations || [...cs, conversation.data]
+      conversations = conversations || [conversation.data, ...cs]
 
       return conversations
     })
@@ -71,49 +54,20 @@ export function Conversations({
     })
   }, [])
 
-  const dayConversations = groupConversationsPerDay[channelIndex] || []
+  const dayConversations =
+    channels.find((c) => c.channelIndex === currentChannelIndex)
+      ?.conversations || []
 
   return (
     <div className="flex-grow overflow-y-auto overflow-x-hidden h-[50vh]">
       <div
-        data-center={conversations.length === 0}
+        data-center={dayConversations.length === 0}
         className="data-[center=true]:flex flex-col data-[center=true]:items-center data-[center=true]:justify-center"
       >
-        {conversations.length > 0 && (
+        {dayConversations.length > 0 && (
           <div className="flex flex-col">
             {dayConversations.map((conversation) => (
-              <Conversation
-                key={conversation.id}
-                removeConversation={(cId) =>
-                  conversationsHandler((cs) => {
-                    const conversationIndex = cs.findIndex((c) => c.id === cId)
-
-                    if (conversationIndex !== -1)
-                      cs.splice(conversationIndex, 1)
-
-                    return [...cs]
-                  })
-                }
-                onNewConversations={(newConversations) => {
-                  conversationsHandler((cs) => {
-                    newConversations.forEach((nc) => {
-                      const conversationIndex = cs.findIndex(
-                        (c) => c.id === nc.id,
-                      )
-
-                      if (conversationIndex !== -1) {
-                        cs[channelIndex] = nc
-                      } else {
-                        cs.push(nc)
-                      }
-                    })
-
-                    return [...cs]
-                  })
-                }}
-                channelIndex={channelIndex}
-                conversation={conversation}
-              />
+              <Conversation key={conversation.id} conversation={conversation} />
             ))}
           </div>
         )}
