@@ -12,6 +12,8 @@
     "db:migrate:generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.552.0",
+    "@aws-sdk/s3-request-presigner": "^3.552.0",
     "@hookform/resolvers": "^3.3.4",
     "@neondatabase/serverless": "^0.9.0",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -40,6 +42,7 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.7",
     "embla-carousel-react": "^8.0.1",
+    "howler": "^2.2.4",
     "lucide-react": "^0.365.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
     "next": "14.1.4",
@@ -64,6 +67,7 @@
     "@rocketseat/eslint-config": "^2.2.2",
     "@types/audiobuffer-to-wav": "^1.0.4",
     "@types/dom-speech-recognition": "^0.0.4",
+    "@types/howler": "^2.2.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
