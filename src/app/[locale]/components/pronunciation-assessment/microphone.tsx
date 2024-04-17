@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { useRecordConversation } from '@/hooks/use-record-conversation'
 import { Mic, Pause } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useState } from 'react'
 
 export function Microphone() {
   const [textareaValue, setTextareaValue] = useState('')
+  const t = useTranslations()
 
   const {
     conversation,
@@ -27,16 +29,18 @@ export function Microphone() {
             <div className="space-y-1 flex flex-col w-full">
               <p className="text-sm font-medium leading-none">
                 {isRecording ? (
-                  'Recording'
+                  t('Recording')
                 ) : (
                   <div className="flex items-center gap-2">
                     <div className="rounded-full w-2 h-2 bg-blue-400 animate-pulse" />
-                    Insira o texto antes de iniciar a gravação
+                    {t('Enter text before starting recording')}
                   </div>
                 )}
               </p>
               {isRecording && (
-                <p className="text-sm text-muted-foreground">Escutando...</p>
+                <p className="text-sm text-muted-foreground">
+                  {t('Listening')}...
+                </p>
               )}
             </div>
             <div className="flex flex-col gap-2 items-center">

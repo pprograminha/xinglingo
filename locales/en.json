@@ -10,7 +10,7 @@
   "Try the pronunciation assessment again": "Try the pronunciation assessment again",
   "Enter text before starting recording": "Enter text before starting recording",
   "Recording": "Recording",
-  "Listening...": "Listening...",
+  "Listening": "Listening",
   "Initial silence timeout! Please try again": "Initial silence timeout! Please try again",
   "Words with average scores": "Words with average scores",
   "Words with low scores": "Words with low scores",
@@ -59,5 +59,16 @@
   "Thursday": "Thursday",
   "Friday": "Friday",
   "Saturday": "Saturday",
-  "Words Omitted": "Words Omitted"
+  "Words Omitted": "Words Omitted",
+  "Search language": "Search language",
+  "No results found": "No results found",
+  "Get started": "Get started",
+  "Find the right AI tutor for you.": "Find the right AI tutor for you.",
+  "What do you want to learn?": "What do you want to learn?",
+  "What's your language level?": "What's your {lang} level?",
+  "I'm just starting": "I'm just starting",
+  "I know the basics": "I know the basics",
+  "I'm conversational": "I'm conversational",
+  "I'm fluent in most situations": "I'm fluent in most situations",
+  "Tell us how you’d like to learn to get a personalized choice of AI tutors": "Tell us how you’d like to learn to get a personalized choice of AI tutors"
 }

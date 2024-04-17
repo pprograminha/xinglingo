@@ -13,7 +13,9 @@ export async function POST(req: Request) {
     messages: [
       {
         role: 'system',
-        content: env.OPENAI_PROMPT,
+        content: `
+        De inglês para .
+        ${env.OPENAI_PROMPT}`,
       },
       ...messages,
     ],

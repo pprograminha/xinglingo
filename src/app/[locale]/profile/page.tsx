@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { DailyWords } from '../dashboard/components/daily-words'
 import { getTranslations } from 'next-intl/server'
+import { LogOut } from '@/components/logout'
 
 const UserProfile = async () => {
   const { user } = await getAuth()
@@ -34,6 +35,7 @@ const UserProfile = async () => {
                     />
                   )}
                 </div>
+                <LogOut />
               </div>
               <div className="w-full px-4 text-center mt-20">
                 <div className="flex justify-center py-4 lg:pt-4 pt-8">

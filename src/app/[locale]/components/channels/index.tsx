@@ -3,6 +3,13 @@ import { Button } from '@/components/ui/button'
 import { useChannels } from '@/hooks/use-channels'
 import { cn } from '@/lib/utils'
 import { HtmlHTMLAttributes } from 'react'
+import { VT323 as FontSans } from 'next/font/google'
+
+const fontSans = FontSans({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-sans',
+})
 
 type ChannelsProps = HtmlHTMLAttributes<HTMLUListElement>
 
@@ -55,7 +62,14 @@ export const Channels = ({ className, ...props }: ChannelsProps) => {
                   group-data-[selected=true]:dark:bg-green-700/20
                   group-data-[selected=true]:dark:text-green-300"
               >
-                <span className="text-sm inline font-bold">{channel.id}</span>
+                <span
+                  className={cn(
+                    'text-sm inline font-bold font-sans',
+                    fontSans.variable,
+                  )}
+                >
+                  {channel.id}
+                </span>
               </Button>
             </li>
           ))}
