@@ -1,4 +1,3 @@
-import { GoogleAuth } from '@/components/google-auth'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
@@ -41,10 +40,7 @@ export default async function RootLayout({
         <Toaster />
         <Sonner />
         <NextIntlProvider>
-          <Wrapper>
-            {children}
-            <GoogleAuth />
-          </Wrapper>
+          <Wrapper>{children}</Wrapper>
         </NextIntlProvider>
       </body>
     </html>

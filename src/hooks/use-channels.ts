@@ -62,7 +62,7 @@ export const useChannels = create<ChannelState>((set, get) => ({
 
     set(() => ({
       conversations: newConversations,
-      channels: getGroupConversationsPerDay(newConversations),
+      channels: getGroupConversationsPerDay(newConversations || []),
     }))
   },
   removeConversation: (conversationId: string) => {

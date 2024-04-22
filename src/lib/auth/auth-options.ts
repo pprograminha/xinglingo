@@ -2,6 +2,7 @@ import { makeUser } from '@/actions/users/make-user'
 import { env } from '@/env'
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+// import AppleProvider from 'next-auth/providers/apple'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -9,6 +10,10 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    // AppleProvider({
+    //   clientId: env.GOOGLE_CLIENT_ID,
+    //   clientSecret: env.GOOGLE_CLIENT_SECRET,
+    // }),
   ],
   callbacks: {
     async signIn({ user }) {
@@ -39,7 +44,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    error: '/error',
-    signIn: '/',
+    error: '/auth',
+    signIn: '/auth',
+    newUser: '/',
   },
 }

@@ -19,37 +19,27 @@ import {
 import { useSize } from '@/hooks/use-size'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
-
-const langs = [
-  {
-    value: 'English',
-    label: 'English',
-  },
-  {
-    value: 'Español',
-    label: 'Español',
-  },
-  {
-    value: 'Français',
-    label: 'Français',
-  },
-  {
-    value: 'Português',
-    label: 'Português',
-  },
-  {
-    value: '國語',
-    label: '國語',
-  },
-]
+import { useSteps } from '@/hooks/use-steps'
+import { Locale, langs } from '@/lib/intl/locales'
 
 export function Combobox() {
   const [open, setOpen] = React.useState(false)
-  const defaultValue = langs[0].value
-  const [value, setValue] = React.useState(defaultValue)
+  const t = useTranslations()
+  const { steps, setStep } = useSteps()
+
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const { width } = useSize(buttonRef)
-  const t = useTranslations()
+
+  const langsValues = Object.entries(langs(t)).map(([value, label]) => ({
+    value,
+    label,
+  }))
+
+  const defaultValue = langsValues[0]?.value
+
+  const value = steps[1] || defaultValue
+
+  const label = langsValues.find((l) => l.value === value)?.label
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -61,7 +51,7 @@ export function Combobox() {
           aria-expanded={open}
           className="lg:w-[400px] md:w-[300px] w-full p-6 justify-between"
         >
-          {value}
+          {label}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -71,14 +61,15 @@ export function Combobox() {
             <CommandInput placeholder={`${t('Search language')}...`} />
             <CommandEmpty>{t('No results found')}</CommandEmpty>
             <CommandList className="w-full">
-              {langs.map((lang) => (
+              {langsValues.map((lang) => (
                 <CommandItem
                   key={lang.value}
                   value={lang.value}
                   onSelect={(currentValue) => {
-                    setValue(
-                      currentValue === value ? defaultValue : currentValue,
-                    )
+                    const newValue =
+                      currentValue === value ? defaultValue : currentValue
+
+                    setStep(1, newValue as Locale)
                     setOpen(false)
                   }}
                 >

@@ -31,23 +31,23 @@ export const microsoftTextToSpeech = ({ text, voice }: TextToSpeechData) => {
   // You will receive one or more synthesizing events as a speech phrase is synthesized.
   // You can use this callback to streaming receive the synthesized audio.
   synthesizer.synthesizing = (s, e) => {
-    const str =
+    console.log(
       '(synthesizing) Reason: ' +
-      sdk.ResultReason[e.result.reason] +
-      ' Audio chunk length: ' +
-      e.result.audioData.byteLength
-    console.log(str)
+        sdk.ResultReason[e.result.reason] +
+        ' Audio chunk length: ' +
+        e.result.audioData.byteLength,
+    )
   }
 
   // The event visemeReceived signals that a viseme is detected.
   // a viseme is the visual description of a phoneme in spoken language. It defines the position of the face and mouth when speaking a word.
   synthesizer.visemeReceived = (s, e) => {
-    const str =
+    console.log(
       '(viseme) : Viseme event received. Audio offset: ' +
-      e.audioOffset / 10000 +
-      'ms, viseme id: ' +
-      e.visemeId
-    console.log(str)
+        e.audioOffset / 10000 +
+        'ms, viseme id: ' +
+        e.visemeId,
+    )
   }
 
   // The event synthesis completed signals that the synthesis is completed.

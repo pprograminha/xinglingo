@@ -9,7 +9,9 @@ import { LogOut } from '@/components/logout'
 const UserProfile = async () => {
   const { user } = await getAuth()
 
-  if (!user) redirect('/')
+  if (!user) {
+    redirect('/auth')
+  }
 
   const t = await getTranslations()
 

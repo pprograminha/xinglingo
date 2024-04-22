@@ -3,7 +3,8 @@ import createIntlMiddleware from 'next-intl/middleware'
 import { NextRequest } from 'next/server'
 import { locales } from './lib/intl/locales'
 
-const publicPages = ['/', '/get-started']
+const publicPages = ['/get-started', '/get-started/.*']
+const authPages = ['/auth']
 
 const intlMiddleware = createIntlMiddleware({
   locales,
@@ -12,29 +13,45 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: 'always',
 })
 
+const isAuthPage = (pathname: string) => {
+  const authPathnameRegex = RegExp(
+    `^(/(${locales.join('|')}))?(${authPages.join('|')})?/?$`,
+    'i',
+  )
+  return authPathnameRegex.test(pathname)
+}
+const isPublicPage = (pathname: string) => {
+  const publicPathnameRegex = RegExp(
+    `^(/(${locales.join('|')}))?(${publicPages.join('|')})?/?$`,
+    'i',
+  )
+
+  return publicPathnameRegex.test(pathname)
+}
+
 const authMiddleware = withAuth(
   function onSuccess(req) {
     return intlMiddleware(req)
   },
   {
     callbacks: {
-      authorized: ({ token }) => token != null,
+      authorized: ({ token, req }) => {
+        if (isAuthPage(req.nextUrl.pathname)) {
+          return true
+        }
+
+        return token != null
+      },
     },
     pages: {
-      signIn: '/',
+      signIn: '/auth',
+      newUser: '/',
     },
   },
 )
 
 export default function middleware(req: NextRequest) {
-  const publicPathnameRegex = RegExp(
-    `^(/(${locales.join('|')}))?(${publicPages.join('|')})?/?$`,
-    'i',
-  )
-
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
-
-  if (isPublicPage) {
+  if (isPublicPage(req.nextUrl.pathname) || isAuthPage(req.nextUrl.pathname)) {
     return intlMiddleware(req)
   } else {
     return (authMiddleware as typeof intlMiddleware)(req)
