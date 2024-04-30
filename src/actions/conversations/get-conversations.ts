@@ -1,6 +1,6 @@
 'use server'
 
-import { withAuth } from '@/lib/auth/get-auth'
+import { getAuth, withAuth } from '@/lib/auth/get-auth'
 import {
   Conversation,
   Phoneme,
@@ -24,8 +24,12 @@ type Conversations = (Conversation & {
 export const getConversations = async (): Promise<Conversations> => {
   return (
     await withAuth(async () => {
+      const { user } = await getAuth()
+
+      if (!user) return []
+
       const conversationsData = await db.query.conversations.findMany({
-        // where: ({ authorId }, { isNotNull }) => isNotNull(authorId),
+        where: ({ authorId }, { eq }) => eq(authorId, user.id),
         with: {
           author: true,
           pronunciationAssessment: {

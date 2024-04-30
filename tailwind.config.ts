@@ -38,6 +38,27 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'music-bar': {
+          '0%': {
+            height: '10%',
+          },
+
+          '25%': {
+            height: '75%',
+          },
+
+          '50%': {
+            height: '50%',
+          },
+
+          '75%': {
+            height: '100%',
+          },
+
+          '100%': {
+            height: '10%',
+          },
+        },
         'shadow-drop-2-center': {
           '0%': {
             transform: 'translateZ(0)',
@@ -58,6 +79,7 @@ const config = {
         },
       },
       animation: {
+        'music-bar': 'music-bar 1s ease-out infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'shadow-drop-2-center':

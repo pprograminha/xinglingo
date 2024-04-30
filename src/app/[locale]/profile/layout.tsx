@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import { SideBar } from './components/sidebar'
 
 export const metadata: Metadata = {
-  title: 'LingoAI',
+  title: 'Lingos AI',
 }
 
 export default function RootLayout({

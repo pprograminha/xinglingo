@@ -120,7 +120,8 @@ export function PronunciationAssessmentDash() {
     <div className="min-h-[300px] md:h-[calc(100vh_-_420px)] overflow-y-auto">
       {previousConversation && !isLoading && (
         <Button
-          className="w-full dark:bg-red-400 scale-75 dark:hover:bg-red-500 dark:text-white mb-4 flex gap-2 items-center"
+          className="w-full max-w-sm mx-auto mb-4 flex gap-2 items-center"
+          variant="secondary"
           onClick={() => retryRecord()}
         >
           {t('Try the pronunciation assessment again')}{' '}

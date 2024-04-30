@@ -14,6 +14,9 @@ type ConversationsCallback = (conversations: Conversations) => Conversations
 interface ChannelState {
   currentChannelIndex: number
   channels: Channel[]
+  isFetching: boolean
+  setIsFetching: (isFetching: boolean) => void
+
   conversations: Conversations
   onChannelIndex: (channelIndex: number) => void
   setConversations: (
@@ -54,6 +57,10 @@ export const useChannels = create<ChannelState>((set, get) => ({
   currentChannelIndex: 0,
   channels: [],
   conversations: [],
+
+  isFetching: false,
+  setIsFetching: (isFetching: boolean) => set(() => ({ isFetching })),
+
   setConversations: (conversations: Conversations | ConversationsCallback) => {
     const newConversations =
       typeof conversations === 'function'

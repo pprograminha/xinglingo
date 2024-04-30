@@ -14,6 +14,8 @@ export async function generatePhraseWithAi(): Promise<string | null> {
 
         Você gerará somente uma frase em inglês.
         As vezes gere a frase como se fosse uma expressão.
+
+        Respeite o contexto da conversa e a gramática.
       `
 
       const messages = phrases.map((phrase) => ({
@@ -30,12 +32,6 @@ export async function generatePhraseWithAi(): Promise<string | null> {
           },
           ...messages,
         ],
-        response_format: {
-          type: 'json_object',
-        },
-        frequency_penalty: 2,
-        presence_penalty: 2,
-        temperature: 1.2,
         max_tokens: 30,
       })
       const phrase = response.choices[0].message.content

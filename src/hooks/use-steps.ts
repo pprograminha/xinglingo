@@ -1,7 +1,7 @@
 import { LabelId } from '@/app/[locale]/get-started/2/radio-group'
 import { TimeId } from '@/app/[locale]/get-started/3/radio-group'
 import { Locale } from '@/lib/intl/locales'
-import { prefixKey } from '@/lib/storage/local'
+import { lingos } from '@/lib/storage/local'
 import { create } from 'zustand'
 import { PersistStorage, persist } from 'zustand/middleware'
 
@@ -54,7 +54,7 @@ export const useSteps = create<StepsState>()(
       },
     }),
     {
-      name: prefixKey(`getStarted:steps`),
+      name: lingos.prefixKey(`getStarted:steps`),
       storage,
     },
   ),

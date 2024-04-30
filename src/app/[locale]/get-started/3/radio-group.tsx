@@ -154,7 +154,7 @@ export const RadioGroup = () => {
             <div key={time.id} className="flex flex-col flex-1 w-full">
               <h1 className="text-xs mb-2">{time.text}</h1>
 
-              <div className="flex items-center gap-2 flex-1 w-full [&>button]:w-full">
+              <div className="flex items-center flex-wrap whitespace-nowrap gap-2 flex-1 w-full [&>button]:w-full">
                 {time.items.map((item) => (
                   <ToggleGroupItem
                     key={item.id}

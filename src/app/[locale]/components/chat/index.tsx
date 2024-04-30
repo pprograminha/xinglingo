@@ -20,6 +20,7 @@ import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
 import { PhraseGenerator } from './phrase-generator'
 import { PronunciationAssessmentDash } from '../pronunciation-assessment/pronunciation-assesment-dash'
+import { useChannels } from '@/hooks/use-channels'
 
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 
@@ -41,12 +42,15 @@ type ChatProps = HTMLAttributes<HTMLDivElement>
 const Chat = ({ className, ...props }: ChatProps) => {
   const [messageText, setMessageText] = useState<string>('')
   const { isOpen, closePronunciation } = usePronunciation()
+  const { upsertConversation } = useChannels()
   const t = useTranslations()
   const { uid } = useAuth()
 
   const { channel } = useChannel('status-updates')
 
   const sendMessageHandler = (conversation: Conversation) => {
+    upsertConversation(conversation as Parameters<typeof upsertConversation>[0])
+
     if (channel === null) return
 
     channel.publish('update-from-client', conversation)

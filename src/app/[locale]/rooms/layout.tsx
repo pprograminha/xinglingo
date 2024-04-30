@@ -1,16 +1,14 @@
-import { getAuth } from '@/lib/auth/get-auth'
+import { LogOut } from '@/components/logout'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Channels } from '../components/channels'
-import { getTranslations } from 'next-intl/server'
 
 export default async function WrapperBarLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { user } = await getAuth()
-  const t = await getTranslations()
+  // const { user } = await getAuth()
+  // const t = await getTranslations()
   return (
     <main className="h-screen flex flex-row">
       <Channels />
@@ -21,10 +19,10 @@ export default async function WrapperBarLayout({
             src="/assets/logo.png"
             width={80}
             height={30}
-            alt="LingoAI logo"
+            alt="Lingos AI logo"
           />
 
-          {user && (
+          {/* {user ? (
             <Link
               href="/profile"
               className="flex flex-row-reverse items-center gap-2"
@@ -45,7 +43,9 @@ export default async function WrapperBarLayout({
                 </span>
               </div>
             </Link>
-          )}
+          ) : ( */}
+          <LogOut />
+          {/* )} */}
         </div>
         {children}
       </div>

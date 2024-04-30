@@ -13,7 +13,7 @@ const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: 'LingoAI',
+  title: 'Lingos AI',
   description: 'English pronunciation Ai Speech',
 }
 
