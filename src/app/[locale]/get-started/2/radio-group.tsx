@@ -49,7 +49,7 @@ export const RadioGroup = () => {
         <div className="flex md:hidden items-center flex-col">
           <Progress />
           <Image
-            src="/assets/cat.png"
+            src="/assets/imgs/cat.png"
             width={400}
             height={267}
             alt="cat"

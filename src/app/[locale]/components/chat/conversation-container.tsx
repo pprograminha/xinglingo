@@ -36,7 +36,7 @@ export function ConversationContainer() {
     return (
       <div className="flex items-center justify-center h-full">
         <Image
-          src="/assets/panda.png"
+          src="/assets/imgs/panda.png"
           loading="lazy"
           width={320}
           height={213}

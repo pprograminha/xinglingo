@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+# color
+readonly RED="\033[1;31m"
+readonly GREEN="\033[1;32m"
+readonly WHITE="\033[1;37m"
+readonly YELLOW="\033[1;33m"
+readonly GRAY_LIGHT="\033[0;37m"
+readonly CYAN_LIGHT="\033[1;36m"
+
+# thickness
+readonly BOLD=$(tput bold)
+readonly NORMAL=$(tput sgr0)
+
+for FILE in locales/*.json; do
+  LANG=$(echo $FILE | cut -d'/' -f2 | cut -d'.' -f1)
+  BASE_LANG='en'
+
+  if [ "$LANG" = "$BASE_LANG" ]; then
+    continue
+  fi
+
+  printf "\n"
+  printf "${GREEN} Traduzindo $FILE ${GRAY_LIGHT}\n"
+  printf "\n"
+
+  BASE_ENTRIES=$(jq -s '.[0] as $BASE | $BASE | to_entries' locales/$BASE_LANG.json)
+  LANG_ENTRIES=$(jq -s '.[0] as $LANG | $LANG | to_entries' $FILE)
+
+  PHRASES_TO_TRANSLATE=$(echo "$BASE_ENTRIES" | jq -c '.[]' | while read item; do
+    KEY=$(echo "$item" | jq -r '.key')
+    LANG_KEY=$(echo "$LANG_ENTRIES" | jq -c '.[]' | jq -r --arg key "$KEY" 'select(.key == $key) | .key')
+
+    if [ -z "$LANG_KEY" ]; then
+      echo $item
+    fi
+  done)
+
+  printf "${CYAN_LIGHT} $PHRASES_TO_TRANSLATE ${CYAN_LIGHT}\n"
+
+  # curl -X POST "https://api.openai.com/v1/chat/completions" \
+  #     -H "Content-Type: application/json" \
+  #     -H "Authorization: Bearer API_KEY" \
+  #     -d '{
+  #           "model": "gpt-4-1106-preview",
+  #           "messages": [
+  #               {"role": "system", "content": "You are a helpful assistant. Your response should be in JSON format."},
+  #               {"role": "system", "content": "Translate $PHRASES_TO_TRANSLATE to language "$lang" to JSON Format: { \"(key)\": \"(value)\" } "},
+  #           ],
+  #           "response_format": {"type": "json_object"}
+  #       }'
+done
+

@@ -38,12 +38,19 @@ export default async function StartStep() {
                 </Link>
               </Button>
             </form>
+            <Link
+              step={2}
+              href="/auth"
+              className="text-xs mt-2 underline dark:text-zinc-400"
+            >
+              {t('Go to login page')}
+            </Link>
           </div>
         </div>
 
         <div className="lg:block hidden">
           <Image
-            src="/assets/panda.png"
+            src="/assets/imgs/panda.png"
             alt={t('Get started')}
             width={650}
             height={650}

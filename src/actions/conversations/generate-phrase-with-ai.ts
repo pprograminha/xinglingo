@@ -17,7 +17,37 @@ export async function generatePhraseWithAi(): Promise<string | null> {
 
         Respeite o contexto da conversa e a gramática.
       `
+      // const assistant = await openai.beta.assistants.create({
+      //   name: 'weather assistant',
+      //   instructions: 'Provide weather information based on location.',
+      //   model: 'gpt-3.5-turbo-1106',
+      // })
 
+      // // Create a thread
+      // const thread = await openai.beta.threads.create()
+
+      // // Send a message to the thread
+      // const message = await openai.beta.threads.messages.create(thread.id, {
+      //   role: 'user',
+      //   content: 'hey',
+      // })
+
+      // // Run the thread with the assistant
+      // const run = await openai.beta.threads.runs.create(thread.id, {
+      //   assistant_id: assistant.id,
+      //   instructions: 'Tell me about the weather in New York City.',
+      // })
+
+      // // Retrieve the run
+      // const retrievedRun = await openai.beta.threads.runs.retrieve(
+      //   thread.id,
+      //   run.id,
+      // )
+
+      // // List messages in the thread
+      // const messages = await openai.beta.threads.messages.list(thread.id)
+      // messages.data.forEach((message) => {
+      // })
       const messages = phrases.map((phrase) => ({
         role: 'user' as const,
         content: phrase,

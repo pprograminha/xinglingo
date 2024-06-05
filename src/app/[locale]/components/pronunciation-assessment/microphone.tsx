@@ -70,7 +70,7 @@ export function Microphone() {
         <div className="flex items-center w-full relative overflow-hidden">
           {isLoading && (
             <Image
-              src="/assets/loading.gif"
+              src="/assets/imgs/loading.gif"
               width="160"
               className="absolute top-0 -right-5"
               height="160"

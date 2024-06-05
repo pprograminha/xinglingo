@@ -21,12 +21,14 @@ export const env = createEnv({
     CLOUDFLARE_SECRET_KEY: z.string().min(1),
     CLOUDFLARE_ACCESS_KEY: z.string().min(1),
     CLOUDFLARE_TOKEN_API: z.string().min(1),
+    RECAPTCHA_SECRET: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_AZURE_SPEECH_SUBSCRITION_KEY: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_REGION: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE: z.string().min(1),
     NEXT_PUBLIC_APP_URL: z.string().min(1),
+    NEXT_PUBLIC_RECAPTCHA_KEY: z.string().min(1),
   },
   shared: {
     NODE_ENV: nodeEnv,
@@ -37,6 +39,7 @@ export const env = createEnv({
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE:
       process.env.NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE,
+    NEXT_PUBLIC_RECAPTCHA_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_AZURE_SPEECH_REGION:
       process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION,

@@ -1,8 +1,10 @@
 'use client'
 import { useSteps } from '@/hooks/use-steps'
 import LinkPrimitive, { LinkProps as LinkPrimitiveProps } from 'next/link'
+import React from 'react'
 
 type LinkProps = LinkPrimitiveProps & {
+  className?: string
   children?: React.ReactNode
   step: number
 }

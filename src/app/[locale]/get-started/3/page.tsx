@@ -18,7 +18,7 @@ export default function LangLevelStep() {
         <div className="flex flex-col items-center px-4 justify-center h-full">
           <Progress />
           <Image
-            src="/assets/panda.png"
+            src="/assets/imgs/panda.png"
             width={400}
             height={267}
             alt="panda"

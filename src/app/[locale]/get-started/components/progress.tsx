@@ -21,12 +21,14 @@ export function Progress() {
     return () => clearTimeout(timer)
   }, [currentStep])
 
+  const step = MAX_STEPS - currentStep
   return (
     <>
       <h1 className="text-xs text-zinc-500 mb-2">
-        {t("You're almost there, just 1 steps to go!", {
-          step: MAX_STEPS - currentStep,
-        })}
+        {step > 0 &&
+          t("You're almost there, just 1 steps to go!", {
+            step,
+          })}
       </h1>
       <ProgressPrimitive value={progress} className="w-[60%]" />
     </>

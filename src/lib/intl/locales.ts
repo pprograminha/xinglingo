@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 
-export const locales = ['en', 'es', 'pt', 'zh-cn', 'fr'] as const
+export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
 export type Locale = (typeof locales)[number]
 
@@ -16,7 +16,7 @@ export const langs = <T extends Locale | undefined>(
     en: t('English'),
     es: t('Spanish'),
     pt: t('Portuguese'),
-    'zh-cn': t('Chinese (Mandarin)'),
+    'it-IT': t('Italian'),
     fr: t('French'),
   }
 

@@ -96,7 +96,7 @@ const Chat = ({ className, ...props }: ChatProps) => {
               <PhraseGenerator onPhrase={(phrase) => setMessageText(phrase)} />
             </div>
           </CardContent>
-          <div className='bg-[url("/assets/chat-bg.svg")] !dark:bg-[url("/assets/chat-bg.svg")] bg-[length:750px_500px]  z-10 absolute top-0 left-0 right-0 bottom-0 opacity-10' />
+          <div className='bg-[url("/assets/svgs/bg.svg")] !dark:bg-[url("/assets/svgs/bg.svg")] bg-[length:750px_500px]  z-10 absolute top-0 left-0 right-0 bottom-0 opacity-10' />
         </Card>
       </div>
     </>

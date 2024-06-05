@@ -1,6 +1,5 @@
 'use client'
 
-import { BackgroundSound } from '@/components/background-sound'
 import { Button } from '@/components/ui/button'
 import { useSteps } from '@/hooks/use-steps'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
@@ -12,11 +11,16 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { verifyReCAPTCHA } from './actions'
+import { toast } from 'sonner'
+import { Logo } from '@/components/logo'
 
 export default function Auth() {
   const router = useRouter()
   const { previousStep } = useSteps()
   const t = useTranslations()
+  const { executeRecaptcha } = useGoogleReCaptcha()
 
   const { status } = useSession({
     required: false,
@@ -32,8 +36,20 @@ export default function Auth() {
     if (previousStep !== 0) {
       lingos.storage.set('firstTime', previousStep.toString())
     }
+    if (executeRecaptcha && typeof window !== 'undefined') {
+      const recaptchaToken = await executeRecaptcha()
+      await verifyReCAPTCHA(recaptchaToken)
 
-    await signIn('google')
+      await signIn('google')
+    } else {
+      toast(t('An error occurred with ReCAPTCHA, please try again later :('), {
+        description: t('Contact support if you see this error'),
+        action: {
+          label: t('Undo'),
+          onClick: () => {},
+        },
+      })
+    }
   }
 
   const isFirstTime = !lingos.storage.get('firstTime')
@@ -42,10 +58,11 @@ export default function Auth() {
     <>
       <div className="h-screen rounded-lg relative border border-zinc-100 dark:border-zinc-700 bg-gradient-to-tr from-zinc-900 shadow-2xl shadow-zinc-600/10 dark:shadow-none flex items-center justify-center">
         <div className="p-8 py-12 sm:p-16 z-10 flex flex-col items-center">
+          <Logo className="absolute top-4 left-12 scale-150" />
           <div className="space-y-4 flex flex-col items-center">
             <Link href="/get-started">
               <Image
-                src="/assets/panda.png"
+                src="/assets/imgs/panda.png"
                 loading="lazy"
                 width={320}
                 height={213}
@@ -53,10 +70,11 @@ export default function Auth() {
                 alt="Lingos AI panda"
               />
             </Link>
+
             <h2
               className={`${pixelatedFont()} mb-8 text-4xl max-w-sm font-bold text-zinc-800 dark:text-white`}
             >
-              {t('Sign in to unlock the best of Lingos AI.')}
+              {t('Sign in to unlock the best of Lingos AI')}
             </h2>
           </div>
           {previousStep === 0 && isFirstTime ? (
@@ -103,38 +121,44 @@ export default function Auth() {
                   />
                   <path fill="none" d="M0 0h48v48H0z" />
                 </svg>
-                <span>Continue with Google</span>
+                <span>{t('Continue with Google')}</span>
               </span>
             </Button>
           )}
           <div className="mt-10 space-y-4 text-center text-zinc-600 dark:text-zinc-400 sm:-mb-8">
             <p className="text-xs">
-              By proceeding, you agree to our{' '}
-              <a href="#" className="underline">
-                Terms of Use
-              </a>{' '}
-              and confirm you have read our
-              <a href="#" className="underline">
-                Privacy and Cookie Statement
-              </a>
-              .
+              {t('By proceeding, you agree to our')}{' '}
+              <Link href="#" className="underline">
+                {t('Terms of Use')}
+              </Link>{' '}
+              {t('and confirm you have read our')}{' '}
+              <Link href="#" className="underline">
+                {t('Privacy and Cookie Statement')}
+              </Link>
             </p>
+
             <p className="text-xs">
-              This site is protected by reCAPTCHA and the
-              <a href="#" className="underline">
-                Google Privacy Policy
-              </a>{' '}
-              and
-              <a href="#" className="underline">
-                Terms of Service
-              </a>{' '}
-              apply.
+              {t('This site is protected by reCAPTCHA and the')}{' '}
+              <Link
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                className="underline"
+              >
+                {t('Google Privacy Policy')}
+              </Link>{' '}
+              {t('and')}{' '}
+              <Link
+                href="https://policies.google.com/terms"
+                target="_blank"
+                className="underline"
+              >
+                {t('Terms of Service')}
+              </Link>{' '}
             </p>
           </div>
         </div>
-        <div className="bg-[url('/assets/chat-bg.svg')] z-0 absolute bg-contain top-0 left-0 bottom-0 right-0 opacity-30" />
+        <div className="bg-[url('/assets/svgs/bg.svg')] z-0 absolute bg-contain top-0 left-0 bottom-0 right-0 opacity-30" />
       </div>
-      <BackgroundSound />
     </>
   )
 }

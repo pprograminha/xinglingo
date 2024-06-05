@@ -20,13 +20,16 @@ import { useSize } from '@/hooks/use-size'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import { useSteps } from '@/hooks/use-steps'
-import { Locale, langs } from '@/lib/intl/locales'
+import { Locale, langs, locales } from '@/lib/intl/locales'
+import { useSearchParams } from 'next/navigation'
+import { z } from 'zod'
+import { useRouter } from '@/navigation'
 
 export function Combobox() {
   const [open, setOpen] = React.useState(false)
   const t = useTranslations()
   const { steps, setStep } = useSteps()
-
+  const router = useRouter()
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const { width } = useSize(buttonRef)
 
@@ -35,7 +38,37 @@ export function Combobox() {
     label,
   }))
 
-  const defaultValue = langsValues[0]?.value
+  const searchParams = useSearchParams()
+
+  const getParams = React.useCallback(() => {
+    if (typeof window === 'undefined')
+      return {
+        subject: null,
+      }
+
+    const subjectData = z
+      .string()
+      .refine((v) => locales.some((l) => l === v))
+      .safeParse(searchParams.get('subject'))
+
+    let subject: Locale | null = null
+
+    if (subjectData.success) {
+      setStep(1, subjectData.data as Locale)
+
+      subject = subjectData.data as Locale
+    }
+
+    return {
+      subject,
+    }
+  }, [searchParams, setStep])
+
+  React.useEffect(() => {
+    getParams()
+  }, [getParams])
+
+  const defaultValue = langsValues[0]?.value as Locale | undefined
 
   const value = steps[1] || defaultValue
 
@@ -68,6 +101,9 @@ export function Combobox() {
                   onSelect={(currentValue) => {
                     const newValue =
                       currentValue === value ? defaultValue : currentValue
+
+                    if (searchParams.has('subject'))
+                      router.replace('/get-started/1')
 
                     setStep(1, newValue as Locale)
                     setOpen(false)
