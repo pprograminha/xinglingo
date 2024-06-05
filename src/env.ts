@@ -32,7 +32,7 @@ export const env = createEnv({
     NEXT_PUBLIC_RECAPTCHA_ENABLE: z
       .string()
       .regex(/true|false/)
-      .transform((v) => v === 'true'),
+      .transform((v) => v === 'true' && process.env.NODE_ENV === 'production'),
   },
   shared: {
     NODE_ENV: nodeEnv,

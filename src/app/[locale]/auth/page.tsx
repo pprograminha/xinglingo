@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
+import { env } from '@/env'
 import { useSteps } from '@/hooks/use-steps'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { lingos } from '@/lib/storage/local'
@@ -11,17 +14,20 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { verifyReCAPTCHA } from './actions'
+import {
+  IGoogleReCaptchaConsumerProps,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3'
 import { toast } from 'sonner'
-import { Logo } from '@/components/logo'
-import { env } from '@/env'
+import { verifyReCAPTCHA } from './actions'
 
 export default function Auth() {
   const router = useRouter()
   const { previousStep } = useSteps()
   const t = useTranslations()
-  const { executeRecaptcha } = useGoogleReCaptcha()
+  const { executeRecaptcha } = env.NEXT_PUBLIC_RECAPTCHA_ENABLE
+    ? useGoogleReCaptcha()
+    : ({} as IGoogleReCaptchaConsumerProps)
 
   const { status } = useSession({
     required: false,
@@ -38,11 +44,11 @@ export default function Auth() {
       lingos.storage.set('firstTime', previousStep.toString())
     }
 
-    const disableReCAPTCHA =
-      env.NODE_ENV !== 'production' && env.NEXT_PUBLIC_RECAPTCHA_ENABLE
+    const hasReCAPTCHA = env.NEXT_PUBLIC_RECAPTCHA_ENABLE
 
-    if (disableReCAPTCHA) {
-      return signIn('google')
+    if (!hasReCAPTCHA) {
+      await signIn('google')
+      return
     }
 
     if (executeRecaptcha && typeof window !== 'undefined') {
