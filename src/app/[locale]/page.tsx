@@ -74,14 +74,14 @@ export default async function Home() {
   ]
 
   return (
-    <div className="flex flex-col h-full bg-[url('/assets/svgs/layered-steps.svg')] bg-repeat-y ">
+    <div className="grid h-full bg-[url('/assets/svgs/layered-steps.svg')] bg-repeat-y overflow-y-auto">
       <header className="px-4 lg:px-6 h-14 flex justify-between items-center">
         <Logo />
         <Button asChild variant="secondary">
           <Link href="/get-started/1">{t('Get Started')}</Link>
         </Button>
       </header>
-      <main className="flex-1 h-full grid overflow-y-auto">
+      <main className="flex-1 h-full grid">
         <div className="px-4 md:px-12">
           <section className="py-12 md:py-24 lg:py-32 flex flex-col-reverse lg:flex-row justify-between gap-8 ">
             <div className="grid max-w-[800px] gap-4 sm:gap-6 md:gap-8">
@@ -112,7 +112,7 @@ export default async function Home() {
             </div>
             <Image
               alt="Panda"
-              className="max-h-[241px] md:max-h-[361px] min-h-[180px] min-w-[150px] max-w-[200px] md:max-w-[300px]"
+              className="max-h-[241px] shrink-0 md:max-h-[361px] min-h-[180px] min-w-[150px] max-w-[200px] md:max-w-[300px]"
               src="/assets/imgs/panda-3.png"
               width={300}
               height={361}

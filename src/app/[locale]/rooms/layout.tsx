@@ -1,5 +1,5 @@
+import { Logo } from '@/components/logo'
 import { LogOut } from '@/components/logout'
-import Image from 'next/image'
 import { Channels } from '../components/channels'
 
 export default async function WrapperBarLayout({
@@ -15,12 +15,7 @@ export default async function WrapperBarLayout({
 
       <div className="flex flex-col h-full w-full">
         <div className="bg-zinc-900 h-16 w-full flex justify-between items-center px-4">
-          <Image
-            src="/assets/logo.png"
-            width={80}
-            height={30}
-            alt="Lingos AI logo"
-          />
+          <Logo />
 
           {/* {user ? (
             <Link

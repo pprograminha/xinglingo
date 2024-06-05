@@ -8,6 +8,8 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
+  if (!env.NEXT_PUBLIC_RECAPTCHA_ENABLE) return children
+
   return (
     <GoogleReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_KEY}>
       {children}

@@ -15,6 +15,7 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { verifyReCAPTCHA } from './actions'
 import { toast } from 'sonner'
 import { Logo } from '@/components/logo'
+import { env } from '@/env'
 
 export default function Auth() {
   const router = useRouter()
@@ -36,6 +37,14 @@ export default function Auth() {
     if (previousStep !== 0) {
       lingos.storage.set('firstTime', previousStep.toString())
     }
+
+    const disableReCAPTCHA =
+      env.NODE_ENV !== 'production' && env.NEXT_PUBLIC_RECAPTCHA_ENABLE
+
+    if (disableReCAPTCHA) {
+      return signIn('google')
+    }
+
     if (executeRecaptcha && typeof window !== 'undefined') {
       const recaptchaToken = await executeRecaptcha()
       await verifyReCAPTCHA(recaptchaToken)

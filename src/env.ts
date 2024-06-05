@@ -29,6 +29,10 @@ export const env = createEnv({
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE: z.string().min(1),
     NEXT_PUBLIC_APP_URL: z.string().min(1),
     NEXT_PUBLIC_RECAPTCHA_KEY: z.string().min(1),
+    NEXT_PUBLIC_RECAPTCHA_ENABLE: z
+      .string()
+      .regex(/true|false/)
+      .transform((v) => v === 'true'),
   },
   shared: {
     NODE_ENV: nodeEnv,
@@ -39,6 +43,7 @@ export const env = createEnv({
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE:
       process.env.NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE,
+    NEXT_PUBLIC_RECAPTCHA_ENABLE: process.env.NEXT_PUBLIC_RECAPTCHA_ENABLE,
     NEXT_PUBLIC_RECAPTCHA_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_AZURE_SPEECH_REGION:
