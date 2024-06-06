@@ -7,12 +7,11 @@ import { env } from '@/env'
 import { useSteps } from '@/hooks/use-steps'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { lingos } from '@/lib/storage/local'
-import { useRouter } from '@/navigation'
+import { Link, useRouter } from '@/navigation'
 import { ChevronsRight } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect } from 'react'
 import {
   IGoogleReCaptchaConsumerProps,

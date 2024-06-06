@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { Locale } from '@/lib/intl/locales'
+import { Link } from '@/navigation'
 import { ArrowRightIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import Link from 'next/link'
 
 type LangData = {
   id: Locale

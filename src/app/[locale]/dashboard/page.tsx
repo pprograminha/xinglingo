@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowLeft, WholeWord } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/navigation'
 import { DailyWords } from './components/daily-words'
 import { WordsList } from './components/words-list'
 

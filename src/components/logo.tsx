@@ -1,7 +1,7 @@
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { cn } from '@/lib/utils'
 import { AudioWaveformIcon } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/navigation'
 import { HtmlHTMLAttributes } from 'react'
 
 type LogoProps = HtmlHTMLAttributes<HTMLDivElement>

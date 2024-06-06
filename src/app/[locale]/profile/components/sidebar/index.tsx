@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { CircleUser, CreditCard, LayoutPanelLeft } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/navigation'
 import { usePathname } from 'next/navigation'
 import { HtmlHTMLAttributes } from 'react'
 

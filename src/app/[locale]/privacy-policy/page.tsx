@@ -1,7 +1,7 @@
 import { Logo } from '@/components/logo'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { getTranslations } from 'next-intl/server'
-import Link from 'next/link'
+import { Link } from '@/navigation'
 
 export default async function PrivacyPage() {
   const t = await getTranslations()
