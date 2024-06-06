@@ -5,6 +5,7 @@ import { PortugueseIcon } from '@/components/icons/portuguese'
 import { SpanishIcon } from '@/components/icons/spanish'
 import { WppIcon } from '@/components/icons/wpp'
 import { Logo } from '@/components/logo'
+import { SetLang } from '@/components/set-lang'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
@@ -77,9 +78,12 @@ export default async function Home() {
     <div className="grid h-full bg-[url('/assets/svgs/layered-steps.svg')] bg-repeat-y overflow-y-auto">
       <header className="px-4 lg:px-6 h-14 flex justify-between items-center">
         <Logo />
-        <Button asChild variant="secondary">
-          <Link href="/get-started/1">{t('Get Started')}</Link>
-        </Button>
+        <div className="flex gap-2 items-center">
+          <SetLang />
+          <Button asChild variant="secondary">
+            <Link href="/get-started/1">{t('Get Started')}</Link>
+          </Button>
+        </div>
       </header>
       <main className="flex-1 h-full grid">
         <div className="px-4 md:px-12">
@@ -162,20 +166,20 @@ export default async function Home() {
           <div>
             <ul className="flex flex-row gap-2">
               <Link
-                href="#"
+                href="/terms-of-service"
                 className="text-xs font-bold hover:underline underline-offset-4"
               >
                 {t('Terms of Service')}
               </Link>
               <Link
-                href="#"
+                href="/privacy-policy"
                 className="text-xs font-bold hover:underline underline-offset-4"
               >
                 {t('Privacy')}
               </Link>
             </ul>
             <Link
-              href="#"
+              href="mailto:support@lingos.ai"
               className="text-xs hover:underline underline-offset-4"
             >
               {t('Need help?')}{' '}

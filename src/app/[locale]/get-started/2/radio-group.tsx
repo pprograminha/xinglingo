@@ -46,7 +46,7 @@ export const RadioGroup = () => {
   return (
     <div className="flex flex-col items-center justify-between py-10 md:py-20 px-8 w-full md:w-1/2">
       <div>
-        <div className="flex md:hidden items-center flex-col">
+        <div className="flex md:hidden mt-4 items-center flex-col">
           <Progress />
           <Image
             src="/assets/imgs/cat.png"

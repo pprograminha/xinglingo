@@ -10,7 +10,7 @@ export default function LangLevelStep() {
   return (
     <div className="h-full flex">
       <div className="w-1/2  hidden md:block bg-gradient-to-tr from-zinc-950 to-zinc-900">
-        <Button size="icon" variant="secondary" className="mt-4 ml-4" asChild>
+        <Button size="icon" variant="secondary" className="mt-16 ml-4" asChild>
           <Link step={1} href="/get-started/2">
             <ArrowLeftIcon className="w-4 h-4" />
           </Link>
