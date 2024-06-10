@@ -1,6 +1,6 @@
-const prefixKey = (key: string) => `@LingosAI:${key}`
+const prefixKey = (key: string) => `@lingos-ai:${key}`
 
-type StorageKeys = 'firstTime' | 'getStarted:steps' | 'sound'
+type StorageKeys = 'first-time' | 'get-started:steps' | 'sound'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setLocalStorage = (key: StorageKeys, value: any) => {

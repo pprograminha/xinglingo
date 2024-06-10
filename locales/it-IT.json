@@ -162,5 +162,19 @@
     "any type of illegal pornography, terrorism advocacy or against human rights;": "qualsiasi tipo di pornografia illegale, incitazione al terrorismo o violazione dei diritti umani;",
     "C) Not to cause damage to the physical (hardware) and logical (software) systems of Lingos AI, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above": "C) Non causare danni ai sistemi fisici (hardware) e logici (software) di Lingos AI, dei suoi fornitori o di terzi, introdurre o diffondere virus informatici o qualsiasi altro sistema hardware o software in grado di causare i danni sopra menzionati",
     "We hope this is clarified, and as previously mentioned, if there is something that you are not sure whether you need or not, it is generally safer to leave cookies enabled, if it interacts with one of the features you use on our site": "Speriamo che ciò sia chiarito, e come precedentemente menzionato, se c'è qualcosa di cui non sei sicuro se hai bisogno o meno, è generalmente più sicuro lasciare i cookie abilitati, se interagisce con una delle funzionalità che utilizzi sul nostro sito.",
-    "This policy is effective as of June 5, 2024 19:21": "Questa politica è efficace dal 5 giugno 2024 19:21"
+    "This policy is effective as of June 5, 2024 19:21": "Questa politica è efficace dal 5 giugno 2024 19:21",
+    "Your goal is to learn 5000 words this year, 400 words remaining": "Il tuo obiettivo è imparare {wordsPerYear} <questionHelp></questionHelp> parole quest'anno, mancano {wordsPerYearRemaining} parole.",
+    "For fluency, you may need to learn from 5000 to 10000 words": "Per essere fluente, potresti aver bisogno di imparare tra {wordsMin} e {wordsMax} parole.",
+    "It's only 14 words a day, you can do it!": "Sono solo {words} parole al giorno, ce la puoi fare!",
+    "All the words you learned in the year 2024": "Tutte le parole che hai imparato nell'anno {year}",
+    "This year": "Quest'anno",
+    "This month": "Questo mese",
+    "Today": "Oggi",
+    "Green words": "Parole verdi",
+    "Yellow words": "Parole gialle",
+    "Red words": "Parole rosse",
+    "Annual goal: 5000 words, 400 remaining": "Obiettivo annuale: {words} parole, ne rimangono ancora {remaining}",
+    "Words you have already encountered": "Parole che hai già incontrato",
+    "Monthly goal: 400 words, 200 remaining": "Obiettivo mensile: {words} parole, ne rimangono ancora {remaining}",
+    "Today's goal: 14 words, 0 remaining": "Oggi obiettivo: {words} parole, ne rimangono ancora {remaining}"
 }

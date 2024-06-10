@@ -162,5 +162,19 @@
   "any type of illegal pornography, terrorism advocacy or against human rights;": "any type of illegal pornography, terrorism advocacy or against human rights;",
   "C) Not to cause damage to the physical (hardware) and logical (software) systems of Lingos AI, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above": "C) Not to cause damage to the physical (hardware) and logical (software) systems of Lingos AI, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above.",
   "We hope this is clarified, and as previously mentioned, if there is something that you are not sure whether you need or not, it is generally safer to leave cookies enabled, if it interacts with one of the features you use on our site": "We hope this is clarified, and as previously mentioned, if there is something that you are not sure whether you need or not, it is generally safer to leave cookies enabled, if it interacts with one of the features you use on our site.",
-  "This policy is effective as of June 5, 2024 19:21": "This policy is effective as of June 5, 2024 19:21."
+  "This policy is effective as of June 5, 2024 19:21": "This policy is effective as of June 5, 2024 19:21.",
+  "Your goal is to learn 5000 words this year, 400 words remaining": "Your goal is to learn {wordsPerYear} <questionHelp></questionHelp> words this year, {wordsPerYearRemaining} words remaining.",
+  "For fluency, you may need to learn from 5000 to 10000 words": "For fluency, you may need to learn from {wordsMin} to {wordsMax} words.",
+  "It's only 14 words a day, you can do it!": "It's only {words} words a day, you can do it!",
+  "All the words you learned in the year 2024": "All the words you learned in the year {year}",
+  "This year": "This year",
+  "This month": "This month",
+  "Today": "Today",
+  "Green words": "Green words",
+  "Yellow words": "Yellow words",
+  "Red words": "Red words",
+  "Annual goal: 5000 words, 400 remaining": "Annual goal: {words} words, {remaining} remaining",
+  "Words you have already encountered": "Words you have already encountered",
+  "Monthly goal: 400 words, 200 remaining": "Monthly goal: {words} words, {remaining} remaining",
+  "Today's goal: 14 words, 0 remaining": "Today's goal: {words} words, {remaining} remaining"
 }

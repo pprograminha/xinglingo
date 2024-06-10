@@ -1,47 +1,72 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { scoreColor } from '@/lib/score-color'
-import { ArrowDown01, ArrowUp10 } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 type WordsListProps = {
   wordsList: Awaited<ReturnType<typeof getWordsList>>['words']
+  t: Awaited<ReturnType<typeof getTranslations>>
 }
 
-export function WordsList({ wordsList }: WordsListProps) {
+export function WordsList({ wordsList, t }: WordsListProps) {
+  const groupedWords = wordsList.reduce(
+    (previousValue, word) => {
+      let wordIndex =
+        previousValue.length - 1 === -1 ? 0 : previousValue.length - 1
+
+      if (previousValue[wordIndex] && previousValue[wordIndex].length === 15) {
+        wordIndex += 1
+      }
+
+      if (!previousValue[wordIndex]) {
+        previousValue[wordIndex] = []
+      }
+
+      if (previousValue[wordIndex].length < 15) {
+        previousValue[wordIndex] = [...previousValue[wordIndex], word]
+      }
+
+      return [...previousValue]
+    },
+    [] as (typeof wordsList)[],
+  )
+
   return (
-    <div className="space-y-8">
-      <ScrollArea className="h-[800px] w-full pr-4">
-        <div className="gap-4 flex flex-1">
-          <div className="w-full">
-            <ArrowUp10 className="my-2 mx-1" />
-            {wordsList.map((w) => (
-              <div className="flex items-center mb-2" key={w.word}>
-                <div
-                  className="ml-2 space-y-1 border rounded-md p-1 data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
-                  data-score-color={scoreColor(w.avgAccuracyScore)}
-                >
-                  <p className="text-sm font-medium leading-none">{w.word}</p>
-                </div>
-                <div className="ml-auto font-medium">{w.wordCount}</div>
+    <div className="pb-4">
+      <h2 className={`text-2xl ${pixelatedFont()}`}>
+        {t('Words you have already encountered')}: {wordsList.length}
+      </h2>
+
+      <Carousel className="w-full mt-2 pb-6 select-none cursor-grab active:cursor-grabbing">
+        <CarouselContent>
+          {groupedWords.map((words, index) => (
+            <CarouselItem key={index}>
+              <div className="w-full flex flex-wrap gap-2">
+                {words.map((w) => (
+                  <div className="flex items-center" key={w.word}>
+                    <div
+                      className="font-medium dark:bg-zinc-900 flex gap-1 items-center border rounded-md py-1 px-2 data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 text-zinc-300 text-xs data-[score-color=yellow]:border-yellow-400"
+                      data-score-color={scoreColor(w.avgAccuracyScore)}
+                    >
+                      <p className="leading-none">{w.word}</p>
+                      <span>{w.wordCount}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="w-full">
-            <ArrowDown01 className="my-2 mx-1" />
-            {wordsList.reverse().map((w) => (
-              <div className="flex items-center mb-2" key={w.word}>
-                <div
-                  className="ml-2 space-y-1 border rounded-md p-1 data-[score-color=red]:border-red-400 data-[score-color=green]:border-green-400 data-[score-color=yellow]:border-yellow-400"
-                  data-score-color={scoreColor(w.avgAccuracyScore)}
-                >
-                  <p className="text-sm font-medium leading-none">{w.word}</p>
-                </div>
-                <div className="ml-auto font-medium">{w.wordCount}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </ScrollArea>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-1/2 -translate-x-[110%] top-full" />
+        <CarouselNext className="right-1/2 translate-x-[110%] top-full" />
+      </Carousel>
     </div>
   )
 }

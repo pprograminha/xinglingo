@@ -24,6 +24,9 @@ const config = {
         amber: {
           900: '#723830',
         },
+        zinc: {
+          920: '#1b1b1d',
+        },
       },
       textShadow: {
         sm: '0 1px 2px var(--tw-shadow-color)',
@@ -42,6 +45,17 @@ const config = {
         'accordion-up': {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
+        },
+        float: {
+          '0%': {
+            transform: 'translate(0px, 0px)',
+          },
+          '50%': {
+            transform: 'translate(-10px, -20px)',
+          },
+          '100%': {
+            transform: 'translate(0px, 0px)',
+          },
         },
         'music-bar': {
           '0%': {
@@ -87,6 +101,7 @@ const config = {
         'music-bar': 'music-bar 1s ease-out infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        float: 'float 6s ease-in-out infinite',
         'shadow-drop-2-center':
           'shadow-drop-2-center 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
         'shadow-pop-bl':

@@ -1,16 +1,11 @@
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { Toaster } from '@/components/ui/toaster'
+import { interSansFont } from '@/lib/font/google/inter-sans-font'
 import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
-import { Inter as FontSans } from 'next/font/google'
 import '../globals.css'
-import { Wrapper } from '../wrapper'
 import { NextIntlProvider } from '../next-intl-provider'
-
-const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
+import { Wrapper } from '../wrapper'
 
 export const metadata: Metadata = {
   title: 'Lingos AI',
@@ -32,10 +27,7 @@ export default async function RootLayout({
         <link rel="icon" href="/assets/favicon.ico" sizes="any" />
       </head>
       <body
-        className={cn(
-          'h-screen dark:bg-zinc-900 font-sans antialiased',
-          fontSans.variable,
-        )}
+        className={cn('h-screen dark:bg-zinc-900 antialiased', interSansFont())}
       >
         <Toaster />
         <Sonner />

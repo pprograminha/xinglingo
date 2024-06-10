@@ -5,7 +5,12 @@ import { lingos } from '@/lib/storage/local'
 import { create } from 'zustand'
 import { PersistStorage, persist } from 'zustand/middleware'
 
-type Steps = [undefined, Locale, LabelId | undefined, `${TimeId}.${string}`[]]
+export type Steps = [
+  undefined,
+  Locale,
+  LabelId | undefined,
+  `${TimeId}.${string}`[],
+]
 
 type StepsValues = Steps[number]
 
@@ -15,7 +20,16 @@ interface StepsState {
   steps: Steps
   setStep: (step: number, steps?: StepsValues) => void
 }
-
+export const defaultTimes: `${TimeId}.${string}`[] = [
+  'evening-night.21-24',
+  'evening-night.18-21',
+  'daytime.9-12',
+  'daytime.12-15',
+  'daytime.15-18',
+  'evening-night.0-3',
+  'morning.6-9',
+  'morning.3-6',
+]
 const storage: PersistStorage<StepsState> = {
   getItem: (key: string) => {
     try {
@@ -38,7 +52,7 @@ export const useSteps = create<StepsState>()(
     (set, get) => ({
       currentStep: 0,
       previousStep: 0,
-      steps: [undefined, 'en', undefined, []],
+      steps: [undefined, 'en', undefined, defaultTimes],
       setStep: (step, value) => {
         const steps = get().steps
 
@@ -54,7 +68,7 @@ export const useSteps = create<StepsState>()(
       },
     }),
     {
-      name: lingos.prefixKey(`getStarted:steps`),
+      name: lingos.prefixKey(`get-started:steps`),
       storage,
     },
   ),

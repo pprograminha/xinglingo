@@ -8,7 +8,7 @@ type LangsResponse<T extends Locale | undefined> = T extends undefined
   ? Record<Locale, string>
   : string
 
-export const langs = <T extends Locale | undefined>(
+export const langs = <T extends Locale | undefined = undefined>(
   t: Awaited<ReturnType<typeof getTranslations>>,
   locale?: T,
 ): LangsResponse<T> => {

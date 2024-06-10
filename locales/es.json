@@ -162,5 +162,19 @@
     "any type of illegal pornography, terrorism advocacy or against human rights;": "cualquier tipo de pornografía ilegal, apología del terrorismo o contra los derechos humanos;",
     "C) Not to cause damage to the physical (hardware) and logical (software) systems of Lingos AI, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above": "C) No causar daños a los sistemas físicos (hardware) y lógicos (software) de Lingos AI, sus proveedores o terceros, introducir o difundir virus informáticos o cualquier otro sistema de hardware o software que sea capaz de causar el daño mencionado anteriormente.",
     "We hope this is clarified, and as previously mentioned, if there is something that you are not sure whether you need or not, it is generally safer to leave cookies enabled, if it interacts with one of the features you use on our site": "Esperamos que esto quede aclarado, y como se mencionó anteriormente, si hay algo de lo que no esté seguro si necesita o no, generalmente es más seguro dejar las cookies habilitadas, si interactúa con una de las características que utiliza en nuestro sitio.",
-    "This policy is effective as of June 5, 2024 19:21": "Esta política entrará em vigor em 5 de junho de 2024 às 19h21."
+    "This year": "Este año",
+    "This month": "Este mes",
+    "Today": "Hoy",
+    "Green words": "Palabras verdes",
+    "Yellow words": "Palabras amarillas",
+    "Red words": "Palabras rojas",
+    "Annual goal: 5000 words, 400 remaining": "Objetivo anual: {words} palabras, {remaining} restantes",
+    "Words you have already encountered": "Palabras que ya has encontrado",
+    "Monthly goal: 400 words, 200 remaining": "Objetivo mensual: {words} palabras, {remaining} restantes",
+    "Today's goal: 14 words, 0 remaining": "Objetivo de hoy: {words} palabras, {remaining} restantes",
+    "This policy is effective as of June 5, 2024 19:21": "Esta política es efectiva a partir del 5 de junio de 2024 a las 19:21.",
+    "Your goal is to learn 5000 words this year, 400 words remaining": "Tu objetivo es aprender {wordsPerYear} <questionHelp></questionHelp> palabras este año, quedan {wordsPerYearRemaining} palabras.",
+    "For fluency, you may need to learn from 5000 to 10000 words": "Para fluidez, es posible que necesites aprender de {wordsMin} a {wordsMax} palabras.",
+    "It's only 14 words a day, you can do it!": "¡Son solo {words} palabras al día, tú puedes hacerlo!",
+    "All the words you learned in the year 2024": "Todas las palabras que aprendiste en el año {year}"
 }

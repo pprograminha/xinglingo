@@ -1,7 +1,10 @@
 import { makeUser } from '@/actions/users/make-user'
 import { env } from '@/env'
+import { Steps } from '@/hooks/use-steps'
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import { cookies } from 'next/headers'
+import { lingos } from '../storage/local'
 // import AppleProvider from 'next-auth/providers/apple'
 
 export const authOptions: NextAuthOptions = {
@@ -21,7 +24,12 @@ export const authOptions: NextAuthOptions = {
         return false
       }
 
+      const steps = JSON.parse(
+        cookies().get(`${lingos.prefixKey(`auth:steps`)}`)?.value || '[]',
+      ) as Steps | []
+
       const makedUser = await makeUser({
+        steps,
         email: user.email,
         fullName: user.name,
         image: user.image,
