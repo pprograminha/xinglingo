@@ -13,8 +13,9 @@ import {
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import { Suspense } from 'react'
 import { Goal } from './components/goal'
+import { getAuth } from '@/lib/auth/get-auth'
+import { Typing } from './components/welcome/typing'
 
 export const metadata: Metadata = {
   title: 'Lingos AI | Dashboard',
@@ -25,25 +26,59 @@ export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const wordsListData = await getWordsList()
+  const { user } = await getAuth()
   const t = await getTranslations()
 
   return (
     <>
       <div className="flex-col flex bg-[url('/assets/svgs/bg.svg')] bg-repeat h-full">
         <div className="p-4 md:p-8 flex flex-col h-full overflow-auto">
-          <div className="grid gap-4 grid-cols-7 mb-4 flex-1">
-            <Card className="bg-gradient-to-tr col-span-7 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
+          <div className="grid gap-4 grid-cols-2 mb-4 flex-1">
+            <Card className="bg-gradient-to-tr col-span-2 md:col-span-1 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
               <div className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover rounded-xl h-full">
-                {/* <div className="bg-[url('/assets/svgs/layered-steps.svg')] h-full bg-repeat-y rounded-xl"> */}
-                <div className="bg-[url('/assets/imgs/sakura.png')] bg-[length:200px_134px] md:bg-[length:auto]  bg-[100%_100%]  h-full w-full bg-no-repeat rounded-xl absolute top-0 left-0 right-0 bottom-0"></div>
-                <div className="h-full z-20 relative">
-                  <div className="p-4 grid">
-                    <Suspense fallback={<p>Loading...</p>}>
-                      <ProfileLink className="ml-auto" />
-                    </Suspense>
+                <div className="h-full flex flex-col justify-between py-2 px-2 md:px-6">
+                  <h1
+                    className={`text-2xl my-4 md:text-6xl ${pixelatedFont()}`}
+                  >
+                    Bem-vindo(a)!! {user?.fullName}
+                  </h1>
+                  <div className="relative select-none">
+                    <div className="absolute -top-[180px] -right-[30px]">
+                      <Image
+                        src="/assets/svgs/dialogue.svg"
+                        width={250}
+                        className="ml-auto animate-in"
+                        height={100}
+                        alt="Tutor AI"
+                      />
+
+                      <p
+                        className={`text-md typing-animation leading-4 absolute top-[calc(50%_+_-20px)] right-8 -translate-y-1/2 min-w-[200px] max-w-[200px] p-5 pl-8 ${pixelatedFont()}`}
+                      >
+                        <Typing
+                          text={`Nossa meta é ajudar você a se tornar fluente em 1 a 2 anos. Vamos estudar juntos para alcançar esse objetivo.`}
+                        />
+                      </p>
+                    </div>
+                    <Image
+                      src="/assets/imgs/tutor-ai-04.png"
+                      width={300}
+                      className="ml-auto"
+                      height={200}
+                      alt="Tutor AI"
+                    />
                   </div>
                 </div>
-                {/* </div> */}
+              </div>
+            </Card>
+            <Card className="bg-gradient-to-tr col-span-2 md:col-span-1 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
+              <div className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover rounded-xl h-full">
+                <div className="bg-[url('/assets/imgs/sakura.png')] bg-[length:200px_134px] md:bg-[length:auto]  bg-[100%_100%]  h-full w-full bg-no-repeat rounded-xl absolute top-0 left-0 right-0 bottom-0"></div>
+                <div className="h-full z-20 relative p-4">
+                  <div className="grid">
+                    <ProfileLink className="ml-auto" />
+                  </div>
+                </div>
               </div>
             </Card>
           </div>

@@ -7,20 +7,144 @@ type GoalTabsProps = {
   wordsListData: Awaited<ReturnType<typeof getWordsList>>
   t: Awaited<ReturnType<typeof getTranslations>>
 }
-export const GoalTabs = async ({ wordsListData, t }: GoalTabsProps) => {
+type GoalTabProps = {
+  wordsListData: Awaited<ReturnType<typeof getWordsList>>
+  value: 'yearly' | 'monthly' | 'daily'
+  variant: 'day' | 'year' | 'month'
+  t: Awaited<ReturnType<typeof getTranslations>>
+}
+
+type TltKeys =
+  | "Today's goal: 14 words, 0 remaining"
+  | 'Monthly goal: 400 words, 200 remaining'
+  | 'Annual goal: 5000 words, 400 remaining'
+
+const GoalTab = ({ t, wordsListData, value, variant }: GoalTabProps) => {
   const {
     count: {
-      wordsPerDay,
-      wordsPerDayRemaining,
-      wordsPerMonth,
-      wordsPerMonthRemaining,
       wordsPerYear,
       wordsPerYearRemaining,
+      wordsPerDay,
+      wordsPerDayRemaining,
+      wordsPerMonthRemaining,
+      wordsPerMonth,
     },
     green,
     red,
     yellow,
   } = wordsListData
+
+  const colorsData = {
+    green,
+    red,
+    yellow,
+  } as const
+
+  const wordsCount: Record<
+    typeof variant,
+    Record<'wordPerVariant' | 'wordVariantRemaining' | 'key', number | TltKeys>
+  > = {
+    day: {
+      key: "Today's goal: 14 words, 0 remaining",
+      wordPerVariant: wordsPerDay,
+      wordVariantRemaining: wordsPerDayRemaining,
+    },
+    month: {
+      key: 'Monthly goal: 400 words, 200 remaining',
+      wordPerVariant: wordsPerMonth,
+      wordVariantRemaining: wordsPerMonthRemaining,
+    },
+    year: {
+      key: 'Annual goal: 5000 words, 400 remaining',
+      wordPerVariant: wordsPerYear,
+      wordVariantRemaining: wordsPerYearRemaining,
+    },
+  }
+  const words: Record<
+    typeof variant,
+    Record<
+      keyof typeof colorsData,
+      {
+        words: typeof colorsData.green.wordsSameDay
+      }
+    >
+  > = {
+    day: {
+      green: {
+        words: colorsData.green.wordsSameDay,
+      },
+      red: {
+        words: colorsData.red.wordsSameDay,
+      },
+      yellow: {
+        words: colorsData.yellow.wordsSameDay,
+      },
+    },
+    year: {
+      green: {
+        words: colorsData.green.wordsSameYear,
+      },
+      red: {
+        words: colorsData.red.wordsSameYear,
+      },
+      yellow: {
+        words: colorsData.yellow.wordsSameYear,
+      },
+    },
+    month: {
+      green: {
+        words: colorsData.green.wordsSameMonth,
+      },
+      red: {
+        words: colorsData.red.wordsSameMonth,
+      },
+      yellow: {
+        words: colorsData.yellow.wordsSameMonth,
+      },
+    },
+  }
+
+  return (
+    <TabsContent value={value}>
+      <CardContent className="mt-4 pb-2">
+        <div className="gap-2 flex flex-wrap">
+          <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 border border-green-300/10 p-2 rounded-xl inline-block">
+            <CardTitle className="text-xs font-medium">
+              <span className="text-green-200">{t('Green words')}</span>
+            </CardTitle>
+            <div className="text-xl mt-1 font-bold">
+              {words[variant].green.words.length}
+            </div>
+          </div>
+          <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 lg:flex-none  border border-yellow-300/10 p-2 rounded-xl inline-block">
+            <CardTitle className="text-xs font-medium">
+              <span className="text-yellow-100">{t('Yellow words')}</span>
+            </CardTitle>
+            <div className="text-xl mt-1 font-bold">
+              {words[variant].yellow.words.length}
+            </div>
+          </div>
+          <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 lg:flex-none  border border-red-300/10 p-2 rounded-xl inline-block">
+            <CardTitle className="text-xs font-medium">
+              <span className="text-red-200">{t('Red words')}</span>
+            </CardTitle>
+            <div className="text-xl mt-1 font-bold">
+              {words[variant].red.words.length}
+            </div>
+          </div>
+        </div>
+        <p className="text-xs mt-2 text-zinc-400">
+          {t(wordsCount[variant].key as TltKeys, {
+            words: wordsCount[variant].wordPerVariant,
+            remaining: wordsCount[variant].wordVariantRemaining,
+          })}
+        </p>
+      </CardContent>
+    </TabsContent>
+  )
+}
+
+export const GoalTabs = ({ wordsListData, t }: GoalTabsProps) => {
   return (
     <Tabs defaultValue="yearly" className="w-full">
       <div className="px-6">
@@ -36,114 +160,24 @@ export const GoalTabs = async ({ wordsListData, t }: GoalTabsProps) => {
           </TabsTrigger>
         </TabsList>
       </div>
-      <TabsContent value="yearly">
-        <CardContent className="mt-4 pb-2">
-          <div className="gap-2 flex flex-wrap">
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 border border-green-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-green-200">{t('Green words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {green.wordsSameYear.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-yellow-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-yellow-100">{t('Yellow words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {yellow.wordsSameYear.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-red-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-red-200">{t('Red words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {red.wordsSameYear.length}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs mt-2 text-zinc-400">
-            {t('Annual goal: 5000 words, 400 remaining', {
-              words: wordsPerYear,
-              remaining: wordsPerYearRemaining,
-            })}
-          </p>
-        </CardContent>
-      </TabsContent>
-      <TabsContent value="monthly">
-        <CardContent className="mt-4 pb-2">
-          <div className="gap-2 flex flex-wrap">
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 border border-green-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-green-200">{t('Green words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {green.wordsSameMonth.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-yellow-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-yellow-100">{t('Yellow words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {yellow.wordsSameMonth.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-red-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-red-200">{t('Red words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {red.wordsSameMonth.length}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs mt-2 text-zinc-400">
-            {t('Monthly goal: 400 words, 200 remaining', {
-              words: wordsPerMonth,
-              remaining: wordsPerMonthRemaining,
-            })}
-          </p>
-        </CardContent>
-      </TabsContent>
-      <TabsContent value="daily">
-        <CardContent className="mt-4 pb-2">
-          <div className="gap-2 flex flex-wrap">
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40 flex-1 border border-green-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-green-200">{t('Green words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {green.wordsSameDay.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-yellow-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-yellow-100">{t('Yellow words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {yellow.wordsSameDay.length}
-              </div>
-            </div>
-            <div className="bg-gradient-to-tr from-transparent to-zinc-700/40  border border-red-300/10 p-2 rounded-xl inline-block">
-              <CardTitle className="text-xs font-medium">
-                <span className="text-red-200">{t('Red words')}</span>
-              </CardTitle>
-              <div className="text-xl mt-1 font-bold">
-                {red.wordsSameDay.length}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs mt-2 text-zinc-400">
-            {t("Today's goal: 14 words, 0 remaining", {
-              words: wordsPerDay,
-              remaining: wordsPerDayRemaining,
-            })}
-          </p>
-        </CardContent>
-      </TabsContent>
+      <GoalTab
+        t={t}
+        value="yearly"
+        variant="year"
+        wordsListData={wordsListData}
+      />
+      <GoalTab
+        t={t}
+        value="monthly"
+        variant="month"
+        wordsListData={wordsListData}
+      />
+      <GoalTab
+        t={t}
+        value="daily"
+        variant="day"
+        wordsListData={wordsListData}
+      />
     </Tabs>
   )
 }

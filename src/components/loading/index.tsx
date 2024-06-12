@@ -134,45 +134,49 @@ export function Loading() {
   }, [])
 
   return (
-    <div className="w-[300px] h-[300px] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
-      <div
-        ref={fireContainerRef}
-        className="w-[100px] h-[100px] absolute bottom-0"
-        id="fireNodes1"
-      >
-        <CfFrame className="bg-yellow-200" />
-        <CfFrame className="bg-yellow-300" />
-        <CfFrame className="bg-yellow-400" />
-        <CfFrame className="bg-yellow-600" />
-        <CfFrame className="bg-orange-500" />
-        <CfFrame className="bg-orange-600" />
-        <CfFrame className="bg-orange-700" />
-      </div>
-      <div
-        ref={secondaryFireContainerRef}
-        className="w-[150px] h-[150px] absolute bottom-0"
-        id="fireNodes2"
-      >
-        <CfFrame className="bg-yellow-200" />
-        <CfFrame className="bg-yellow-300" />
-        <CfFrame className="bg-yellow-400" />
-        <CfFrame className="bg-yellow-600" />
-        <CfFrame className="bg-orange-500" />
-        <CfFrame className="bg-orange-600" />
-        <CfFrame className="bg-orange-700" />
-      </div>
-      <div
-        ref={baseFireRef}
-        className="w-[100px] h-[100px] absolute bottom-0"
-        id="base-fire"
-      >
-        <CfFrame className="bg-orange-700 opacity-95" />
-        <CfFrame className="bg-orange-600 w-[100px] h-[100px] opacity-[0.85] left-[75px]" />
-        <CfFrame className="bg-orange-500 w-[60px] h-[60px] opacity-[0.85] left-[130px]" />
-      </div>
-      <div className="w-3/5 h-[100px] absolute left-[50px] bottom-0">
-        <div className="h-[30px] origin-center absolute shadow-lg w-full rounded-[0.5em] bottom-0 bg-amber-900 rotate-[15deg]"></div>
-        <div className="h-[30px] origin-center absolute shadow-lg w-full rounded-[0.5em] bottom-0 bg-amber-900 rotate-[-15deg]"></div>
+    <div className="bg-zinc-900 h-full w-full relative">
+      <div className="h-full relative bg-[url('/assets/svgs/bg.svg')]">
+        <div className="w-[300px] h-[300px] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4 ">
+          <div
+            ref={fireContainerRef}
+            className="w-[100px] h-[100px] absolute bottom-0"
+            id="fireNodes1"
+          >
+            <CfFrame className="bg-yellow-200" />
+            <CfFrame className="bg-yellow-300" />
+            <CfFrame className="bg-yellow-400" />
+            <CfFrame className="bg-yellow-600" />
+            <CfFrame className="bg-orange-500" />
+            <CfFrame className="bg-orange-600" />
+            <CfFrame className="bg-orange-700" />
+          </div>
+          <div
+            ref={secondaryFireContainerRef}
+            className="w-[150px] h-[150px] absolute bottom-0"
+            id="fireNodes2"
+          >
+            <CfFrame className="bg-yellow-200" />
+            <CfFrame className="bg-yellow-300" />
+            <CfFrame className="bg-yellow-400" />
+            <CfFrame className="bg-yellow-600" />
+            <CfFrame className="bg-orange-500" />
+            <CfFrame className="bg-orange-600" />
+            <CfFrame className="bg-orange-700" />
+          </div>
+          <div
+            ref={baseFireRef}
+            className="w-[100px] h-[100px] absolute bottom-0"
+            id="base-fire"
+          >
+            <CfFrame className="bg-orange-700 opacity-95" />
+            <CfFrame className="bg-orange-600 w-[100px] h-[100px] opacity-[0.85] left-[75px]" />
+            <CfFrame className="bg-orange-500 w-[60px] h-[60px] opacity-[0.85] left-[130px]" />
+          </div>
+          <div className="w-3/5 h-[100px] absolute left-[50px] bottom-0">
+            <div className="h-[30px] origin-center absolute shadow-lg w-full rounded-[0.5em] bottom-0 bg-amber-900 rotate-[15deg]"></div>
+            <div className="h-[30px] origin-center absolute shadow-lg w-full rounded-[0.5em] bottom-0 bg-amber-900 rotate-[-15deg]"></div>
+          </div>
+        </div>
       </div>
     </div>
   )

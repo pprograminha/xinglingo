@@ -18,7 +18,7 @@ type GoalProps = {
   wordsListData: Awaited<ReturnType<typeof getWordsList>>
   t: Awaited<ReturnType<typeof getTranslations>>
 }
-export const Goal = async ({ wordsListData, t }: GoalProps) => {
+export const Goal = ({ wordsListData, t }: GoalProps) => {
   const {
     words: wordsList,
     count: { wordsPerYear, wordsPerYearRemaining },

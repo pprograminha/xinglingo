@@ -17,7 +17,7 @@ export default async function PrivacyPage() {
             {t(
               "Your privacy is important to us It is Lingos AI's policy to respect your privacy regarding any information we may collect on the site",
             )}
-            <Link href="https://lingos.ai">{t('Lingos AI')}</Link>
+            <Link href="https://lingos.life">{t('Lingos AI')}</Link>
             {t(', and other sites we own and operate')}
           </span>
         </p>
