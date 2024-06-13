@@ -73,7 +73,7 @@ export function SetLang() {
                 key={lang.value}
                 value={lang.value}
                 onSelect={(locale) => {
-                  router.replace(pathname, { locale })
+                  router.replace(pathname, { locale: locale as Locale })
 
                   setOpen(false)
                 }}
