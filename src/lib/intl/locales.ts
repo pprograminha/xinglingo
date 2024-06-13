@@ -4,6 +4,14 @@ export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
 export type Locale = (typeof locales)[number]
 
+export const imagesSrc: Record<Locale, string> = {
+  'it-IT': '/assets/svgs/flags/italian.svg',
+  pt: '/assets/svgs/flags/brazil.svg',
+  en: '/assets/svgs/flags/usa.svg',
+  es: '/assets/svgs/flags/spain.svg',
+  fr: '/assets/svgs/flags/france.svg',
+}
+
 type LangsResponse<T extends Locale | undefined> = T extends undefined
   ? Record<Locale, string>
   : string

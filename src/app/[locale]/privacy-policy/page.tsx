@@ -15,9 +15,9 @@ export default async function PrivacyPage() {
         <p>
           <span>
             {t(
-              "Your privacy is important to us It is Lingos AI's policy to respect your privacy regarding any information we may collect on the site",
+              "Your privacy is important to us It is Xinglingo's policy to respect your privacy regarding any information we may collect on the site",
             )}
-            <Link href="https://lingos.life">{t('Lingos AI')}</Link>
+            <Link href="https://lingos.life">{t('Xinglingo')}</Link>
             {t(', and other sites we own and operate')}
           </span>
         </p>
@@ -99,7 +99,7 @@ export default async function PrivacyPage() {
         <p>
           <span>
             {t(
-              'The user undertakes to make appropriate use of the contents and information that Lingos AI offers on the site and with an enunciative but not limitative character:',
+              'The user undertakes to make appropriate use of the contents and information that Xinglingo offers on the site and with an enunciative but not limitative character:',
             )}
           </span>
         </p>
@@ -135,7 +135,7 @@ export default async function PrivacyPage() {
           <li>
             <span>
               {t(
-                'C) Not to cause damage to the physical (hardware) and logical (software) systems of Lingos AI, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above',
+                'C) Not to cause damage to the physical (hardware) and logical (software) systems of Xinglingo, its suppliers or third parties, to introduce or spread computer viruses or any other hardware or software systems that are capable of causing the damage mentioned above',
               )}
             </span>
           </li>

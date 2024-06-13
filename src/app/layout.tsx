@@ -2,7 +2,7 @@ import './globals.css'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Lingos AI',
+  title: 'Xinglingo',
 }
 
 export default async function RootLayout({

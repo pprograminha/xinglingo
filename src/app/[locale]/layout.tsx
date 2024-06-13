@@ -8,7 +8,7 @@ import { NextIntlProvider } from '../next-intl-provider'
 import { Wrapper } from '../wrapper'
 
 export const metadata: Metadata = {
-  title: 'Lingos AI',
+  title: 'Xinglingo',
   description: 'English pronunciation Ai Speech',
 }
 

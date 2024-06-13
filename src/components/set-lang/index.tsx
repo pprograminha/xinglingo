@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Locale, langs } from '@/lib/intl/locales'
+import { Locale, imagesSrc, langs } from '@/lib/intl/locales'
 import { cn } from '@/lib/utils'
 import { usePathname, useRouter } from '@/navigation'
 import { useLocale, useTranslations } from 'next-intl'
@@ -36,14 +36,6 @@ export function SetLang() {
     value,
     label,
   }))
-
-  const imagesSrc: Record<Locale, string> = {
-    'it-IT': '/assets/svgs/flags/italian.svg',
-    pt: '/assets/svgs/flags/brazil.svg',
-    en: '/assets/svgs/flags/uk.svg',
-    es: '/assets/svgs/flags/spain.svg',
-    fr: '/assets/svgs/flags/france.svg',
-  }
 
   const currentImageSrc = imagesSrc[value as Locale]
 
@@ -82,13 +74,7 @@ export function SetLang() {
                 value={lang.value}
                 onSelect={(locale) => {
                   router.replace(pathname, { locale })
-                  // router.replace(
-                  //   // @ts-expect-error -- TypeScript will validate that only known `params`
-                  //   // are used in combination with a given `pathname`. Since the two will
-                  //   // always match for the current route, we can skip runtime checks.
-                  //   { pathname, params },
-                  //   { locale },
-                  // )
+
                   setOpen(false)
                 }}
               >

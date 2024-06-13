@@ -89,14 +89,14 @@ export default function Auth() {
                   width={320}
                   height={213}
                   className="w-30"
-                  alt="Lingos AI panda"
+                  alt="Xinglingo panda"
                 />
               </Link>
 
               <h2
                 className={`${pixelatedFont()} mb-8 text-4xl max-w-sm font-bold text-zinc-800 dark:text-white`}
               >
-                {t('Sign in to unlock the best of Lingos AI')}
+                {t('Sign in to unlock the best of Xinglingo')}
               </h2>
             </div>
 

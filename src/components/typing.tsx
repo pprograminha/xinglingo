@@ -3,11 +3,17 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 type TypingProps = {
   text: string
+  startDelay?: number
+  delay?: number
 }
-export const Typing = ({ text: textBase }: TypingProps) => {
+export const Typing = ({
+  text: textBase,
+  delay: delayTime = 30,
+  startDelay = 0,
+}: TypingProps) => {
   const [text, setText] = useState('')
 
-  const delay = () => new Promise((resolve) => setTimeout(resolve, 30))
+  const delay = (d: number) => new Promise((resolve) => setTimeout(resolve, d))
 
   const effectRef = useRef<number>(0)
 
@@ -16,11 +22,13 @@ export const Typing = ({ text: textBase }: TypingProps) => {
 
     effectRef.current = 1
 
+    if (startDelay !== 0) await delay(startDelay)
+
     for (const c of textBase) {
-      await delay()
+      await delay(delayTime)
       setText((oldText) => oldText + c)
     }
-  }, [textBase])
+  }, [textBase, startDelay, delayTime])
 
   useEffect(() => {
     textHandler()

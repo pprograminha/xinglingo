@@ -3,6 +3,7 @@ import plugin from 'tailwindcss/plugin'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 const config = {
+  mode: 'jit',
   darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -111,6 +112,7 @@ const config = {
   },
   plugins: [
     require('tailwindcss-animate'),
+    require('@kamona/tailwindcss-perspective'),
     plugin(function ({ matchUtilities, theme }) {
       matchUtilities(
         {

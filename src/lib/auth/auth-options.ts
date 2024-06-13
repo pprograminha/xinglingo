@@ -19,10 +19,13 @@ export const authOptions: NextAuthOptions = {
     // }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       if (!user.email || !user.name) {
         return false
       }
+
+      const googleId =
+        account?.provider === 'google' ? Number(user.id) || null : null
 
       const steps = JSON.parse(
         cookies().get(`${lingos.prefixKey(`auth:steps`)}`)?.value || '[]',
@@ -30,6 +33,7 @@ export const authOptions: NextAuthOptions = {
 
       const makedUser = await makeUser({
         steps,
+        googleId,
         email: user.email,
         fullName: user.name,
         image: user.image,

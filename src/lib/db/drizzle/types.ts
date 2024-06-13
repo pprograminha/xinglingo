@@ -5,10 +5,15 @@ import {
   pronunciationsAssessment,
   speechs,
   users,
+  usersAvailability,
+  usersProfile,
   words,
 } from './schema'
 
-export type User = InferSelectModel<typeof users>
+export type User = InferSelectModel<typeof users> & {
+  profile?: InferSelectModel<typeof usersProfile>
+  availability?: InferSelectModel<typeof usersAvailability>
+}
 export type PronunciationAssessment = InferSelectModel<
   typeof pronunciationsAssessment
 >

@@ -1,10 +1,10 @@
 {
-  "id": "6a5b66b4-e066-4736-86fc-6b9cb1889096",
-  "prevId": "11f939e6-d01c-4eeb-a6b2-e8b04908f002",
-  "version": "5",
-  "dialect": "pg",
+  "id": "cc6f9470-d741-458d-8320-b609b849ee58",
+  "prevId": "f98dc97e-a9f5-4572-b04c-46350b498202",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "conversations": {
+    "public.conversations": {
       "name": "conversations",
       "schema": "",
       "columns": {
@@ -29,6 +29,7 @@
         "role": {
           "name": "role",
           "type": "role",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
@@ -67,7 +68,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "phonemes": {
+    "public.phonemes": {
       "name": "phonemes",
       "schema": "",
       "columns": {
@@ -129,7 +130,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "pronunciationsAssessment": {
+    "public.pronunciationsAssessment": {
       "name": "pronunciationsAssessment",
       "schema": "",
       "columns": {
@@ -234,7 +235,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "speechs": {
+    "public.speechs": {
       "name": "speechs",
       "schema": "",
       "columns": {
@@ -256,9 +257,17 @@
           "primaryKey": false,
           "notNull": true
         },
+        "speed": {
+          "name": "speed",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
         "client": {
           "name": "client",
           "type": "client",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'cloudflare-s3'"
@@ -283,7 +292,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "speechsToConversations": {
+    "public.speechsToConversations": {
       "name": "speechsToConversations",
       "schema": "",
       "columns": {
@@ -340,7 +349,7 @@
       },
       "uniqueConstraints": {}
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -368,9 +377,23 @@
           "primaryKey": false,
           "notNull": false
         },
+        "googleId": {
+          "name": "googleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "locale": {
+          "name": "locale",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pt'"
+        },
         "role": {
           "name": "role",
           "type": "role",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
@@ -407,10 +430,159 @@
           "columns": [
             "image"
           ]
+        },
+        "users_googleId_unique": {
+          "name": "users_googleId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "googleId"
+          ]
         }
       }
     },
-    "words": {
+    "public.usersAvailability": {
+      "name": "usersAvailability",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "times": {
+          "name": "times",
+          "type": "jsonb[9]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "days": {
+          "name": "days",
+          "type": "jsonb[7]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "usersAvailability_userId_users_id_fk": {
+          "name": "usersAvailability_userId_users_id_fk",
+          "tableFrom": "usersAvailability",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "usersAvailability_userId_unique": {
+          "name": "usersAvailability_userId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId"
+          ]
+        }
+      }
+    },
+    "public.usersProfile": {
+      "name": "usersProfile",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "localeToLearn": {
+          "name": "localeToLearn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "communicationLevel": {
+          "name": "communicationLevel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'basics'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "usersProfile_userId_users_id_fk": {
+          "name": "usersProfile_userId_users_id_fk",
+          "tableFrom": "usersProfile",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "usersProfile_userId_unique": {
+          "name": "usersProfile_userId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId"
+          ]
+        }
+      }
+    },
+    "public.words": {
       "name": "words",
       "schema": "",
       "columns": {
@@ -474,20 +646,21 @@
     }
   },
   "enums": {
-    "role": {
+    "public.role": {
       "name": "role",
-      "values": {
-        "superadmin": "superadmin",
-        "admin": "admin",
-        "subscriber": "subscriber",
-        "user": "user"
-      }
+      "schema": "public",
+      "values": [
+        "superadmin",
+        "admin",
+        "user"
+      ]
     },
-    "client": {
+    "public.client": {
       "name": "client",
-      "values": {
-        "cloudflare-s3": "cloudflare-s3"
-      }
+      "schema": "public",
+      "values": [
+        "cloudflare-s3"
+      ]
     }
   },
   "schemas": {},

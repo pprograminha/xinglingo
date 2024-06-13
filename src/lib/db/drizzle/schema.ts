@@ -1,6 +1,8 @@
 import { relations } from 'drizzle-orm'
 import {
   doublePrecision,
+  integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -9,20 +11,44 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 
-export const userRoleEnum = pgEnum('role', [
-  'superadmin',
-  'admin',
-  'subscriber',
-  'user',
-])
+export const userRoleEnum = pgEnum('role', ['superadmin', 'admin', 'user'])
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey(),
   fullName: text('fullName').notNull(),
   email: text('email').notNull().unique(),
   image: text('image').unique(),
+  googleId: integer('googleId').unique(),
   locale: text('locale').notNull().default('pt'),
   role: userRoleEnum('role').default('user').notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const usersProfile = pgTable('usersProfile', {
+  id: uuid('id').primaryKey(),
+  userId: uuid('userId')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    })
+    .notNull()
+    .unique(),
+  localeToLearn: text('localeToLearn').notNull().default('en'),
+  communicationLevel: text('communicationLevel').notNull().default('basics'),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const usersAvailability = pgTable('usersAvailability', {
+  id: uuid('id').primaryKey(),
+  userId: uuid('userId')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    })
+    .notNull()
+    .unique(),
+  times: jsonb('times').array(9).notNull().$type<string[]>(),
+  days: jsonb('days').array(7).notNull().$type<string[]>(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -145,8 +171,10 @@ export const wordsRelations = relations(words, ({ many, one }) => ({
   phonemes: many(phonemes),
 }))
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   conversations: many(conversations),
+  availability: one(usersAvailability),
+  profile: one(usersProfile),
   pronunciationsAssessment: many(pronunciationsAssessment),
 }))
 

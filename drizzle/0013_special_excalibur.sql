@@ -1,0 +1,1 @@
+ALTER TABLE "usersProfile" ADD COLUMN "localeToLearn" text DEFAULT 'en' NOT NULL;

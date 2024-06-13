@@ -40,3 +40,5 @@ next-env.d.ts
 
 tmp/*.wav
 tmp/*.webm
+
+dump.sql

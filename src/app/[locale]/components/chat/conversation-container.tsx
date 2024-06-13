@@ -41,7 +41,7 @@ export function ConversationContainer() {
           width={320}
           height={213}
           className="w-24 opacity-20"
-          alt="Lingos AI panda"
+          alt="Xinglingo panda"
         />
       </div>
     )

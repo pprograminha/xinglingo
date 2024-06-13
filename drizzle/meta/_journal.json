@@ -71,6 +71,41 @@
       "when": 1712783210736,
       "tag": "0009_last_rick_jones",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1718228796729,
+      "tag": "0010_mature_pride",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1718232411681,
+      "tag": "0011_true_bloodstrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1718232728220,
+      "tag": "0012_flawless_silk_fever",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1718232924376,
+      "tag": "0013_special_excalibur",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1718235377610,
+      "tag": "0014_yielding_brood",
+      "breakpoints": true
     }
   ]
 }
