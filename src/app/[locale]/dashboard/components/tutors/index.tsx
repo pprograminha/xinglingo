@@ -16,11 +16,11 @@ export const Tutors = () => {
       <div className="h-full md:bg-none bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl ">
         <CardHeader className="mb-2">
           <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
-            Crie seu tutor AI ou use um existente
+            Nossos Petutors AI
           </CardTitle>
           <CardDescription>
-            O tutor AI é um modelo de aprendizado treinado para fornecer ensino
-            e orientação.
+            O Petutor AI é um modelo de aprendizado treinado para fornecer
+            ensino e orientação.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">

@@ -11,8 +11,8 @@ import {
 } from './schema'
 
 export type User = InferSelectModel<typeof users> & {
-  profile?: InferSelectModel<typeof usersProfile>
-  availability?: InferSelectModel<typeof usersAvailability>
+  profile?: InferSelectModel<typeof usersProfile> | null
+  availability?: InferSelectModel<typeof usersAvailability> | null
 }
 export type PronunciationAssessment = InferSelectModel<
   typeof pronunciationsAssessment

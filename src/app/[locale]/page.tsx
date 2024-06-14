@@ -179,7 +179,7 @@ export default async function Home() {
               </Link>
             </ul>
             <Link
-              href="mailto:support@lingos.life"
+              href="mailto:support@xinglingo.com"
               className="text-xs hover:underline underline-offset-4"
             >
               {t('Need help?')}{' '}

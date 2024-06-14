@@ -15,7 +15,7 @@ export default async function PrivacyPage() {
       <p>
         <span>
           {t('By accessing the website')}{' '}
-          <a href="https://lingos.life">{t('Xinglingo')}</a>,{' '}
+          <a href="https://xinglingo.com">{t('Xinglingo')}</a>,{' '}
           {t(
             'you agree to comply with these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with all local laws If you do not agree with any of these terms, you are prohibited from using or accessing this site The materials contained in this site are protected by applicable copyright and trademark law',
           )}

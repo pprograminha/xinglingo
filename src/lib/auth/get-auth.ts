@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from './auth-options'
 import { User } from '../db/drizzle/types'
+import { getUser } from '@/actions/users/get-user'
 
 export const getAuth = async () => {
   const session = await getServerSession(authOptions)
@@ -11,7 +12,13 @@ export const getAuth = async () => {
       })
     | undefined
 
-  return { user: sessionUser?.more || null }
+  let user: User | null = sessionUser?.more || null
+
+  if (user) {
+    user = await getUser(user.id)
+  }
+
+  return { user }
 }
 
 interface GenericFunction {

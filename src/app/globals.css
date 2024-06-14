@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 * {
-    scrollbar-color: #181818 transparent;
+    scrollbar-color: #86efac transparent;
     scrollbar-width: thin;
 
     &::-webkit-scrollbar:hover {
-        background-color: #181818;
+        background-color: #86efac;
     }
     &::-webkit-scrollbar {
         width: 15px;

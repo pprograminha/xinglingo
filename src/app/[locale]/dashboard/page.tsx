@@ -26,7 +26,7 @@ export default async function DashboardPage() {
       <div className="flex-col flex bg-[url('/assets/svgs/bg.svg')] bg-repeat h-full">
         <div className="p-4 md:p-8 flex flex-col h-full overflow-auto">
           <div className="grid gap-4 grid-cols-2 mb-4 flex-1">
-            <Welcome t={t} user={user} />
+            <Welcome t={t} user={user} wordsListData={wordsListData} />
             <Card className="bg-gradient-to-tr col-span-2 md:col-span-1 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
               <div className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover rounded-xl h-full">
                 <div className="bg-[url('/assets/imgs/sakura.png')] bg-[length:200px_134px] md:bg-[length:auto]  bg-[100%_100%]  h-full w-full bg-no-repeat rounded-xl absolute top-0 left-0 right-0 bottom-0"></div>
