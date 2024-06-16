@@ -8,9 +8,15 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 
-export const Tutors = () => {
+type TutorsProps = {
+  t: Awaited<ReturnType<typeof getTranslations>>
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const Tutors = ({ t }: TutorsProps) => {
   return (
     <Card className="bg-gradient-to-tr col-span-3 md:col-span-2  dark:from-zinc-920 dark:to-zinc-900">
       <div className="h-full md:bg-none bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl ">
