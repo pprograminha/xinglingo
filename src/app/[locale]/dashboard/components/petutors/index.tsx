@@ -11,22 +11,23 @@ import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 
-type TutorsProps = {
+type PetutorsProps = {
   t: Awaited<ReturnType<typeof getTranslations>>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const Tutors = ({ t }: TutorsProps) => {
+export const Petutors = ({ t }: PetutorsProps) => {
   return (
-    <Card className="bg-gradient-to-tr col-span-3 md:col-span-2  dark:from-zinc-920 dark:to-zinc-900">
+    <Card className="bg-gradient-to-tr col-span-4 md:col-span-2  dark:from-zinc-920 dark:to-zinc-900">
       <div className="h-full md:bg-none bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl ">
         <CardHeader className="mb-2">
           <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
-            Nossos Petutors AI
+            {t('Our AI Petutors')}
           </CardTitle>
           <CardDescription>
-            O Petutor AI é um modelo de aprendizado treinado para fornecer
-            ensino e orientação.
+            {t(
+              'The AI Petutor is a trained learning model designed to provide teaching and guidance',
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
@@ -35,7 +36,7 @@ export const Tutors = ({ t }: TutorsProps) => {
               variant="recommended"
               className="absolute top-0 right-0 -translate-y-1/2 translate-x-2"
             >
-              Recomendado
+              {t('Recommended')}
             </Badge>
 
             <div className="bg-[url('/assets/svgs/bg.svg')]">
@@ -43,12 +44,12 @@ export const Tutors = ({ t }: TutorsProps) => {
                 <p
                   className={`text-lg group-hover:animate-float group-hover:delay-700  ${pixelatedFont()}`}
                 >
-                  - Oi, eu sou o Ioua.
+                  - {t("Hello, I'm Ioua")}
                 </p>
                 <p
                   className={`text-lg group-hover:animate-float group-hover:delay-500 ${pixelatedFont()}`}
                 >
-                  - Comigo você pode falar o que quiser.
+                  - {t('With me, you can say whatever you want')}
                 </p>
               </div>
               <Image
@@ -56,7 +57,7 @@ export const Tutors = ({ t }: TutorsProps) => {
                 className="group-hover:animate-float mx-auto"
                 width={300}
                 height={200}
-                alt="Tutor AI"
+                alt="Petutor AI"
               />
             </div>
           </div>
@@ -64,11 +65,11 @@ export const Tutors = ({ t }: TutorsProps) => {
             <div className="bg-[url('/assets/svgs/bg.svg')]">
               <div className="p-4">
                 <p className={`text-lg ${pixelatedFont()} `}>
-                  - Oi, eu sou a Luna.
+                  - {t("Hello, I'm Luna")}
                 </p>
                 <p className={`min-h-[56px] text-lg ${pixelatedFont()} `}>
                   <Typing
-                    text="- Quer aprender a se comunicar em uma entrevista?"
+                    text={`- ${t('Do you want to learn how to communicate in an interview?')}`}
                     startDelay={1000}
                   />
                 </p>
@@ -78,7 +79,7 @@ export const Tutors = ({ t }: TutorsProps) => {
                 width={300}
                 height={200}
                 className="mx-auto"
-                alt="Tutor AI"
+                alt="Petutor AI"
               />
             </div>
           </div>
@@ -87,10 +88,12 @@ export const Tutors = ({ t }: TutorsProps) => {
             <div className="bg-[url('/assets/svgs/bg.svg')]">
               <div className="p-4">
                 <p className={`text-lg ${pixelatedFont()}`}>
-                  - Oi, eu sou o Ukki.
+                  - {t("Hello, I'm Ukki")}
                 </p>
                 <p className={`min-h-[56px] text-lg ${pixelatedFont()}`}>
-                  <Typing text="- Quer aprender a se comunicar em um restaurante?" />
+                  <Typing
+                    text={`- ${t('Do you want to learn how to communicate in a restaurant?')}`}
+                  />
                 </p>
               </div>
               <Image
@@ -98,7 +101,7 @@ export const Tutors = ({ t }: TutorsProps) => {
                 width={300}
                 className="mx-auto"
                 height={200}
-                alt="Tutor AI"
+                alt="Petutor AI"
               />
             </div>
           </div>

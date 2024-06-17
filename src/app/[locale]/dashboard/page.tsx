@@ -4,9 +4,9 @@ import { getWordsList } from '@/actions/conversations/get-words-list'
 import { getAuth } from '@/lib/auth/get-auth'
 import { getTranslations } from 'next-intl/server'
 import { Goal } from './components/goal'
-import { Tutors } from './components/tutors'
-import { Welcome } from './components/welcome'
 import { Sakura } from './components/sakura'
+import { Welcome } from './components/welcome'
+import { Petutors } from './components/petutors'
 
 export const metadata: Metadata = {
   title: 'Xinglingo | Dashboard',
@@ -29,9 +29,9 @@ export default async function DashboardPage() {
             <Sakura t={t} />
           </div>
 
-          <div className="grid gap-4 grid-cols-3">
+          <div className="grid gap-4 grid-cols-4 lg:grid-cols-3">
             <Goal t={t} wordsListData={wordsListData} />
-            <Tutors t={t} />
+            <Petutors t={t} />
           </div>
         </div>
       </div>

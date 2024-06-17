@@ -26,14 +26,14 @@ export const Sakura = ({ t }: SakuraProps) => {
 
               <div>
                 <p className="text-zinc-500 text-xs">
-                  Selecione um novo idioma para aprender{' '}
+                  {t('Select a new language to learn')}{' '}
                 </p>
 
                 <Button
                   variant="secondary"
                   className="border border-zinc-700 mt-2 flex gap-2 items-center"
                 >
-                  Novo idioma <ChevronRightIcon className="w-4" />
+                  {t('New language')} <ChevronRightIcon className="w-4" />
                 </Button>
               </div>
             </div>
@@ -41,14 +41,14 @@ export const Sakura = ({ t }: SakuraProps) => {
           </div>
           <div className="relative flex-1 bg-zinc-800/90 flex flex-col justify-between border border-pink-500/50  p-4 rounded-xl">
             <Badge variant="shortly" className="absolute -top-2 -right-2">
-              Em breve
+              {t('Shortly')}
             </Badge>
             <h1
               className={`text-2xl ${pixelatedFont()} flex gap-1 items-center`}
             >
-              Novos Petutors AI
+              {t('New AI Petutors')}
               <Badge variant="shortly" className="px-4 ml-2 text-sm">
-                Em breve
+                {t('Shortly')}
               </Badge>
             </h1>
             <div className="flex flex-wrap gap-2 mt-4">
@@ -57,7 +57,7 @@ export const Sakura = ({ t }: SakuraProps) => {
                   <div className="p-4">
                     <p className={`min-h-[56px] text-lg ${pixelatedFont()} `}>
                       <Typing
-                        text="- Logo estarei apto a compartilhar conhecimentos sobre história com você."
+                        text={`- ${t('Soon, I will be able to share knowledge about history with you')}`}
                         startDelay={100}
                       />
                     </p>
@@ -67,7 +67,7 @@ export const Sakura = ({ t }: SakuraProps) => {
                     width={150}
                     height={164}
                     className="mx-auto"
-                    alt="Tutor AI"
+                    alt="Petutor AI"
                   />
                 </div>
               </div>
@@ -76,7 +76,7 @@ export const Sakura = ({ t }: SakuraProps) => {
                   <div className="p-4">
                     <p className={`min-h-[56px] text-lg ${pixelatedFont()} `}>
                       <Typing
-                        text="- Em breve estarei disponível para compartilhar conhecimentos sobre tecnologia com você."
+                        text={`- ${t('In due course, I will be available to share knowledge about technology with you')}`}
                         startDelay={50}
                       />
                     </p>
@@ -86,7 +86,7 @@ export const Sakura = ({ t }: SakuraProps) => {
                     width={150}
                     height={164}
                     className="mx-auto"
-                    alt="Tutor AI"
+                    alt="Petutor AI"
                   />
                 </div>
               </div>

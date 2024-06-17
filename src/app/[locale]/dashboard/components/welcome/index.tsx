@@ -35,8 +35,8 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
     <Card className="bg-gradient-to-tr col-span-2 md:col-span-1 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
       <div className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover rounded-xl h-full">
         <div className="h-full flex flex-col justify-between px-4 pt-4 pb-10">
-          <div className="bg-gradient-to-tr from-zinc-800 h-full via-zinc-800 to-violet-200/10 rounded-xl w-full px-4 py-2">
-            <div className="bg-[url('/assets/svgs/bg-700.svg')] h-full bg-[length:200px,200px]">
+          <div className="bg-gradient-to-tr from-zinc-800 via-zinc-800 to-violet-200/10 rounded-xl w-full px-4 py-2">
+            <div className="bg-[url('/assets/svgs/bg-700.svg')] bg-[length:200px,200px]">
               {user?.profile?.localeToLearn && (
                 <div className="flex justify-between h-full flex-col gap-2">
                   <div className="flex flex-col gap-2">
@@ -78,14 +78,14 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                     </div>
                     <Button
                       variant="secondary"
-                      className="md:max-w-xs border border-zinc-700"
+                      className="md:max-w-xs flex items-center gap-1 border border-zinc-700"
                     >
-                      Continuar <ChevronRight className="w-4" />
+                      {t('Continue')} <ChevronRight className="w-4" />
                     </Button>
                   </div>
                   <div className="flex flex-col justify-end py-3 md:p-4 w-full h-full">
                     <h1 className="text-xs text-zinc-400">
-                      Progresso para fluência
+                      {t('Progress towards fluency')}
                     </h1>
                     <div className="flex gap-2 items-center ">
                       <Progress value={(words.length / wordsPerYear) * 100} />{' '}
@@ -100,14 +100,16 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
           </div>
           <div>
             <h1 className={`text-4xl my-4 md:text-5xl ${pixelatedFont()}`}>
-              Bem-vindo(a)!! {user?.fullName}
+              {t('Welcome!! {userFullName}', {
+                userFullName: user?.fullName,
+              })}
             </h1>
 
             <div className="flex flex-col lg:flex-row justify-between items-start gap-2 lg:gap-4">
               <div>
                 <div className="flex flex-col gap-2">
                   <h2 className={`text-zinc-400 text-2xl ${pixelatedFont()}`}>
-                    Continuar de onde parou?
+                    {t('Continue where you left off?')}
                   </h2>
                 </div>
                 <div className="flex flex-wrap md:flex-nowrap md:w-[210px] mt-6 gap-1 md:gap-0">
@@ -145,7 +147,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       width={180}
                       className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
                       height={150}
-                      alt="Tutor AI"
+                      alt="Petutor AI"
                     />
                   </div>
                   <div
@@ -176,7 +178,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       width={180}
                       className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
                       height={150}
-                      alt="Tutor AI"
+                      alt="Petutor AI"
                     />
                   </div>
                   <div
@@ -206,7 +208,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       width={180}
                       className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
                       height={150}
-                      alt="Tutor AI"
+                      alt="Petutor AI"
                     />
                   </div>
                 </div>
@@ -219,7 +221,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       <div>
                         <div className="flex gap-2 items-center">
                           <h1 className={`text-2xl ${pixelatedFont()}`}>
-                            Seu desempenho{' '}
+                            {t('Your performance')}{' '}
                           </h1>
                           <TooltipProvider>
                             <Tooltip>
@@ -228,33 +230,47 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                               </TooltipTrigger>
                               <TooltipContent className="max-w-md grid gap-2">
                                 <p>
-                                  - Palavras que possuem uma pontuação superior
-                                  a 95 ou igual a 95 são representadas em{' '}
-                                  <span className="px-1 bg-green-300/10 text-green-300 rounded-md">
-                                    verde
-                                  </span>
+                                  {t.rich(
+                                    'Words with a score above or equal to 95 are represented in <g>green</g>',
+                                    {
+                                      g: (chunks) => (
+                                        <span className="px-1 bg-green-300/10 text-green-300 rounded-md">
+                                          {chunks}
+                                        </span>
+                                      ),
+                                    },
+                                  )}
                                 </p>
                                 <p>
-                                  - As palavras com uma pontuação de 50 pontos
-                                  ou mais, mas inferior a 95 pontos, são
-                                  representadas em{' '}
-                                  <span className="px-1 bg-yellow-300/10 text-yellow-300 rounded-md">
-                                    amarelo
-                                  </span>
+                                  {t.rich(
+                                    'Words with a score of 50 points or more but less than 95 points are represented in <y>yellow</y>',
+                                    {
+                                      y: (chunks) => (
+                                        <span className="px-1 bg-yellow-300/10 text-yellow-300 rounded-md">
+                                          {chunks}
+                                        </span>
+                                      ),
+                                    },
+                                  )}
                                 </p>
                                 <p>
-                                  - Palavras com pontuação de 0 a 49 pontos são
-                                  representadas em{' '}
-                                  <span className="px-1 bg-red-300/10 text-red-400 rounded-md">
-                                    vermelho
-                                  </span>
+                                  {t.rich(
+                                    'Words with a score between 0 and 49 points are represented in <r>red</r>',
+                                    {
+                                      r: (chunks) => (
+                                        <span className="px-1 bg-red-300/10 text-red-400 rounded-md">
+                                          {chunks}
+                                        </span>
+                                      ),
+                                    },
+                                  )}
                                 </p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
                         </div>
                         <p className="flex gap-2 items-center text-xs text-zinc-400">
-                          Consiga pontos conversando com os tutores{' '}
+                          {t('Earn points by talking to the petutors')}
                           <CoinsIcon className="w-4 h-4" />
                         </p>
                       </div>
@@ -317,7 +333,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                   width={250}
                   className="ml-auto animate-in"
                   height={100}
-                  alt="Tutor AI"
+                  alt="Petutor AI"
                 />
 
                 <p
@@ -333,7 +349,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                 src="/assets/imgs/tutor-ai-04.png"
                 width={200}
                 height={200}
-                alt="Tutor AI"
+                alt="Petutor AI"
               />
             </div> */}
           </div>

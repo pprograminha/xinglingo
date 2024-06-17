@@ -3,9 +3,11 @@ import { getAuth } from '@/lib/auth/get-auth'
 import { PartyPopperIcon, SparkleIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { ProfileLinkSkeleton } from './skeleton'
+import { getTranslations } from 'next-intl/server'
 
 export const ProfileLinkContent = async () => {
   const { user } = await getAuth()
+  const t = await getTranslations()
   const {
     green: { words },
     count: { wordsPerYear },
@@ -30,8 +32,9 @@ export const ProfileLinkContent = async () => {
         {words.length < wordsPerYear ? (
           <>
             <h1>
-              Você está {((words.length / wordsPerYear) * 100).toFixed(2)}% mais
-              próximo de se tornar fluente
+              {t('You are {value}% closer to becoming fluent', {
+                value: ((words.length / wordsPerYear) * 100).toFixed(2),
+              })}
             </h1>
             <div className="p-2 border border-yellow-200 inline-block rounded-md mt-2">
               <span className="text-yellow-400">{wordsPerYear}</span> /{' '}
