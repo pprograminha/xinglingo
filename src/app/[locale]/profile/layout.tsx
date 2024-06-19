@@ -12,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <section className="bg-[url('/assets/svgs/bg.svg')] h-full p-4 md:p-8 overflow-y-auto ">
-      <div className="flex gap-4 min-h-full">
+      <div className="flex gap-2 sm:gap-4 min-h-full">
         <SideBar />
         {children}
       </div>
