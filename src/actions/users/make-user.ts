@@ -14,7 +14,7 @@ export async function makeUser({
   fullName,
   steps,
   image = null,
-}: Omit<NewUser, 'id'> & { steps: Steps | []; googleId: number | null }) {
+}: Omit<NewUser, 'id'> & { steps: Steps | []; googleId: string | null }) {
   let [user] = await db.select().from(users).where(eq(users.email, email))
 
   const locale = cookies().get('NEXT_LOCALE')?.value || 'en'

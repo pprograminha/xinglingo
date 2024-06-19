@@ -1,6 +1,3 @@
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { AlignJustify } from 'lucide-react'
 import type { Metadata } from 'next'
 import { SideBar } from './components/sidebar'
 
@@ -14,26 +11,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <section className="h-screen flex relative">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            className="lg:hidden bg-transparent dark:bg-transparent border-0 absolute z-20 top-5 left-5"
-          >
-            <AlignJustify className="w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent
-          className="w-[400px] flex flex-col h-full border-r-1 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 lg:hidden"
-          side="left"
-        >
-          <SideBar />
-        </SheetContent>
-      </Sheet>
-      <SideBar className="hidden lg:flex " />
-      {children}
+    <section className="bg-[url('/assets/svgs/bg.svg')] h-full p-4 md:p-8 overflow-y-auto ">
+      <div className="flex gap-4 min-h-full">
+        <SideBar />
+        {children}
+      </div>
     </section>
   )
 }

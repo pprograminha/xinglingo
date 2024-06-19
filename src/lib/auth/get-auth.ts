@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from './auth-options'
 import { User } from '../db/drizzle/types'
 import { getUser } from '@/actions/users/get-user'
+import { redirect } from '@/navigation'
 
 export const getAuth = async () => {
   const session = await getServerSession(authOptions)
@@ -16,6 +17,8 @@ export const getAuth = async () => {
 
   if (user) {
     user = await getUser(user.id)
+  } else {
+    redirect('/auth')
   }
 
   return { user }

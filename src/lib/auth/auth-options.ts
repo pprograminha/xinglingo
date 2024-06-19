@@ -24,8 +24,7 @@ export const authOptions: NextAuthOptions = {
         return false
       }
 
-      const googleId =
-        account?.provider === 'google' ? Number(user.id) || null : null
+      const googleId = account?.provider === 'google' ? user.id : null
 
       const steps = JSON.parse(
         cookies().get(`${lingos.prefixKey(`auth:steps`)}`)?.value || '[]',

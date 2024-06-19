@@ -45,7 +45,6 @@ const authMiddleware = withAuth(
     },
     pages: {
       signIn: '/auth',
-      newUser: '/',
     },
   },
 )

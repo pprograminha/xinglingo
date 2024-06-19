@@ -1,7 +1,6 @@
 import { relations } from 'drizzle-orm'
 import {
   doublePrecision,
-  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -18,7 +17,7 @@ export const users = pgTable('users', {
   fullName: text('fullName').notNull(),
   email: text('email').notNull().unique(),
   image: text('image').unique(),
-  googleId: integer('googleId').unique(),
+  googleId: text('googleId').unique(),
   locale: text('locale').notNull().default('pt'),
   role: userRoleEnum('role').default('user').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),

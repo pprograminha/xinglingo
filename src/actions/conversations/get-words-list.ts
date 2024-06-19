@@ -1,5 +1,5 @@
 'use server'
-import { withAuth } from '@/lib/auth/get-auth'
+import { getAuth, withAuth } from '@/lib/auth/get-auth'
 import { User } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 import { pronunciationsAssessment, words } from '@/lib/db/drizzle/schema'
@@ -22,7 +22,9 @@ type GetWordsProps = {
 export const getWordsList = async (props?: GetWordsProps) => {
   return (
     await withAuth(async (props?: GetWordsProps) => {
-      const { sort = 'desc', user } = props || {}
+      const { sort = 'desc' } = props || {}
+
+      const { user } = await getAuth()
 
       const sqWithoutWhere = db
         .select({

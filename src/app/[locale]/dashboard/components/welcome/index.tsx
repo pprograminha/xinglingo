@@ -31,6 +31,8 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
 
   const allWordsCount = words.length + redWords.length + yellowWords.length
 
+  const getPercentage = (n1: number, n2: number) => (n1 / n2) * 100 || 0
+
   return (
     <Card className="bg-gradient-to-tr col-span-2 md:col-span-1 h-full dark:from-zinc-920 dark:to-zinc-800/70 relative">
       <div className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover rounded-xl h-full">
@@ -279,28 +281,15 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       <div className="bg-zinc-900 rounded-xl p-1 lg:h-full mt-auto">
                         <div
                           data-start={
-                            (words.length / allWordsCount) * 100 <= 20
+                            getPercentage(words.length, allWordsCount) <= 20
                           }
                           style={{
-                            width: `${(words.length / allWordsCount) * 100}%`,
+                            width: `${getPercentage(words.length, allWordsCount)}%`,
                           }}
                           className={`bg-green-500/5 flex gap-2 lg:flex-col data-[start=true]:items-start justify-between items-end text-green-300 p-1 rounded-xl text-xs`}
                         >
-                          %{((words.length / allWordsCount) * 100).toFixed(2)}
-                        </div>
-                      </div>
-                      <div className="bg-zinc-900 rounded-xl p-1 lg:h-full">
-                        <div
-                          data-start={
-                            (yellowWords.length / allWordsCount) * 100 <= 20
-                          }
-                          style={{
-                            width: `${(yellowWords.length / allWordsCount) * 100}%`,
-                          }}
-                          className="bg-yellow-500/5 flex gap-2 lg:flex-col data-[start=true]:items-start justify-between items-end text-yellow-300 p-1 rounded-xl text-xs"
-                        >
                           %
-                          {((yellowWords.length / allWordsCount) * 100).toFixed(
+                          {getPercentage(words.length, allWordsCount).toFixed(
                             2,
                           )}
                         </div>
@@ -308,15 +297,36 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       <div className="bg-zinc-900 rounded-xl p-1 lg:h-full">
                         <div
                           data-start={
-                            (redWords.length / allWordsCount) * 100 <= 20
+                            getPercentage(yellowWords.length, allWordsCount) <=
+                            20
                           }
                           style={{
-                            width: `${(redWords.length / allWordsCount) * 100}%`,
+                            width: `${getPercentage(yellowWords.length, allWordsCount)}%`,
+                          }}
+                          className="bg-yellow-500/5 flex gap-2 lg:flex-col data-[start=true]:items-start justify-between items-end text-yellow-300 p-1 rounded-xl text-xs"
+                        >
+                          %
+                          {getPercentage(
+                            yellowWords.length,
+                            allWordsCount,
+                          ).toFixed(2)}
+                        </div>
+                      </div>
+                      <div className="bg-zinc-900 rounded-xl p-1 lg:h-full">
+                        <div
+                          data-start={
+                            getPercentage(redWords.length, allWordsCount) <= 20
+                          }
+                          style={{
+                            width: `${getPercentage(redWords.length, allWordsCount)}%`,
                           }}
                           className="bg-red-500/5 flex gap-2 lg:flex-col data-[start=true]:items-start justify-between items-end text-red-400 p-1 rounded-xl text-xs"
                         >
                           %
-                          {((redWords.length / allWordsCount) * 100).toFixed(2)}
+                          {getPercentage(
+                            redWords.length,
+                            allWordsCount,
+                          ).toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -325,34 +335,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row gap-2 justify-between">
-            {/* <div className="relative flex-col shrink-0 flex justify-center items-center select-none h-[500px]">
-              <div className="relative">
-                <Image
-                  src="/assets/svgs/dialogue.svg"
-                  width={250}
-                  className="ml-auto animate-in"
-                  height={100}
-                  alt="Petutor AI"
-                />
-
-                <p
-                  className={`text-md typing-animation leading-4 absolute top-[calc(50%_+_-20px)] right-8 -translate-y-1/2 min-w-[200px] max-w-[200px] p-5 pl-8 ${pixelatedFont()}`}
-                >
-                  <Typing
-                    text={`Sabia que dá pra aprender uma nova lingua em até 1 ano?`}
-                  />
-                </p>
-              </div>
-
-              <Image
-                src="/assets/imgs/tutor-ai-04.png"
-                width={200}
-                height={200}
-                alt="Petutor AI"
-              />
-            </div> */}
-          </div>
+          <div />
         </div>
       </div>
     </Card>
