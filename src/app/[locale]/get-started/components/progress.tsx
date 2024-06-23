@@ -24,13 +24,13 @@ export function Progress() {
   const step = MAX_STEPS - currentStep
   return (
     <>
-      <h1 className="text-xs text-zinc-500 mb-2">
+      <h1 className="text-xs text-center mt-4 text-zinc-500 mb-2">
         {step > 0 &&
           t("You're almost there, just 1 steps to go!", {
             step,
           })}
       </h1>
-      <ProgressPrimitive value={progress} className="w-[60%]" />
+      <ProgressPrimitive value={progress} className="w-[60%] mt-4" />
     </>
   )
 }

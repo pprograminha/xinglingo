@@ -3,7 +3,6 @@
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 
-import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -22,11 +21,14 @@ import { usePathname, useRouter } from '@/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 
-export function SetLang() {
+type SetLangProps = {
+  className?: string
+  collateral?: boolean
+}
+
+export function SetLang({ className }: SetLangProps) {
   const [open, setOpen] = React.useState(false)
   const t = useTranslations()
-
-  const buttonRef = React.useRef<HTMLButtonElement>(null)
 
   const router = useRouter()
   const pathname = usePathname()
@@ -43,13 +45,13 @@ export function SetLang() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          ref={buttonRef}
-          variant="outline"
-          role="combobox"
+      <PopoverTrigger>
+        <div
           aria-expanded={open}
-          className="px-2 py-0 gap-1 flex"
+          className={cn(
+            'px-2 py-2  dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-all rounded-md gap-1 items-center flex',
+            className,
+          )}
         >
           {lang && (
             <Image
@@ -61,7 +63,7 @@ export function SetLang() {
             />
           )}
           <ChevronsUpDown className="h-3 w-3 shrink-0 opacity-50" />
-        </Button>
+        </div>
       </PopoverTrigger>
       <PopoverContent className="w-full max-w-max p-0">
         <Command className="min-w-[200px]">

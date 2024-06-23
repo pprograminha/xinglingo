@@ -12,7 +12,7 @@ import { interSansFont } from '@/lib/font/google/inter-sans-font'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { CircleHelpIcon } from 'lucide-react'
 import { GoalTabs } from './goal-tabs'
-import { WordsList } from '../words-list'
+import { WordsList } from './words-list'
 
 type GoalProps = {
   wordsListData: Awaited<ReturnType<typeof getWordsList>>

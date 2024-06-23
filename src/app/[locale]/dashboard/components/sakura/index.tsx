@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { Link } from '@/navigation'
 import { ChevronRightIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
@@ -31,9 +32,12 @@ export const Sakura = ({ t }: SakuraProps) => {
 
                 <Button
                   variant="secondary"
-                  className="border border-zinc-700 mt-2 flex gap-2 items-center"
+                  asChild
+                  className="border border-zinc-700 mt-2 gap-2 items-center inline-flex"
                 >
-                  {t('New language')} <ChevronRightIcon className="w-4" />
+                  <Link href="/profile">
+                    {t('New language')} <ChevronRightIcon className="w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>

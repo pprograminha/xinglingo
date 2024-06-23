@@ -60,7 +60,7 @@ export const RadioGroup = () => {
       </div>
 
       <RadioGroupPrimitive
-        className="w-full"
+        className="w-full mt-8"
         key={steps[2]}
         defaultValue={steps[2]}
         onValueChange={(value) => setStep(2, value as LabelId)}
@@ -95,7 +95,7 @@ export const RadioGroup = () => {
         ))}
       </RadioGroupPrimitive>
 
-      <div className="flex w-full items-center gap-2 mt-4">
+      <div className="flex w-full items-center gap-2 mt-8 pb-4">
         <Button size="icon" variant="secondary" asChild>
           <Link step={1} href="/get-started/1">
             <ArrowLeftIcon className="w-4 h-4" />

@@ -16,6 +16,8 @@ const badgeVariants = cva(
           'bg-gradient-to-r from-violet-600 rounded-full to-indigo-400 text-zinc-50 shadow dark:text-zinc-50',
         shortly:
           'bg-gradient-to-r from-pink-600 rounded-full to-pink-400 text-zinc-50 shadow dark:text-zinc-50',
+        discount:
+          'bg-gradient-to-r from-pink-600 rounded-full to-pink-400 text-zinc-50 shadow dark:text-zinc-50',
         destructive:
           'border-transparent bg-red-500 text-zinc-50 shadow hover:bg-red-500/80 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/80',
         outline: 'text-zinc-950 dark:text-zinc-50',

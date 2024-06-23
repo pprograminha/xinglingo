@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       ...messages,
     ],
   })
-
+  // const text = await streamText(response)
   const stream = OpenAIStream(response)
 
   return new StreamingTextResponse(stream)

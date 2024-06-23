@@ -9,6 +9,7 @@ import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from './your-performance'
+import { Intensive } from '@/components/intensive'
 
 type WelcomeProps = {
   user: User | null
@@ -56,15 +57,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex gap-1 border border-orange-600/60 shrink-0 text-orange-500 rounded-full px-2 md:px-6 text-xs py-2 max-h-8 bg-gradient-to-tr dark:from-zinc-700 dark:to-orange-700/40">
-                          <Image
-                            src="/assets/svgs/flame-danger.svg"
-                            width={15}
-                            height={15}
-                            alt="Flame danger"
-                          />
-                          0x
-                        </div>
+                        <Intensive value={0} />
                       </div>
                     </div>
                     <Button

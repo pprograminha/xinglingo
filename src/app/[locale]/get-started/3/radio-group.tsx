@@ -147,8 +147,8 @@ export const RadioGroup = () => {
           <Title />
         </div>
       </div>
-      <div className="w-full">
-        <h1 className="mb-2">Times</h1>
+      <div className="w-full mt-4">
+        <h1 className="mb-2">{t('Times')}</h1>
         <ToggleGroup type="multiple" className="flex flex-col w-full">
           {times.map((time) => (
             <div key={time.id} className="flex flex-col flex-1 w-full">
@@ -194,7 +194,7 @@ export const RadioGroup = () => {
         </ToggleGroup>
       </div>
 
-      <div className="flex w-full items-center gap-2 mt-4">
+      <div className="flex w-full items-center gap-2 mt-8 pb-4">
         <Button size="icon" variant="secondary" asChild>
           <Link step={2} href="/get-started/2">
             <ArrowLeftIcon className="w-4 h-4" />

@@ -200,5 +200,22 @@
     "You are {value}% closer to becoming fluent": "Sei al {value}% più vicino a diventare fluente",
     "Shortly": "A breve",
     "Soon, I will be able to share knowledge about history with you": "Presto sarò in grado di condividere con te conoscenze sulla storia.",
-    "In due course, I will be available to share knowledge about technology with you": "A tempo debito, sarò disponibile a condividere con te conoscenze sulla tecnologia."
+    "In due course, I will be available to share knowledge about technology with you": "A tempo debito, sarò disponibile a condividere con te conoscenze sulla tecnologia.",
+    "scores": "livelli",
+    "Your average score is {points} points": "Il tuo punteggio medio è di {points} punti",
+    "See more": "Vedi altro",
+    "We noticed that you still don't have a plan": "Abbiamo notato che non hai ancora un piano",
+    "Learn other languages": "Impara altre lingue",
+    "Set a new system language": "Imposta una nuova lingua di sistema",
+    "Return to dashboard": "Torna alla dashboard",
+    "Disabled": "Disabilitato",
+    "To create a plan": "Per creare un piano",
+    "Green": "Verde",
+    "Red": "Rosso",
+    "Yellow": "Giallo",
+    "Words that you had contact with": "Parole con cui hai avuto contatto",
+    "Word": "Parola",
+    "Times used": "Volte utilizzato",
+    "Status": "Stato",
+    "Scoring": "Punteggio"
 }

@@ -200,5 +200,22 @@
     "You are {value}% closer to becoming fluent": "Você está {value}% mais perto de se tornar fluente",
     "Shortly": "Em breve",
     "Soon, I will be able to share knowledge about history with you": "Em breve, poderei compartilhar conhecimentos sobre história com você",
-    "In due course, I will be available to share knowledge about technology with you": "No devido tempo, estarei disponível para compartilhar conhecimentos sobre tecnologia com você."
+    "In due course, I will be available to share knowledge about technology with you": "No devido tempo, estarei disponível para compartilhar conhecimentos sobre tecnologia com você.",
+    "scores": "puntajes",
+    "Your average score is {points} points": "Tu puntuación promedio es de {points} puntos",
+    "See more": "Ver más",
+    "We noticed that you still don't have a plan": "Hemos notado que aún no tienes un plan",
+    "Learn other languages": "Aprende otros idiomas",
+    "Set a new system language": "Establecer un nuevo idioma del sistema",
+    "Return to dashboard": "Volver al panel de control",
+    "Disabled": "Deshabilitado",
+    "To create a plan": "Para crear un plan",
+    "Green": "Verde",
+    "Red": "Rojo",
+    "Yellow": "Amarillo",
+    "Words that you had contact with": "Palavras com as quais você entrou em contato",
+    "Word": "Palavra",
+    "Times used": "Vezes utilizada",
+    "Status": "Status",
+    "Scoring": "Avaliação"
 }

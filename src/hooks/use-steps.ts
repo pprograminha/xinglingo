@@ -29,6 +29,11 @@ export const defaultTimes: `${TimeId}.${string}`[] = [
   'evening-night.0-3',
   'morning.6-9',
   'morning.3-6',
+  'days.mon',
+  'days.tue',
+  'days.wed',
+  'days.thu',
+  'days.fri',
 ]
 const storage: PersistStorage<StepsState> = {
   getItem: (key: string) => {

@@ -30,11 +30,14 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
 
   return (
     <ul
-      className={cn('inline-flex flex-col min-h-full gap-1', className)}
+      className={cn(
+        'inline-flex  fixed bottom-4 right-6 left-4 md:bottom-auto md:right-auto md:left-auto md:relative z-50 flex-col  md:min-h-full gap-1',
+        className,
+      )}
       {...props}
     >
-      <div className="bg-gradient-to-t from-zinc-800 via-zinc-900 to-zinc-900 border h-full dark:border-zinc-800 py-2 rounded-xl">
-        <div className="flex flex-col gap-2 px-2 h-full rounded-xl bg-[url('/assets/svgs/bg-700.svg')] bg-[length:200px_137px]">
+      <div className="bg-gradient-to-t from-zinc-900 md:from-zinc-800 via-zinc-900 to-zinc-900 border h-full dark:border-zinc-800 rounded-xl">
+        <div className="flex md:flex-col gap-2 p-1 sm:p-2 h-full rounded-xl bg-[url('/assets/svgs/bg.svg')] bg-[length:200px_137px]">
           {items.map((item) => (
             <li
               key={item.href}
@@ -62,12 +65,13 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
                     dark:ring-offset-zinc-950
                     dark:focus-visible:ring-zinc-300
                     dark:hover:text-zinc-50
-                    h-14
+                    sm:h-14
+                    h-12
+                    w-12
+                    sm:w-14
                     lg:p-0
-                    py-2
-                    px-2
+                    md:p-2
                     rounded-xl
-                    w-14
                     dark:bg-zinc-800
                     border
                     border-zinc-800
@@ -122,12 +126,13 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
                     dark:ring-offset-zinc-950
                     dark:focus-visible:ring-zinc-300
                     dark:hover:text-zinc-50
-                    h-14
+                    sm:h-14
+                    h-12
+                    w-12
+                    sm:w-14
                     lg:p-0
-                    py-2
-                    px-2
+                    md:p-2
                     rounded-xl
-                    w-14
                     dark:bg-zinc-900
                     border
                     border-zinc-800
