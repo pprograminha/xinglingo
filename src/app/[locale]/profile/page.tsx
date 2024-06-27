@@ -94,8 +94,10 @@ const UserProfile = async () => {
               className="absolute top-4 left-4 border border-zinc-700"
             >
               <Link href="/dashboard">
-                <ChevronLeftIcon className="w-4 mr-2" />
-                {t('Return to dashboard')}
+                <ChevronLeftIcon className="w-4 " />
+                <span className="hidden ml-2 sm:inline-block">
+                  {t('Return to dashboard')}
+                </span>
               </Link>
             </Button>
             <Image
@@ -274,7 +276,7 @@ const UserProfile = async () => {
           </div>
           <div
             data-color={scoreColor(averageScore)}
-            className="mt-4 p-4 rounded-xl w-full bg-gradient-to-t from-zinc-800 data-[color=green]:to-green-300/5 data-[color=red]:to-red-300/5 data-[color=yellow]:to-yellow-300/5 flex-1 h-full"
+            className="mt-4 p-4 rounded-xl w-full bg-gradient-to-tr to-zinc-800  from-zinc-700/20  flex-1 h-full"
           >
             <h1 className={`${pixelatedFont()} text-2xl md:text-4xl`}>
               {t('Words that you had contact with')}
@@ -300,7 +302,7 @@ const UserProfile = async () => {
                 <div className="flex flex-col gap-2 w-full text-xs">
                   {words
                     .reverse()
-                    .filter((_, i) => i <= 5)
+                    .filter((_, i) => i <= 4)
                     .map((word) => (
                       <div
                         data-color={word.scoreColor}
@@ -313,7 +315,7 @@ const UserProfile = async () => {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
-                              <span className="whitespace-nowrap flex gap-2 items-center border py-0.5 px-2 rounded-full group-data-[color=green]:border-green-300 group-data-[color=green]:text-green-300 group-data-[color=yellow]:border-yellow-300 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:border-red-300 group-data-[color=red]:text-red-300">
+                              <span className="whitespace-nowrap flex gap-2 items-center border py-0.5 px-2 rounded-full group-data-[color=green]:text-green-300 group-data-[color=green]:border-green-300 group-data-[color=yellow]:border-yellow-300 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:border-red-300 group-data-[color=red]:text-red-300">
                                 {t(
                                   colorText[word.scoreColor as ScoreColorKeys],
                                 )}

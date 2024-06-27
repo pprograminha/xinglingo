@@ -44,7 +44,10 @@ export const Sakura = ({ t }: SakuraProps) => {
             <ProfileLink className="ml-auto max-w-none lg:max-w-xs" />
           </div>
           <div className="relative flex-1 bg-zinc-800/90 flex flex-col justify-between border border-pink-500/50  p-4 rounded-xl">
-            <Badge variant="shortly" className="absolute -top-2 -right-2">
+            <Badge
+              variant="shortly"
+              className="absolute hidden lg:block -top-2 -right-2"
+            >
               {t('Shortly')}
             </Badge>
             <h1

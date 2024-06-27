@@ -16,7 +16,9 @@ const CfFrame: React.FC<HtmlHTMLAttributes<HTMLDivElement>> = ({
   ></div>
 )
 
-export function Loading() {
+type LoadingProps = HtmlHTMLAttributes<HTMLDivElement>
+
+export function Loading({ className, ...props }: LoadingProps) {
   const fireContainerRef = useRef<HTMLDivElement | null>(null)
   const secondaryFireContainerRef = useRef<HTMLDivElement | null>(null)
   const baseFireRef = useRef<HTMLDivElement | null>(null)
@@ -134,7 +136,10 @@ export function Loading() {
   }, [])
 
   return (
-    <div className="bg-zinc-900 h-full w-full relative">
+    <div
+      className={cn('bg-zinc-900 h-full w-full relative', className)}
+      {...props}
+    >
       <div className="h-full relative bg-[url('/assets/svgs/bg.svg')]">
         <div className="w-[300px] h-[300px] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4 ">
           <div

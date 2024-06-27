@@ -7,6 +7,7 @@ import { Goal } from './components/goal'
 import { Sakura } from './components/sakura'
 import { Welcome } from './components/welcome'
 import { Petutors } from './components/petutors'
+import { Bubble } from '@/components/bubble'
 
 export const metadata: Metadata = {
   title: 'Xinglingo | Dashboard',
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
+      <Bubble />
     </>
   )
 }
