@@ -25,6 +25,7 @@ export async function makeUser({
       .set({
         image,
         locale,
+        updatedAt: new Date(),
       })
       .where(eq(users.email, email))
 

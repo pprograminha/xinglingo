@@ -21,6 +21,8 @@ export const env = createEnv({
     CLOUDFLARE_SECRET_KEY: z.string().min(1),
     CLOUDFLARE_ACCESS_KEY: z.string().min(1),
     CLOUDFLARE_TOKEN_API: z.string().min(1),
+    TYPEBOT_BOT_KEY: z.string().min(1),
+    TYPEBOT_BOT_URL: z.string().min(1),
     RECAPTCHA_SECRET: z.string().min(1),
   },
   client: {

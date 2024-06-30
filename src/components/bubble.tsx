@@ -1,13 +1,27 @@
 'use client'
+import { getServerEnv } from '@/actions/env/get-server-env'
+import { env as baseEnv } from '@/env'
 import { Bubble as BubblePrimitive } from '@typebot.io/nextjs'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 export const Bubble = () => {
   const t = useTranslations()
+
+  const [env, setEnv] = useState<typeof baseEnv | null>(null)
+  const locale = useLocale()
+
+  useEffect(() => {
+    getServerEnv().then((response) => setEnv(response))
+  }, [])
+
+  if (!env || !locale) return null
+
   return (
     <BubblePrimitive
-      apiHost="https://bot.chatswt.io"
-      typebot="lingos-bot"
+      key={locale}
+      apiHost={env.TYPEBOT_BOT_URL}
+      typebot={`${env.TYPEBOT_BOT_KEY}-${locale.toLowerCase()}`}
       previewMessage={{
         message: t('Do you have any doubts?'),
         autoShowDelay: 1000,

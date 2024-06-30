@@ -3,6 +3,7 @@
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 
+import { updateUser } from '@/actions/users/update-user'
 import {
   Command,
   CommandEmpty,
@@ -15,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useAuth } from '@/hooks/use-auth'
 import { Locale, imagesSrc, langs } from '@/lib/intl/locales'
 import { cn } from '@/lib/utils'
 import { usePathname, useRouter } from '@/navigation'
@@ -26,13 +28,14 @@ type SetLangProps = {
   collateral?: boolean
 }
 
-export function SetLang({ className }: SetLangProps) {
+export function SetLang({ className, collateral }: SetLangProps) {
   const [open, setOpen] = React.useState(false)
   const t = useTranslations()
 
   const router = useRouter()
   const pathname = usePathname()
   const value = useLocale()
+  const { uid } = useAuth()
 
   const langsValues = Object.entries(langs(t)).map(([value, label]) => ({
     value,
@@ -75,6 +78,14 @@ export function SetLang({ className }: SetLangProps) {
                 key={lang.value}
                 value={lang.value}
                 onSelect={(locale) => {
+                  const userId = uid()
+
+                  if (collateral && lang && userId) {
+                    updateUser({
+                      locale,
+                      userId,
+                    })
+                  }
                   router.replace(pathname, { locale: locale as Locale })
 
                   setOpen(false)

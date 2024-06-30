@@ -93,39 +93,41 @@ const UserProfile = async () => {
                 {user?.fullName}
               </h3>
             </div>
-            <div className="bg-gradient-to-tr col-span-11 md:col-span-7 lg:col-span-8  rounded-xl w-full md:w-auto from-zinc-800 to-zinc-800/10   px-1 md:px-4  flex-1">
-              <div className="flex  flex-wrap w-full justify-between">
-                <div className="mr-4 p-3 text-center flex-1">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-green-300">
-                    {green.words.length}
-                  </span>
-                  <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
-                    {t('Words with high scores')}
-                  </span>
+            <div className="bg-gradient-to-tr col-span-11 md:col-span-7 lg:col-span-8  rounded-xl w-full md:w-auto from-zinc-800 to-zinc-800/10     flex-1">
+              <div className="h-full px-1 md:px-4 bg-[url('/assets/svgs/radiant-gradient.svg')] bg-[100%_100%] rounded-xl bg-cover">
+                <div className="flex  flex-wrap w-full justify-between">
+                  <div className="mr-4 p-3 text-center flex-1">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-green-300">
+                      {green.words.length}
+                    </span>
+                    <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
+                      {t('Words with high scores')}
+                    </span>
+                  </div>
+                  <div className="mr-4 p-3 text-center flex-1">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-yellow-200">
+                      {yellow.words.length}
+                    </span>
+                    <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
+                      {t('Words with average scores')}
+                    </span>
+                  </div>
+                  <div className="lg:mr-4 p-3 text-center flex-1">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-red-400">
+                      {red.words.length}
+                    </span>
+                    <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
+                      {t('Words with low scores')}
+                    </span>
+                  </div>
                 </div>
-                <div className="mr-4 p-3 text-center flex-1">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-yellow-200">
-                    {yellow.words.length}
-                  </span>
-                  <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
-                    {t('Words with average scores')}
-                  </span>
-                </div>
-                <div className="lg:mr-4 p-3 text-center flex-1">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-red-400">
-                    {red.words.length}
-                  </span>
-                  <span className="text-sm text-zinc-400 inline-block max-w-[180px]">
-                    {t('Words with low scores')}
-                  </span>
-                </div>
-              </div>
 
-              <YourPerformance
-                wordsListData={wordsListData}
-                t={t}
-                className="[&_#bg]:!bg-none [&_#gradient]:!bg-none !bg-transparent"
-              />
+                <YourPerformance
+                  wordsListData={wordsListData}
+                  t={t}
+                  className="[&_#bg]:!bg-none [&_#gradient]:!bg-none !bg-transparent"
+                />
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-3 w-full mt-4 gap-4">
