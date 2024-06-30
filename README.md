@@ -2,7 +2,7 @@
 
 ## Introdução
 
-App de aprendizado de línguas com LLM e AIs
+App de aprendizado de línguas com LLM e Neural TTS
 
 
 ### Requisitos Funcionais
