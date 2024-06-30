@@ -218,5 +218,15 @@
   "Times used": "Times used",
   "Status": "Status",
   "Scoring": "Scoring",
-  "Do you have any doubts?": "Do you have any doubts?"
+  "Do you have any doubts?": "Do you have any doubts?",
+  "Worst scores": "Worst scores",
+  "Lastest words": "Lastest words",
+  "Words": "Words",
+  "Search your word": "Search your word",
+  "Sort by worst scores": "Sort by worst scores",
+  "Here are all the words you learned with us, feel free to explore": "Here are all the words you learned with us, feel free to explore",
+  "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "The word with the lowest score is \"{lowestScoringWord}\". Would you like to improve that score?",
+  "Learn word": "Learn word",
+  "To improve your score, you should practice your pronunciation": "To improve your score, you should practice your pronunciation.",
+  "You've already pronounced this word {wordCount} time(s)": "You've already pronounced this word {wordCount} time(s)."
 }

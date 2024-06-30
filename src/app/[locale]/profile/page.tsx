@@ -3,21 +3,17 @@ import { Intensive } from '@/components/intensive'
 import { SetLang } from '@/components/set-lang'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Command, CommandEmpty, CommandList } from '@/components/ui/command'
 import { getAuth } from '@/lib/auth/get-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { Locale, imagesSrc, langs, locales } from '@/lib/intl/locales'
+import { scoreColor } from '@/lib/score-color'
 import { Link } from '@/navigation'
-import { ChevronLeftIcon, HelpCircleIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from '../dashboard/components/welcome/your-performance'
-import {
-  TooltipProvider,
-  TooltipTrigger,
-  TooltipContent,
-  Tooltip,
-} from '@/components/ui/tooltip'
-import { scoreColor } from '@/lib/score-color'
+import { CommmandItemComponent, Dialog } from './components/dialog'
 
 const UserProfile = async () => {
   const { user } = await getAuth()
@@ -43,38 +39,6 @@ const UserProfile = async () => {
     return locales.filter(
       (l) => user.locale !== l && user.profile?.localeToLearn !== l,
     )
-  }
-
-  type TranslateKeys = Parameters<typeof t>[0]
-
-  type ScoreColorKeys = 'green' | 'yellow' | 'red'
-
-  const colorText: Record<ScoreColorKeys, TranslateKeys> = {
-    green: 'Green',
-    red: 'Red',
-    yellow: 'Yellow',
-  }
-
-  const getColorText = (scoreColor: ScoreColorKeys) => {
-    const colorsText: Record<ScoreColorKeys, TranslateKeys> = {
-      green:
-        'Words with a score above or equal to 95 are represented in <g>green</g>',
-      red: 'Words with a score between 0 and 49 points are represented in <r>red</r>',
-      yellow:
-        'Words with a score of 50 points or more but less than 95 points are represented in <y>yellow</y>',
-    }
-
-    const colorText = colorsText[scoreColor]
-
-    return t.rich(colorText, {
-      [scoreColor[0]]: (chunks) => (
-        <span
-          className={`px-1 bg-${scoreColor}-300/10 text-${scoreColor}-300 rounded-md`}
-        >
-          {chunks}
-        </span>
-      ),
-    })
   }
 
   const averageScore = Number(
@@ -104,7 +68,7 @@ const UserProfile = async () => {
               alt="Dog"
               src="/assets/imgs/dog.png"
               width="150"
-              height="150"
+              height="100"
               className="opacity-15"
             />
           </div>
@@ -276,65 +240,51 @@ const UserProfile = async () => {
           </div>
           <div
             data-color={scoreColor(averageScore)}
-            className="mt-4 p-4 rounded-xl w-full bg-gradient-to-tr to-zinc-800  from-zinc-700/20  flex-1 h-full"
+            className="mt-4 p-4 rounded-xl w-full bg-gradient-to-tr to-zinc-800  from-zinc-700/20  flex-1 h-full relative"
           >
-            <h1 className={`${pixelatedFont()} text-2xl md:text-4xl`}>
-              {t('Words that you had contact with')}
-            </h1>
-            <h2
-              className={`${pixelatedFont()} tracking-wider text-md md:text-2xl text-zinc-500`}
-            >
-              {t('Your average score is {points} points', {
-                points: averageScore,
-              })}{' '}
-            </h2>
+            <div className=" rounded-xl h-full bg-[url('/assets/imgs/sakura.png')] bg-[100%_100%] bg-no-repeat bg-[length:200px_134px] md:bg-[length:auto] absolute w-full opacity-20"></div>
 
-            <div className="overflow-x-auto w-full">
-              <div className="flex flex-col gap-2 min-w-[500px]  mt-4">
-                <div
-                  className={`flex gap-4 justify-between text-md md:text-xl w-full ${pixelatedFont()}`}
-                >
-                  <span>{t('Word')}</span>
-                  <span>{t('Times used')}</span>
-                  <span>{t('Status')}</span>
-                  <span className="text-right">{t('Scoring')}</span>
+            <div className="z-20 relative">
+              <div className="flex gap-4 justify-between">
+                <div>
+                  <h1 className={`${pixelatedFont()} text-2xl`}>
+                    {t('Words that you had contact with')}
+                  </h1>
+                  <h2
+                    className={`${pixelatedFont()} tracking-wider text-md md:text-lg text-zinc-500`}
+                  >
+                    {t('Your average score is {points} points', {
+                      points: averageScore,
+                    })}{' '}
+                  </h2>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-xs">
-                  {words
-                    .reverse()
-                    .filter((_, i) => i <= 4)
-                    .map((word) => (
-                      <div
-                        data-color={word.scoreColor}
+                <Dialog wordsListData={wordsListData} />
+              </div>
+
+              <div className="overflow-x-auto w-full">
+                <Command className="dark:bg-transparent">
+                  <CommandList className="pr-4 [&>div]:flex [&>div]:flex-wrap [&>div]:gap-x-2 overflow-y-hidden max-h-[200px] md:max-h-[340px]">
+                    <CommandEmpty>{t('No results found')}.</CommandEmpty>
+
+                    {words.reverse().map((word) => (
+                      <CommmandItemComponent
+                        variant="popover"
+                        word={word}
                         key={word.word}
-                        className="flex py-2 justify-between gap-4 group "
-                      >
-                        <span>{word.word}</span>
-                        <span>{word.wordCount}</span>
-
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <span className="whitespace-nowrap flex gap-2 items-center border py-0.5 px-2 rounded-full group-data-[color=green]:text-green-300 group-data-[color=green]:border-green-300 group-data-[color=yellow]:border-yellow-300 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:border-red-300 group-data-[color=red]:text-red-300">
-                                {t(
-                                  colorText[word.scoreColor as ScoreColorKeys],
-                                )}
-                                <HelpCircleIcon className="w-4 text-zinc-500" />
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-md grid gap-2">
-                              <p>
-                                {getColorText(
-                                  word.scoreColor as ScoreColorKeys,
-                                )}
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <span>{word.avgAccuracyScore.toFixed(0)}</span>
-                      </div>
+                        style={{
+                          flexBasis: [
+                            '16rem',
+                            '14rem',
+                            '10rem',
+                            '20rem',
+                            '18rem',
+                          ][Math.floor(Math.random() * 5)],
+                        }}
+                        className="basis-64 grow bg-zinc-900/30 dark:aria-selected:bg-zinc-900/40 backdrop-blur-sm"
+                      />
                     ))}
-                </div>
+                  </CommandList>
+                </Command>
               </div>
             </div>
           </div>

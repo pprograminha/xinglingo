@@ -218,5 +218,15 @@
     "Times used": "Utilisé",
     "Status": "Statut",
     "Scoring": "Score",
-    "Do you have any doubts?": "Avez-vous des doutes ?"
+    "Do you have any doubts?": "Avez-vous des doutes ?",
+    "Worst scores": "Pires scores",
+    "Lastest words": "Mots les plus récents",
+    "Words": "Mots",
+    "Search your word": "Recherchez votre mot",
+    "Sort by worst scores": "Trier par pires scores",
+    "Here are all the words you learned with us, feel free to explore": "Voici tous les mots que vous avez appris avec nous, n'hésitez pas à explorer",
+    "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "Le mot avec le score le plus bas est \"{lowestScoringWord}\". Voulez-vous améliorer ce score ?",
+    "Learn word": "Apprenez le mot",
+    "To improve your score, you should practice your pronunciation": "Pour améliorer votre score, vous devriez pratiquer votre prononciation",
+    "You've already pronounced this word {wordCount} time(s)": "Vous avez déjà prononcé ce mot {wordCount} fois"
 }

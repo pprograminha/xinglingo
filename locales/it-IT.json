@@ -218,5 +218,15 @@
     "Times used": "Volte utilizzato",
     "Status": "Stato",
     "Scoring": "Punteggio",
-    "Do you have any doubts?": "Hai dei dubbi?"
+    "Do you have any doubts?": "Hai dei dubbi?",
+    "Worst scores": "Punteggi peggiori",
+    "Lastest words": "Ultimo parole",
+    "Words": "Parole",
+    "Search your word": "Cerca la tua parola",
+    "Sort by worst scores": "Ordina per punteggi peggiori",
+    "Here are all the words you learned with us, feel free to explore": "Ecco tutte le parole che hai imparato con noi, sentiti libero di esplorare",
+    "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "La parola con il punteggio più basso è \"{lowestScoringWord}\". Vorresti migliorare quel punteggio?",
+    "Learn word": "Impara parola",
+    "To improve your score, you should practice your pronunciation": "Per migliorare il tuo punteggio, dovresti esercitarti nella pronuncia.",
+    "You've already pronounced this word {wordCount} time(s)": "Hai già pronunciato questa parola {wordCount} volta/e."
 }
