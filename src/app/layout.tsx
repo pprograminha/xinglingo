@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Xinglingo',
+  manifest: '/manifest.json',
 }
 
 export default async function RootLayout({
