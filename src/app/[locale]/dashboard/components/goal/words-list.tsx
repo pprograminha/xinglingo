@@ -37,7 +37,7 @@ export function WordsList({ wordsList, t }: WordsListProps) {
       },
       [] as (typeof wordsList)[],
     )[0],
-  ]
+  ].filter(Boolean)
 
   return (
     <div className="pb-4">
