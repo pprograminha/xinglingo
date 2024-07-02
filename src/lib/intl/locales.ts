@@ -1,9 +1,17 @@
 import { getTranslations } from 'next-intl/server'
+import { it, ptBR, enUS, es, fr, Locale as DateLocale } from 'date-fns/locale'
 
 export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
 export type Locale = (typeof locales)[number]
 
+export const dateLocale: Record<Locale, DateLocale> = {
+  'it-IT': it,
+  pt: ptBR,
+  en: enUS,
+  es,
+  fr,
+}
 export const imagesSrc: Record<Locale, string> = {
   'it-IT': '/assets/imgs/flags/italian.png',
   pt: '/assets/imgs/flags/brazil.png',
