@@ -12,7 +12,7 @@ import { Link } from '@/navigation'
 import { ChevronLeftIcon } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import { YourPerformance } from '../dashboard/components/welcome/your-performance'
+import { YourPerformance } from '../../dashboard/components/welcome/your-performance'
 import { CommmandItemComponent, Dialog } from './components/dialog'
 
 const UserProfile = async () => {
@@ -150,7 +150,7 @@ const UserProfile = async () => {
                     className="border border-pink-600 relative ml-auto mt-8"
                     variant="secondary"
                   >
-                    <Link href="/profile/plans">
+                    <Link href="/plans">
                       <Badge
                         variant="discount"
                         className="absolute tracking-widest font-normal -top-2 -right-2"

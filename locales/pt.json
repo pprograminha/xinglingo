@@ -109,7 +109,7 @@
     "An error occurred with ReCAPTCHA, please try again later :(": "Ocorreu um erro com o ReCAPTCHA, por favor tente novamente mais tarde :(",
     "Contact support if you see this error": "Entre em contato com o suporte se você visualizar esse erro.",
     "Undo": "Desfazer",
-    "This site is protected by reCAPTCHA and the": "Este site é protegido pelo reCAPTCHA e pelo",
+    "This site is protected by reCAPTCHA and the": "Este site é protegido pelo reCAPTCHA e pela",
     "Google Privacy Policy": "Política de Privacidade do Google",
     "and": "e",
     "apply": "aceite",
@@ -228,5 +228,10 @@
     "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "A palavra com a pontuação mais baixa é \"{lowestScoringWord}\". Você gostaria de melhorar essa pontuação?",
     "Learn word": "Aprender palavra",
     "To improve your score, you should practice your pronunciation": "Para melhorar sua pontuação, você deve praticar sua pronúncia.",
-    "You've already pronounced this word {wordCount} time(s)": "Você já pronunciou esta palavra {wordCount} vez(es)."
+    "You've already pronounced this word {wordCount} time(s)": "Você já pronunciou esta palavra {wordCount} vez(es).",
+    "Standart": "Padrão",
+    "month": "mês",
+    "year": "ano",
+    "day": "dia",
+    "week": "semana"
 }

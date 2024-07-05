@@ -1,6 +1,9 @@
 import { relations } from 'drizzle-orm'
 import {
+  bigint,
+  boolean,
   doublePrecision,
+  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -19,9 +22,89 @@ export const users = pgTable('users', {
   image: text('image').unique(),
   googleId: text('googleId').unique(),
   locale: text('locale').notNull().default('pt'),
+  billingAddress: jsonb('billingAddress'),
+  paymentMethod: jsonb('paymentMethod'),
   role: userRoleEnum('role').default('user').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const customers = pgTable('customers', {
+  id: uuid('id')
+    .primaryKey()
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    }),
+  stripeCustomerId: text('stripeCustomerId'),
+})
+
+// Products Table
+export const products = pgTable('products', {
+  id: text('id').primaryKey(),
+  active: boolean('active'),
+  name: text('name'),
+  description: text('description'),
+  image: text('image'),
+  metadata: jsonb('metadata'),
+})
+
+export const pricesTypeEnum = pgEnum('type', ['one_time', 'recurring'])
+export const pricesIntervalVariantEnum = pgEnum('intervalVariant', [
+  'day',
+  'week',
+  'month',
+  'year',
+])
+
+export const prices = pgTable('prices', {
+  id: text('id').primaryKey(),
+  productId: text('productId').references(() => products.id, {
+    onDelete: 'cascade',
+  }),
+  active: boolean('active'),
+  description: text('description'),
+  unitAmount: bigint('unitAmount', {
+    mode: 'bigint',
+  }),
+  currency: text('currency'),
+  type: pricesTypeEnum('type'),
+  intervalVariant: pricesIntervalVariantEnum('intervalVariant'),
+  intervalCount: integer('intervalCount'),
+  trialPeriodDays: integer('trialPeriodDays'),
+  metadata: jsonb('metadata'),
+})
+
+export const subscriptionsStatusEnum = pgEnum('status', [
+  'trialing',
+  'active',
+  'canceled',
+  'incomplete',
+  'incomplete_expired',
+  'past_due',
+  'unpaid',
+  'paused',
+])
+
+export const subscriptions = pgTable('subscriptions', {
+  id: text('id').primaryKey(),
+  userId: uuid('userId').references(() => users.id, {
+    onDelete: 'cascade',
+  }),
+  status: subscriptionsStatusEnum('status'),
+  metadata: jsonb('metadata'),
+  priceId: text('priceId').references(() => prices.id, {
+    onDelete: 'cascade',
+  }),
+  quantity: integer('quantity'),
+  cancelAtPeriodEnd: boolean('cancelAtPeriodEnd'),
+  created: timestamp('created').defaultNow(),
+  currentPeriodStart: timestamp('currentPeriodStart').defaultNow(),
+  currentPeriodEnd: timestamp('currentPeriodEnd').defaultNow(),
+  endedAt: timestamp('endedAt').defaultNow(),
+  cancelAt: timestamp('cancelAt').defaultNow(),
+  canceledAt: timestamp('canceledAt').defaultNow(),
+  trialStart: timestamp('trialStart').defaultNow(),
+  trialEnd: timestamp('trialEnd').defaultNow(),
 })
 
 export const usersProfile = pgTable('usersProfile', {
@@ -174,7 +257,16 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   conversations: many(conversations),
   availability: one(usersAvailability),
   profile: one(usersProfile),
+  customer: one(customers),
   pronunciationsAssessment: many(pronunciationsAssessment),
+  subscriptions: many(subscriptions),
+}))
+
+export const customersRelations = relations(customers, ({ one }) => ({
+  user: one(users, {
+    fields: [customers.id],
+    references: [users.id],
+  }),
 }))
 
 export const speechsRelations = relations(speechs, ({ many }) => ({
@@ -207,6 +299,29 @@ export const pronunciationsAssessmentRelations = relations(
     words: many(words),
   }),
 )
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  user: one(users, {
+    fields: [subscriptions.userId],
+    references: [users.id],
+  }),
+  price: one(prices, {
+    fields: [subscriptions.priceId],
+    references: [prices.id],
+  }),
+}))
+
+export const pricesRelations = relations(prices, ({ one, many }) => ({
+  product: one(products, {
+    fields: [prices.productId],
+    references: [products.id],
+  }),
+  subscriptions: many(subscriptions),
+}))
+
+export const productsRelations = relations(products, ({ many }) => ({
+  prices: many(prices),
+}))
 
 export const phonemesRelations = relations(phonemes, ({ one }) => ({
   word: one(words, {

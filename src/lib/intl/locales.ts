@@ -4,6 +4,24 @@ import { it, ptBR, enUS, es, fr, Locale as DateLocale } from 'date-fns/locale'
 export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
 export type Locale = (typeof locales)[number]
+export const getCurrency = (locale: Locale) =>
+  ({
+    pt: 'BRL' as const,
+    en: 'USD' as const,
+    'it-IT': 'EUR' as const,
+    fr: 'EUR' as const,
+    es: 'EUR' as const,
+  })[locale]
+export const parsedLocales: Record<
+  Locale,
+  'en' | 'es' | 'pt-BR' | 'it' | 'fr'
+> = {
+  en: 'en',
+  es: 'es',
+  pt: 'pt-BR',
+  'it-IT': 'it',
+  fr: 'fr',
+}
 
 export const dateLocale: Record<Locale, DateLocale> = {
   'it-IT': it,

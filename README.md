@@ -10,7 +10,7 @@ App de aprendizado de línguas com LLM e Neural TTS
 - [✅] O aplicativo deve permitir que o estudante crie uma conta pessoal.
 - [✅] O aplicativo deve ter uma trilha sonora.
 - [✅] O aplicativo deve permitir que o estudante não queria a trilha sonora.
-- [❌] O aplicativo deve aprensentar a plaforma com o modelo de voz da OpenAI antes e após a assinatura.
+- [❌] O aplicativo deve aprensentar a plaforma com o modelo de voz da OpenAI antes a assinatura.
 - [❌] O aplicativo deve ter a possibilidade de conversa com o LLM.
 - [❌] O aplicativo deve ter a possibilidade de criação de "tutores" LLM.
 - [❌] O aplicativo deve ter a possibilidade de correção de frases.

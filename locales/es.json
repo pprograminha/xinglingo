@@ -228,5 +228,10 @@
     "Word": "Palabra",
     "Times used": "Veces usadas",
     "Status": "Estado",
-    "Scoring": "Puntuación"
+    "Scoring": "Puntuación",
+    "Standart": "Estándar",
+    "month": "mes",
+    "year": "año",
+    "day": "día",
+    "week": "semana"
 }

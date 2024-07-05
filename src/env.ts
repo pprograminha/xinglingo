@@ -16,6 +16,8 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     NEXTAUTH_URL: z.string().min(1),
+    STRIPE_SECRET_KEY: z.string().min(1),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
     CLOUDFLARE_BUCKET_NAME: z.string().min(1),
     CLOUDFLARE_ACCOUNT_ID: z.string().min(1),
@@ -28,6 +30,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_AZURE_SPEECH_SUBSCRITION_KEY: z.string().min(1),
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_REGION: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE: z.string().min(1),
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -45,7 +48,9 @@ export const env = createEnv({
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE:
-      process.env.NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE,
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_RECAPTCHA_ENABLE: process.env.NEXT_PUBLIC_RECAPTCHA_ENABLE,
     NEXT_PUBLIC_RECAPTCHA_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

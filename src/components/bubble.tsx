@@ -23,6 +23,7 @@ export const Bubble = () => {
       apiHost={env.TYPEBOT_BOT_URL}
       typebot={`${env.TYPEBOT_BOT_KEY}-${locale.toLowerCase()}`}
       previewMessage={{
+        avatarUrl: 'https://xinglingo.com/assets/imgs/tutor-ai-03.png',
         message: t('Do you have any doubts?'),
         autoShowDelay: 1000,
       }}

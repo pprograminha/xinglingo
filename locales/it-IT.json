@@ -228,5 +228,10 @@
     "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "La parola con il punteggio più basso è \"{lowestScoringWord}\". Vorresti migliorare quel punteggio?",
     "Learn word": "Impara parola",
     "To improve your score, you should practice your pronunciation": "Per migliorare il tuo punteggio, dovresti esercitarti nella pronuncia.",
-    "You've already pronounced this word {wordCount} time(s)": "Hai già pronunciato questa parola {wordCount} volta/e."
+    "You've already pronounced this word {wordCount} time(s)": "Hai già pronunciato questa parola {wordCount} volta/e.",
+    "Standart": "Standard",
+    "month": "mese",
+    "year": "anno",
+    "day": "giorno",
+    "week": "settimana"
 }

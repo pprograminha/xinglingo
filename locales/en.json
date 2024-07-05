@@ -228,5 +228,10 @@
   "The word with the lowest score is \"{lowestScoringWord}\" Would you like to improve that score?": "The word with the lowest score is \"{lowestScoringWord}\". Would you like to improve that score?",
   "Learn word": "Learn word",
   "To improve your score, you should practice your pronunciation": "To improve your score, you should practice your pronunciation.",
-  "You've already pronounced this word {wordCount} time(s)": "You've already pronounced this word {wordCount} time(s)."
+  "You've already pronounced this word {wordCount} time(s)": "You've already pronounced this word {wordCount} time(s).",
+  "Standart": "Standart",
+  "month": "month",
+  "year": "year",
+  "day": "day",
+  "week": "week"
 }

@@ -120,6 +120,62 @@
       "when": 1718665593722,
       "tag": "0016_quick_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1720029493963,
+      "tag": "0017_chubby_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1720046874495,
+      "tag": "0018_broad_marvel_zombies",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1720126476752,
+      "tag": "0019_little_hedge_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1720126493130,
+      "tag": "0020_quick_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1720126594733,
+      "tag": "0021_late_micromacro",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1720126613570,
+      "tag": "0022_yellow_domino",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1720126894226,
+      "tag": "0023_mute_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1720126914343,
+      "tag": "0024_zippy_rachel_grey",
+      "breakpoints": true
     }
   ]
 }

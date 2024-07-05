@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SideBar } from './components/sidebar'
+import { SideBar } from './profile/components/sidebar'
 import { Bubble } from '@/components/bubble'
 
 export const metadata: Metadata = {
