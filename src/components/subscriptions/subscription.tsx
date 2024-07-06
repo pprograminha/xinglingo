@@ -1,12 +1,12 @@
 'use client'
-import { getCountryOrContinent } from '@/lib/geo'
+import { getCurrency, Locale } from '@/lib/intl/locales'
 import { BigNumber } from 'bignumber.js'
 import { CheckIcon, Loader2 } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useState, useTransition } from 'react'
 import { Product } from '.'
 import { Button } from '../ui/button'
-import { getCurrency, Locale } from '@/lib/intl/locales'
+import { getCountryOrContinent } from '@/lib/geo'
 
 type SubscriptionProps = {
   product: Product
@@ -17,38 +17,52 @@ export const Subscription = ({ onSubscribe, product }: SubscriptionProps) => {
   const [isPending, startTransition] = useTransition()
   const t = useTranslations()
   const locale = useLocale()
-
-  const [currency, setCurrency] = useState<ReturnType<typeof getCurrency>>(
-    getCurrency(locale as Locale),
-  )
   const [isClient, setIsClient] = useState(false)
 
   type TranslationKeys = Parameters<typeof t>[0]
 
   const price = product.prices[0]
 
-  const priceAmount = price?.unitAmount
-    ? new BigNumber(price.unitAmount.toString()).div(100).toNumber()
-    : null
-
   const feats = {
     prod_QPn87NTXuVQL8i: [
-      '6 vozes avançadas',
-      '3 modelos LLM treinados',
-      'Teste sua pronuncia com Neural TSS',
-      'Correção de respostas com LLM',
+      {
+        id: 1,
+        message: t('{count} advanced voices', {
+          count: 6,
+        }),
+      },
+      {
+        id: 2,
+        message: t('{count} trained LLM models', {
+          count: 3,
+        }),
+      },
+      {
+        id: 3,
+        message: t('Test your pronunciation with NLP'),
+      },
+      {
+        id: 4,
+        message: t('Answer correction with LLM'),
+      },
     ],
   }
+
+  const [currency, setCurrency] = useState(getCurrency(locale as Locale))
+
+  const priceAmount =
+    currency === 'BRL'
+      ? price?.unitAmount
+        ? new BigNumber(price.unitAmount.toString()).div(100).toNumber()
+        : null
+      : 12.99
 
   useEffect(() => {
     setIsClient(true)
 
     if (isClient)
-      getCountryOrContinent().then((countryOrContinent) => {
-        const currencies: Record<
-          Awaited<ReturnType<typeof getCountryOrContinent>>,
-          ReturnType<typeof getCurrency>
-        > = {
+      getCountryOrContinent(t).then((countryOrContinent) => {
+        const currencies: Record<typeof countryOrContinent, typeof currency> = {
           brazil: 'BRL',
           europe: 'EUR',
           other: 'USD',
@@ -58,7 +72,7 @@ export const Subscription = ({ onSubscribe, product }: SubscriptionProps) => {
 
         setCurrency(currencies[countryOrContinent])
       })
-  }, [locale, isClient])
+  }, [t, isClient, locale])
 
   if (!price) return null
 
@@ -86,13 +100,13 @@ export const Subscription = ({ onSubscribe, product }: SubscriptionProps) => {
           / {price.intervalVariant && t(price.intervalVariant)}
         </div>
         <ul className="mt-4 space-y-2">
-          {feats[product.id as keyof typeof feats]?.map((message) => (
+          {feats[product.id as keyof typeof feats]?.map((feat) => (
             <li
               className="flex items-center text-xs text-zinc-400"
-              key={message}
+              key={feat.id}
             >
               <CheckIcon className=" text-green-500 rounded-full mr-2 p-1" />
-              {message}
+              {feat.message}
             </li>
           ))}
         </ul>

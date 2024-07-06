@@ -11,7 +11,10 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string().min(1),
     OPENAI_PROMPT: z.string().min(1),
     OPENAI_MODEL: z.string().min(1),
-    BASE_DATE: z.string().min(1),
+    EXPIRE_AT: z
+      .string()
+      .min(1)
+      .transform((expireAt) => new Date(expireAt)),
     DRIZZLE_DATABASE_URL: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),

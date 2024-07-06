@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { toast } from 'sonner'
 
 type Country = 'brazil' | 'unknown' | 'usa' | 'europe' | 'other'
@@ -48,7 +49,9 @@ const getInternalCountryOrContinent = (
   return 'other'
 }
 
-export async function getCountryOrContinent() {
+export async function getCountryOrContinent(
+  t: Awaited<ReturnType<typeof getTranslations>>,
+) {
   let contry: Country = 'unknown'
 
   contry = await new Promise<Country>((resolve) => {
@@ -58,15 +61,15 @@ export async function getCountryOrContinent() {
           resolve(getInternalCountryOrContinent(position))
         },
         () => {
-          toast('Não foi possível obter sua localização.', {
-            description: 'Por favor, permita sua localização para continuar!',
+          toast(t('Could not obtain your location'), {
+            description: t('Please allow your location to continue!'),
           })
           resolve('unknown')
         },
       )
     } else {
-      toast('Seu navegador não suporta Geolocalização.', {
-        description: 'Tente novamente em outro navegador!',
+      toast(t('Your browser does not support Geolocation'), {
+        description: t('Try again in another browser!'),
       })
 
       resolve('unknown')

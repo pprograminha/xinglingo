@@ -77,8 +77,8 @@ export default async function Home() {
       icon: PortugueseIcon,
     },
   ]
-  const baseDate = new Date(env.BASE_DATE)
-  const expireAt = new Date(baseDate.setMonth(baseDate.getMonth() + 1))
+
+  const expireAt = env.EXPIRE_AT
 
   return (
     <div className="grid h-full bg-[url('/assets/svgs/layered-steps.svg')] bg-repeat-y overflow-y-auto">
@@ -151,11 +151,14 @@ export default async function Home() {
             <div className="bg-zinc-800/90 p-4 rounded-xl flex justify-between gap-2 items-center md:pr-20">
               <div>
                 <h1 className={`${pixelatedFont()} text-xl text-pink-400 mb-2`}>
-                  Desconto de 30% até {format(expireAt, 'dd/MM')}
+                  {t('Discount of {discount} until {date}', {
+                    discount: '30%',
+                    date: format(expireAt, 'dd/MM'),
+                  })}
                 </h1>
                 <div className="inline-flex flex-col gap-1 ">
                   <h2 className={`${pixelatedFont()} text-zinc-400 text-2xl`}>
-                    Restam apenas
+                    {t('Only')}
                   </h2>
                   <Timer expireAt={expireAt} />
                 </div>
@@ -164,10 +167,10 @@ export default async function Home() {
                 <Button
                   asChild
                   variant="secondary"
-                  className="py-6 gap-2 px-6 dark:bg-gradient-to-tr dark:from-pink-600 dark:to-pink-400 transition-all dark:hover:to-pink-600 animate-pulse rounded-full"
+                  className="py-6 gap-2 px-6 transition-all border border-pink-300 !bg-transparent animate-pulse rounded-xl"
                 >
                   <Link href="/auth">
-                    Aproveitar
+                    {t('To take advantage')}
                     <ChevronRightIcon className="w-6" />
                   </Link>
                 </Button>
@@ -176,7 +179,7 @@ export default async function Home() {
                 variant="discount"
                 className={`${pixelatedFont()} border-0 text-md font-thin absolute -right-2 -top-2`}
               >
-                Aproveite já!
+                {t('Take advantage already!')}
               </Badge>
             </div>
           </section>
@@ -218,11 +221,12 @@ export default async function Home() {
             <h1
               className={`${pixelatedFont()} tracking-wide whitespace-normal text-3xl `}
             >
-              Você pode escolher seu próprio Petutor!
+              {t('You can choose your own Petutor!')}
             </h1>
             <p className={`${pixelatedFont()} text-lg tracking-wide mb-4`}>
-              Com os Petutors você pode treinar sua pronuncia, treinar sua
-              audição e escrita com uma lingua estrangeira!{' '}
+              {t(
+                'With the Petutors, you can train your pronunciation, train your hearing and writing skills in a foreign language!',
+              )}
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="basis-60 bg-gradient-to-tr cursor-pointer hover:border-zinc-500/40  transition-all from-zinc-900 to-zinc-800 rounded-lg border border-zinc-800 flex-1 flex items-center justify-center">

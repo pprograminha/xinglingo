@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { cn } from '@/lib/utils'
 import { differenceInSeconds, subSeconds } from 'date-fns'
+import { useTranslations } from 'next-intl'
 import { HtmlHTMLAttributes, useEffect, useMemo, useRef, useState } from 'react'
 
 type TimerProps = {
@@ -18,6 +19,7 @@ export const Timer = ({
   const [isClient, setIsClient] = useState(false)
   const expireAt = useRef(defaultExpireAt)
   const currentDate = useMemo(() => new Date(), [])
+  const t = useTranslations()
 
   const defaultDate = differenceInSeconds(expireAt.current, currentDate)
 
@@ -81,7 +83,7 @@ export const Timer = ({
       className={cn(`${pixelatedFont()} text-md font-thin`, className)}
       {...props}
     >
-      {time.days} dias {time.hours}h {time.minutes}m {time.seconds}s
+      {time.days} {t('days')} {time.hours}h {time.minutes}m {time.seconds}s
     </Badge>
   )
 }
