@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 import Stripe from 'stripe'
 import { createOrRetrieveCustomer } from './stripe-records'
 import { getCurrency, Locale, parsedLocales } from '@/lib/intl/locales'
+import { db } from '@/lib/db/drizzle/query'
 
 type CheckoutResponse = {
   error?: {
@@ -35,6 +36,7 @@ const calculateTrialEndUnixTimestamp = (
 export async function checkoutWithStripe(
   user: User,
   price: Price,
+  couponCode: string,
 ): Promise<CheckoutResponse> {
   try {
     let customerId: string = ''
@@ -47,15 +49,35 @@ export async function checkoutWithStripe(
 
     const locale = (cookies().get('NEXT_LOCALE')?.value || 'en') as Locale
 
+    const promotionCode = await db.query.promotionCodes.findFirst({
+      where: (tablePromotionCodes, { eq }) =>
+        eq(tablePromotionCodes.code, couponCode),
+    })
+
     let params: Stripe.Checkout.SessionCreateParams = {
-      allow_promotion_codes: true,
+      // allow_promotion_codes: true,
       billing_address_collection: 'required',
       customer: customerId,
+      metadata: {
+        couponCode,
+      },
 
       locale: parsedLocales[locale],
       customer_update: {
         address: 'auto',
+        name: 'auto',
       },
+
+      ...(promotionCode && promotionCode.coupon
+        ? {
+            discounts: [
+              {
+                coupon: promotionCode.coupon,
+              },
+            ],
+          }
+        : {}),
+
       line_items: [
         {
           price: price.id,
@@ -72,8 +94,17 @@ export async function checkoutWithStripe(
       ...params,
       mode: 'subscription',
       subscription_data: {
-        trial_end: calculateTrialEndUnixTimestamp(price.trialPeriodDays),
+        // trial_settings: {
+        //   end_behavior: {
+        //     missing_payment_method: 'cancel',
+        //   },
+        // },
+        // NEXT_PUBLIC_TRIAL_PERIOD_DAYS: 7,
+        trial_end: calculateTrialEndUnixTimestamp(
+          env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS ?? price.trialPeriodDays,
+        ),
       },
+      // payment_method_collection: 'if_required',
     }
 
     let session: Stripe.Response<Stripe.Checkout.Session>

@@ -1,16 +1,25 @@
 /* eslint-disable no-case-declarations */
 import {
+  deleteCouponRecord,
   deletePriceRecord,
   deleteProductRecord,
+  deletePromotionCodeRecord,
   manageSubscriptionStatusChange,
+  upsertCouponRecord,
   upsertPriceRecord,
   upsertProductRecord,
+  upsertPromotionCodeRecord,
 } from '@/actions/stripe/stripe-records'
 import { env } from '@/env'
 import { stripe } from '@/lib/stripe/config'
 import Stripe from 'stripe'
 
 const relevantEvents = new Set([
+  'promotion_code.created',
+  'promotion_code.updated',
+  'coupon.created',
+  'coupon.updated',
+  'coupon.deleted',
   'product.created',
   'product.updated',
   'product.deleted',
@@ -79,6 +88,22 @@ export async function POST(req: Request) {
               true,
             )
           }
+          break
+        case 'promotion_code.created':
+        case 'promotion_code.updated':
+          await upsertPromotionCodeRecord(
+            event.data.object as Stripe.PromotionCode,
+          )
+          break
+        case 'coupon.created':
+        case 'coupon.updated':
+          await upsertCouponRecord(event.data.object as Stripe.Coupon)
+          break
+        case 'coupon.deleted':
+          await deleteCouponRecord(event.data.object as Stripe.Coupon)
+          await deletePromotionCodeRecord(
+            (event.data.object as Stripe.Coupon).id,
+          )
           break
         default:
           throw new Error('Unhandled relevant event!')

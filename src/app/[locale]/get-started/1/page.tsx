@@ -16,11 +16,11 @@ export default async function StartStep() {
             <h1
               className={`${pixelatedFont()} font-bold text-4xl dark:text-yellow-50 md:text-6xl lg:w-10/12`}
             >
-              {t('Find the right AI tutor for you')}
+              {t('Find the right AI petutor for you')}
             </h1>
             <p className="mt-8 text-zinc-700 dark:text-zinc-200 lg:w-10/12">
               {t(
-                'Tell us how you’d like to learn to get a personalized choice of AI tutors',
+                'Tell us how you’d like to learn to get a personalized choice of AI petutors',
               )}
             </p>
           </div>

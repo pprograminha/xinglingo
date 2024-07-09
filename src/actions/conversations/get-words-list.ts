@@ -1,15 +1,22 @@
 'use server'
 import { getAuth, withAuth } from '@/lib/auth/get-auth'
-import { User } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
-import { pronunciationsAssessment, words } from '@/lib/db/drizzle/schema'
 import {
+  conversations,
+  pronunciationsAssessment,
+  words,
+} from '@/lib/db/drizzle/schema'
+import { User } from '@/lib/db/drizzle/types'
+import {
+  differenceInDays,
   eachWeekendOfMonth,
   getDate,
   getDaysInMonth,
+  isEqual,
   isSameDay,
   isSameMonth,
   isSameYear,
+  startOfDay,
 } from 'date-fns'
 import { asc, desc, eq, sql } from 'drizzle-orm'
 
@@ -121,6 +128,64 @@ export const getWordsList = async (props?: GetWordsProps) => {
         wordsSameDate('green', isSameDay).length,
       )
 
+      let intensive = 0
+
+      if (user) {
+        let conversationsCreatedAt = (
+          await db.query.conversations.findMany({
+            where: (conversations, { eq }) =>
+              eq(conversations.recipientId, user.id),
+            columns: {
+              text: true,
+              createdAt: true,
+            },
+            orderBy: [desc(conversations.createdAt)],
+          })
+        ).map((c) => c.createdAt)
+
+        conversationsCreatedAt = conversationsCreatedAt.map((createdAt) =>
+          startOfDay(createdAt),
+        )
+
+        conversationsCreatedAt = conversationsCreatedAt.reduce(
+          (oldConversationsCreatedAt, conversationCreatedAt) => {
+            const existingConversationCreatedAt =
+              oldConversationsCreatedAt.some((oldConversationCreatedAt) =>
+                isEqual(oldConversationCreatedAt, conversationCreatedAt),
+              )
+
+            if (existingConversationCreatedAt) return oldConversationsCreatedAt
+
+            return [...oldConversationsCreatedAt, conversationCreatedAt]
+          },
+          [] as typeof conversationsCreatedAt,
+        )
+
+        const isStudiedToday = conversationsCreatedAt.some((c) =>
+          isEqual(c, startOfDay(currentDate)),
+        )
+
+        intensive += isStudiedToday ? 1 : 0
+
+        let oldConversationsCreatedAt:
+          | (typeof conversationsCreatedAt)[number]
+          | null = null
+
+        for (const createdAt of conversationsCreatedAt) {
+          if (!oldConversationsCreatedAt) {
+            oldConversationsCreatedAt = createdAt
+            continue
+          }
+          const diff = differenceInDays(oldConversationsCreatedAt, createdAt)
+
+          if (diff > 1) break
+
+          intensive += 1
+        }
+      }
+
+      const emblems = Math.floor(wordsData.length / wordsPerYear)
+
       const response = {
         words: wordsData,
         green: {
@@ -142,7 +207,9 @@ export const getWordsList = async (props?: GetWordsProps) => {
           wordsSameDay: wordsSameDate('yellow', isSameDay),
         },
         count: {
-          wordsPerYear,
+          intensive,
+          emblems,
+          wordsPerYear: wordsPerYear * (emblems + 1),
           wordsPerYearCurrent,
           wordsPerYearRemaining,
           wordsPerMonth,

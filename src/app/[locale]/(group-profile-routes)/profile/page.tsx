@@ -14,6 +14,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from '../../dashboard/components/welcome/your-performance'
 import { CommmandItemComponent, Dialog } from './components/dialog'
+import { env } from '@/env'
 
 const UserProfile = async () => {
   const { user } = await getAuth()
@@ -27,7 +28,7 @@ const UserProfile = async () => {
     green,
     red,
     yellow,
-    count: { wordsPerYear },
+    count: { wordsPerYear, intensive },
     words,
   } = wordsListData
 
@@ -75,7 +76,7 @@ const UserProfile = async () => {
           <div className=" grid grid-cols-11 flex-wrap items-center justify-start gap-4 w-full mt-4">
             <div className="relative py-4 px-2 md:p-4  col-span-11 md:col-span-4 lg:col-span-3 bg-gradient-to-t from-zinc-800 h-full to-violet-400/30 rounded-xl ">
               <Intensive
-                value={0}
+                value={intensive}
                 className="flex items-center justify-center absolute -top-2 -right-2 px-4"
               />
               <div className="p-1 rounded-full mx-auto shrink-0 sm:min-w-max min-w-[100px] max-w-min  mt-4 bg-gradient-to-tr from-violet-200 via-violet-600 to-fuchsia-600">
@@ -155,7 +156,7 @@ const UserProfile = async () => {
                         variant="discount"
                         className="absolute tracking-widest font-normal -top-2 -right-2"
                       >
-                        30%
+                        {env.NEXT_PUBLIC_DISCOUNT}%
                       </Badge>
                       {t('To create a plan')}
                     </Link>

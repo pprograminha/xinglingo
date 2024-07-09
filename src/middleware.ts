@@ -14,7 +14,7 @@ const authPages = ['/auth']
 const intlMiddleware = createIntlMiddleware({
   locales,
   localeDetection: true,
-  defaultLocale: 'pt',
+  defaultLocale: 'en',
   localePrefix: 'always',
 })
 

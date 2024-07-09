@@ -11,14 +11,12 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string().min(1),
     OPENAI_PROMPT: z.string().min(1),
     OPENAI_MODEL: z.string().min(1),
-    EXPIRE_AT: z
-      .string()
-      .min(1)
-      .transform((expireAt) => new Date(expireAt)),
+
     DRIZZLE_DATABASE_URL: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     NEXTAUTH_URL: z.string().min(1),
+
     STRIPE_SECRET_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
@@ -36,12 +34,38 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_REGION: z.string().min(1),
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE: z.string().min(1),
+    NEXT_PUBLIC_EXPIRE_AT: z
+      .string()
+      .min(1)
+      .transform((expireAt) => new Date(expireAt)),
     NEXT_PUBLIC_APP_URL: z.string().min(1),
     NEXT_PUBLIC_RECAPTCHA_KEY: z.string().min(1),
+    NEXT_PUBLIC_COUPON: z.string().min(1),
+    NEXT_PUBLIC_DISCOUNT: z
+      .string()
+      .min(1)
+      .refine((value) => {
+        const { data: valueAsNum, success } = z
+          .number()
+          .safeParse(Number(value))
+
+        if (!success) return success
+
+        if (valueAsNum < 0 || valueAsNum > 100) {
+          return false
+        }
+
+        return success
+      })
+      .transform(Number),
     NEXT_PUBLIC_RECAPTCHA_ENABLE: z
       .string()
       .regex(/true|false/)
       .transform((v) => v === 'true' && process.env.NODE_ENV === 'production'),
+    NEXT_PUBLIC_TRIAL_PERIOD_DAYS: z
+      .string()
+      .optional()
+      .transform((v) => (v ? Number(v) || 0 : undefined)),
   },
   shared: {
     NODE_ENV: nodeEnv,
@@ -51,7 +75,11 @@ export const env = createEnv({
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE:
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+      process.env.NEXT_PUBLIC_AZURE_SPEECH_LANGUAGE,
+    NEXT_PUBLIC_COUPON: process.env.NEXT_PUBLIC_COUPON,
+    NEXT_PUBLIC_TRIAL_PERIOD_DAYS: process.env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS,
+    NEXT_PUBLIC_DISCOUNT: process.env.NEXT_PUBLIC_DISCOUNT,
+    NEXT_PUBLIC_EXPIRE_AT: process.env.NEXT_PUBLIC_EXPIRE_AT,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_RECAPTCHA_ENABLE: process.env.NEXT_PUBLIC_RECAPTCHA_ENABLE,

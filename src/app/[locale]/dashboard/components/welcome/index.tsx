@@ -1,4 +1,6 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
+import { getModels } from '@/actions/models/get-models'
+import { Intensive } from '@/components/intensive'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -9,18 +11,25 @@ import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from './your-performance'
-import { Intensive } from '@/components/intensive'
+import { createHistory } from '@/actions/models/create-history'
+import { redirect } from '@/navigation'
 
 type WelcomeProps = {
   user: User | null
   t: Awaited<ReturnType<typeof getTranslations>>
+  modelsData: Awaited<ReturnType<typeof getModels>>
   wordsListData: Awaited<ReturnType<typeof getWordsList>>
 }
 
-export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
+export const Welcome = ({
+  user,
+  t,
+  wordsListData,
+  modelsData,
+}: WelcomeProps) => {
   const {
     green: { words },
-    count: { wordsPerYear },
+    count: { wordsPerYear, intensive },
   } = wordsListData
 
   return (
@@ -57,15 +66,28 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                             </span>
                           </div>
                         </div>
-                        <Intensive value={0} />
+                        <Intensive value={intensive} />
                       </div>
                     </div>
-                    <Button
-                      variant="secondary"
-                      className="md:max-w-xs flex items-center gap-1 border border-zinc-700"
+                    <form
+                      className="w-full"
+                      action={async () => {
+                        'use server'
+                        if (user && modelsData.histories[0])
+                          createHistory({
+                            userId: user.id,
+                            modelId: modelsData.histories[0].id,
+                          })
+                      }}
                     >
-                      {t('Continue')} <ChevronRight className="w-4" />
-                    </Button>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="md:max-w-xs w-full flex items-center gap-1 border border-zinc-700"
+                      >
+                        {t('Continue')} <ChevronRight className="w-4" />
+                      </Button>
+                    </form>
                   </div>
                   <div className="flex flex-col justify-end py-3 md:p-4 w-full h-full">
                     <h1 className="text-xs text-zinc-400">
@@ -93,48 +115,65 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
               <div>
                 <div className="flex flex-col gap-2">
                   <h2 className={`text-zinc-400 text-2xl ${pixelatedFont()}`}>
-                    {t('Continue where you left off?')}
+                    {!modelsData.recommended
+                      ? t('Continue where you left off?')
+                      : t('Recommended (plural)')}
                   </h2>
                 </div>
                 <div className="flex flex-wrap md:flex-nowrap md:w-[210px] mt-6 gap-1 md:gap-0">
-                  <div
-                    className="cursor-pointer
-                  relative
-                  flex
-                  flex-col
-                  place-items-center
-                  md:flex-none
-
-                  backdrop-blur-sm
-                  rounded-xl
-                  bg-gradient-to-tr
-                  md:bg-none
-                  md:rounded-none
-                  dark:from-zinc-800
-                  dark:via-zinc-800/80
-                  dark:to-violet-300/5
-
-                  z-40
-                  transition-all
-
-
-                  min-w-[100px]
-                  md:min-w-[170px]
-                  h-[100px]
-                  md:h-[170px]
-                  md:hover:-translate-y-5"
-                  >
-                    <ChevronRight className="md:w-6 w-4 md:relative absolute top-0 md:top-1/2 md:-translate-y-1/2 right-0 md:-right-[70px] text-white" />
-
-                    <Image
-                      src="/assets/imgs/tutor-ai-01.png"
-                      width={180}
-                      className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
-                      height={150}
-                      alt="Petutor AI"
-                    />
-                  </div>
-                  <div
+                  {modelsData.histories.map((history, i) => (
+                    <form
+                      action={async () => {
+                        'use server'
+                        if (user) {
+                          redirect('/rooms')
+                          createHistory({
+                            userId: user.id,
+                            modelId: history.id,
+                          })
+                        }
+                      }}
+                      style={{
+                        zIndex: modelsData.histories.length - i,
+                      }}
+                      key={history.id}
+                      className={`
+                      cursor-pointer
+                      relative
+                      flex
+                      flex-col
+                      place-items-center
+                      md:flex-none
+                      backdrop-blur-sm
+                      rounded-xl
+                      bg-gradient-to-tr
+                      md:bg-none
+                      md:rounded-none
+                      dark:from-zinc-800
+                      dark:via-zinc-800/80
+                      dark:to-violet-300/5
+                      transition-all
+                      min-w-[100px]
+                      md:min-w-[170px]
+                      h-[100px]
+                      md:h-[170px]
+                      md:hover:-translate-y-5
+                      md:-translate-x-[${150 * i}px]
+                    `}
+                    >
+                      <ChevronRight className="pointer-events-none md:w-6 w-4 md:relative absolute top-0 md:top-1/2 md:-translate-y-1/2 right-0 md:-right-[70px] text-white" />
+                      <button className="w-full h-full" type="submit">
+                        <Image
+                          src={`/assets/imgs/${history.image}`}
+                          width={180}
+                          className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
+                          height={150}
+                          alt="Petutor AI"
+                        />
+                      </button>
+                    </form>
+                  ))}
+                  {/* <div
                     className="cursor-pointer
                   relative
                   flex
@@ -194,7 +233,7 @@ export const Welcome = ({ user, t, wordsListData }: WelcomeProps) => {
                       height={150}
                       alt="Petutor AI"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <YourPerformance t={t} wordsListData={wordsListData} />

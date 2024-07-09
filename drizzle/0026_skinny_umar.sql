@@ -1,0 +1,1 @@
+ALTER TABLE "subscriptions" ADD COLUMN "coupons" jsonb DEFAULT '[]'::jsonb NOT NULL;

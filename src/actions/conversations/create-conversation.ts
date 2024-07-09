@@ -1,6 +1,6 @@
 'use server'
 
-import { withAuth } from '@/lib/auth/get-auth'
+import { getAuth, withAuth } from '@/lib/auth/get-auth'
 import { Conversation, User } from '@/lib/db/drizzle/types'
 import { db } from '@/lib/db/drizzle/query'
 import { conversations, users } from '@/lib/db/drizzle/schema'
@@ -18,11 +18,15 @@ export async function createConversation({
 > {
   return (
     await withAuth(async () => {
+      const { user } = await getAuth()
+
+      if (!user) throw new Error('User does not exist')
       const [conversation] = (await db
         .insert(conversations)
         .values([
           {
             id: crypto.randomUUID(),
+            recipientId: user.id,
             text,
             authorId,
           },
