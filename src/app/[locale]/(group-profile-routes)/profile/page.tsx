@@ -151,7 +151,7 @@ const UserProfile = async () => {
                     className="border border-pink-600 relative ml-auto mt-8"
                     variant="secondary"
                   >
-                    <Link href="/plans">
+                    <Link href="/subscriptions">
                       <Badge
                         variant="discount"
                         className="absolute tracking-widest font-normal -top-2 -right-2"

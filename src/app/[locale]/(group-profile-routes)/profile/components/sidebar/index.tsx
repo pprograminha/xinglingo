@@ -22,7 +22,7 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
       label: 'Perfil',
     },
     {
-      href: '/plans',
+      href: '/subscriptions',
       icon: <CreditCard />,
       label: 'Planos',
     },

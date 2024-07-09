@@ -57,14 +57,20 @@ export function Conversation({ conversation }: ConversationProps) {
     isLoading,
     startRecording,
   } = useRecordConversation()
+  const userId = uid()
   const { append, isLoading: openaiIsLoading } = useChat({
     onFinish(message) {
-      createConversation({
-        text: message.content,
-      }).then((conversation) => {
-        if (conversation)
-          upsertConversation({ ...conversation, pronunciationAssessment: null })
-      })
+      if (userId)
+        createConversation({
+          text: message.content,
+          recipientId: userId,
+        }).then((conversation) => {
+          if (conversation)
+            upsertConversation({
+              ...conversation,
+              pronunciationAssessment: null,
+            })
+        })
     },
     api: '/api/ai/chat',
     body: {

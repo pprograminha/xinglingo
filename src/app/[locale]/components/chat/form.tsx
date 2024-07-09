@@ -38,10 +38,12 @@ export const ChatForm = ({
   async function createConversationForm(formData: FormData) {
     const messageText = z.string().safeParse(formData.get('text'))
 
-    if (messageText.success) {
+    const userId = uid()
+    if (messageText.success && userId) {
       const conversation = await createConversation({
         text: messageText.data,
-        authorId: uid(),
+        authorId: userId,
+        recipientId: userId,
       })
 
       onMessageText('')

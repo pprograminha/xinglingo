@@ -86,8 +86,8 @@ export async function checkoutWithStripe(
       ],
 
       currency: getCurrency(locale),
-      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/plans`,
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/plans`,
+      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/subscriptions`,
+      success_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/subscriptions`,
     }
 
     params = {

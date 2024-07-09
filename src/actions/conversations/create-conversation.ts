@@ -1,14 +1,14 @@
 'use server'
 
-import { getAuth, withAuth } from '@/lib/auth/get-auth'
-import { Conversation, User } from '@/lib/db/drizzle/types'
+import { withAuth } from '@/lib/auth/get-auth'
 import { db } from '@/lib/db/drizzle/query'
 import { conversations, users } from '@/lib/db/drizzle/schema'
+import { Conversation, User } from '@/lib/db/drizzle/types'
 import { InferInsertModel, eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
-
 export async function createConversation({
   text,
+  recipientId,
   authorId,
 }: Omit<InferInsertModel<typeof conversations>, 'id'>): Promise<
   | (Conversation & {
@@ -18,15 +18,12 @@ export async function createConversation({
 > {
   return (
     await withAuth(async () => {
-      const { user } = await getAuth()
-
-      if (!user) throw new Error('User does not exist')
       const [conversation] = (await db
         .insert(conversations)
         .values([
           {
             id: crypto.randomUUID(),
-            recipientId: user.id,
+            recipientId,
             text,
             authorId,
           },
