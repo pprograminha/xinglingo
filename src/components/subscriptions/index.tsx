@@ -18,6 +18,8 @@ import {
 } from '../ui/dialog'
 import { Subscription } from './subscription'
 import { User } from '@/lib/db/drizzle/types'
+import { retrieveActiveSubscription } from '@/lib/subscription'
+import { lingos } from '@/lib/storage/local'
 
 export type Product = Awaited<ReturnType<typeof getProducts>>[number]
 
@@ -45,7 +47,7 @@ export const Subscriptions = ({
     const { sessionId, error } = await checkoutWithStripe(
       user,
       product.prices[0],
-      env.NEXT_PUBLIC_COUPON,
+      lingos.storage.get('coupon-code') || env.NEXT_PUBLIC_COUPON,
     )
 
     if (!sessionId || error) {
@@ -83,11 +85,9 @@ export const Subscriptions = ({
     })
   }, [])
 
-  const hasSubscription = user?.subscriptions?.some(
-    ({ status }) => status === 'active' || status === 'trialing',
-  )
+  const hasActiveSubscription = retrieveActiveSubscription(user)
 
-  if ((variant === 'dialog' && isPending) || hasSubscription) return null
+  if ((variant === 'dialog' && isPending) || hasActiveSubscription) return null
 
   return (
     <Dialog defaultOpen>

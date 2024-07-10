@@ -21,7 +21,7 @@ type GoalProps = {
 export const Goal = ({ wordsListData, t }: GoalProps) => {
   const {
     words: wordsList,
-    count: { wordsPerYear, wordsPerYearRemaining },
+    count: { wordsToLearn, wordsRemaining },
   } = wordsListData
 
   return (
@@ -31,10 +31,10 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
               {t.rich(
-                'Your goal is to learn 5000 words this year, 400 words remaining',
+                'Your goal is to learn {words} words, {wordsRemaining} words remaining',
                 {
-                  wordsPerYear,
-                  wordsPerYearRemaining,
+                  words: wordsToLearn,
+                  wordsRemaining,
                   questionHelp: () => (
                     <TooltipProvider>
                       <Tooltip delayDuration={0}>
@@ -46,7 +46,7 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
                             {t(
                               'For fluency, you may need to learn from 5000 to 10000 words',
                               {
-                                wordsMin: wordsPerYear,
+                                wordsMin: wordsToLearn,
                                 wordsMax: 10000,
                               },
                             )}

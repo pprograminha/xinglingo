@@ -48,15 +48,19 @@ import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { scoreColor } from '@/lib/score-color'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { Link } from '@/navigation'
+import { Model } from '@/lib/db/drizzle/types'
 
 type CommmandItemComponentProps = {
   word: Awaited<ReturnType<typeof getWordsList>>['words'][number]
   variant?: 'popover' | 'collapsible'
   className?: string
+  model?: Model
   style?: React.CSSProperties
 }
 export function CommmandItemComponent({
   word,
+  model,
   variant = 'collapsible',
   className,
   ...props
@@ -148,15 +152,22 @@ export function CommmandItemComponent({
                 wordCount: word.wordCount,
               })}
             </p>
-            <div className="bg-gradient-to-tr from-violet-400 to-violet-700 p-0.5 rounded-lg inline-block">
-              <Button
-                className="dark:text-white gap-2 px-2 py-1 h-auto"
-                variant="secondary"
-              >
-                {t('Learn word')}
-                <ChevronRightIcon className="w-4" />
-              </Button>
-            </div>
+            {model && (
+              <div className="bg-gradient-to-tr from-violet-400 to-violet-700 p-0.5 rounded-lg inline-block">
+                <Button
+                  className="dark:text-white gap-2 px-2 py-1 h-auto"
+                  variant="secondary"
+                  asChild
+                >
+                  <Link
+                    href={`/models/${model.slug}/channels/${'channel.id'}/?word=${word.word}`}
+                  >
+                    {t('Learn word')}
+                    <ChevronRightIcon className="w-4" />
+                  </Link>
+                </Button>
+              </div>
+            )}
           </PopoverContent>
         </Popover>
       ) : (
@@ -204,15 +215,22 @@ export function CommmandItemComponent({
                 wordCount: word.wordCount,
               })}
             </p>
-            <div className="bg-gradient-to-tr from-violet-400 to-violet-700 p-0.5 rounded-lg inline-block">
-              <Button
-                className="dark:text-white gap-2 px-2 py-1 h-auto"
-                variant="secondary"
-              >
-                {t('Learn word')}
-                <ChevronRightIcon className="w-4" />
-              </Button>
-            </div>
+            {model && (
+              <div className="bg-gradient-to-tr from-violet-400 to-violet-700 p-0.5 rounded-lg inline-block">
+                <Button
+                  className="dark:text-white gap-2 px-2 py-1 h-auto"
+                  variant="secondary"
+                  asChild
+                >
+                  <Link
+                    href={`/models/${model.slug}/channels/${'channel.id'}/?word=${word.word}`}
+                  >
+                    {t('Learn word')}
+                    <ChevronRightIcon className="w-4" />
+                  </Link>
+                </Button>
+              </div>
+            )}
           </CollapsibleContent>
         </Collapsible>
       )}
@@ -235,9 +253,10 @@ function WordIcon(props: WordIconProps) {
 }
 type DialogProps = {
   wordsListData: Awaited<ReturnType<typeof getWordsList>>
+  model?: Model
 }
 
-export function Dialog({ wordsListData }: DialogProps) {
+export function Dialog({ wordsListData, model }: DialogProps) {
   const t = useTranslations()
   const [open, setOpen] = React.useState(false)
 
@@ -372,13 +391,21 @@ export function Dialog({ wordsListData }: DialogProps) {
             heading={sortedRef.current ? t('Worst scores') : t('Lastest words')}
           >
             {latestWords.map((word) => (
-              <CommmandItemComponent word={word} key={word.word} />
+              <CommmandItemComponent
+                word={word}
+                key={word.word}
+                model={model}
+              />
             ))}
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading={t('Words')}>
             {restWords.map((word) => (
-              <CommmandItemComponent word={word} key={word.word} />
+              <CommmandItemComponent
+                word={word}
+                key={word.word}
+                model={model}
+              />
             ))}
           </CommandGroup>
         </CommandList>

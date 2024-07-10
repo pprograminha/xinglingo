@@ -265,5 +265,12 @@
   "An unknown error occurred": "An unknown error occurred.",
   "Please try again later or contact a system administrator": "Please try again later or contact a system administrator.",
   "Sign up for our personalized plan to learn a foreign language!": "Sign up for our personalized plan to learn a foreign language!",
-  "Recommended (plural)": "Recommended"
+  "Recommended (plural)": "Recommended",
+  "Active": "Active",
+  "You have an active plan": "You have an active plan",
+  "Your goal is to learn {words} words, {wordsRemaining} words remaining": "Your goal is to learn {words} <questionHelp></questionHelp> words, {wordsRemaining} words remaining.",
+  "Pronounce any word and it will appear here": "Pronounce any word and it will appear here",
+  "No content": "No content",
+  "Pronounce": "Pronounce",
+  "Your trial period will expire, there are still:": "Your trial period will expire, there are still:"
 }

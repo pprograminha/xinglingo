@@ -59,7 +59,7 @@ export async function checkoutWithStripe(
       billing_address_collection: 'required',
       customer: customerId,
       metadata: {
-        couponCode,
+        coupon_code: couponCode,
       },
 
       locale: parsedLocales[locale],

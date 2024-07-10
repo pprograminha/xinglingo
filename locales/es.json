@@ -265,5 +265,12 @@
     "An unknown error occurred": "Ocurrió un error desconocido.",
     "Please try again later or contact a system administrator": "Por favor, inténtelo de nuevo más tarde o contacte a un administrador del sistema.",
     "Sign up for our personalized plan to learn a foreign language!": "¡Regístrate en nuestro plan personalizado para aprender un idioma extranjero!",
-    "Recommended (plural)": "Recomendados"
+    "Recommended (plural)": "Recomendados",
+    "Active": "Activo",
+    "You have an active plan": "Tienes un plan activo",
+    "Your goal is to learn {words} words, {wordsRemaining} words remaining": "Su objetivo es aprender {words} <questionHelp></questionHelp> palabras, quedan {wordsRemaining} palabras.",
+    "Pronounce any word and it will appear here": "Pronuncie cualquier palabra y aparecerá aquí",
+    "No content": "No hay contenido",
+    "Pronounce": "Pronunciar",
+    "Your trial period will expire, there are still:": "Su período de prueba expirará, todavía quedan:"
 }

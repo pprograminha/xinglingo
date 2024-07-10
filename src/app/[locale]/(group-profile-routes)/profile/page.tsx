@@ -3,18 +3,35 @@ import { Intensive } from '@/components/intensive'
 import { SetLang } from '@/components/set-lang'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandList } from '@/components/ui/command'
+import { Command, CommandList } from '@/components/ui/command'
+import { env } from '@/env'
 import { getAuth } from '@/lib/auth/get-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
-import { Locale, imagesSrc, langs, locales } from '@/lib/intl/locales'
+import {
+  Locale,
+  dateLocale,
+  imagesSrc,
+  langs,
+  locales,
+} from '@/lib/intl/locales'
 import { scoreColor } from '@/lib/score-color'
+import { retrieveActiveSubscription } from '@/lib/subscription'
 import { Link } from '@/navigation'
-import { ChevronLeftIcon } from 'lucide-react'
+import { formatDistance, isBefore } from 'date-fns'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from '../../dashboard/components/welcome/your-performance'
 import { CommmandItemComponent, Dialog } from './components/dialog'
-import { env } from '@/env'
+import { getModels } from '@/actions/models/get-models'
+import {
+  TooltipContent,
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+
+export const dynamic = 'force-dynamic'
 
 const UserProfile = async () => {
   const { user } = await getAuth()
@@ -22,13 +39,14 @@ const UserProfile = async () => {
   const t = await getTranslations()
 
   const wordsListData = await getWordsList()
+  const modelsData = await getModels(user)
   const locale = (await getLocale()) as Locale
 
   const {
     green,
     red,
     yellow,
-    count: { wordsPerYear, intensive },
+    count: { wordsToLearn, intensive, wordsRemaining },
     words,
   } = wordsListData
 
@@ -42,11 +60,14 @@ const UserProfile = async () => {
     )
   }
 
-  const averageScore = Number(
-    (
-      words.reduce((acc, w) => acc + w.avgAccuracyScore, 0) / words.length
-    ).toFixed(0),
-  )
+  const averageScore =
+    Number(
+      (
+        words.reduce((acc, w) => acc + w.avgAccuracyScore, 0) / words.length
+      ).toFixed(0),
+    ) || 0
+  const activeSubscription = retrieveActiveSubscription(user)
+  const currentDate = new Date()
 
   return (
     <div className="mx-auto min-h-full bg-white dark:bg-zinc-900 border md:mb-0 mb-20 border-zinc-200  dark:border-zinc-800 w-full shadow-xl rounded-xl ">
@@ -132,33 +153,57 @@ const UserProfile = async () => {
             </div>
           </div>
           <div className="grid grid-cols-3 w-full mt-4 gap-4">
-            <div className="bg-gradient-to-tr col-span-3 md:col-span-1 min-h-[200px] rounded-xl from-zinc-800 to-zinc-800/10 border border-zinc-600 relative">
+            <div
+              data-active-subscription={Boolean(activeSubscription)}
+              className="group bg-gradient-to-tr col-span-3 md:col-span-1 min-h-[200px] rounded-xl from-zinc-800 to-zinc-800/10 border border-violet-400/40 data-[active-subscription=false]:border-zinc-600 relative"
+            >
               <div className="bg-[url('/assets/svgs/bg-700.svg')] h-full w-full relative">
                 <div className="bg-[url('/assets/imgs/octopus.png')] bg-[length:150px_100px] lg:bg-[length:200px_130px] opacity-15 bg-center bg-no-repeat h-full w-full absolute top-0 right-0"></div>
                 <Badge
                   variant="secondary"
-                  className="absolute tracking-wider dark:bg-zinc-600 font-normal top-2 right-2"
+                  className="absolute tracking-wider dark:bg-violet-500 group-data-[active-subscription=false]:dark:bg-zinc-600 font-normal top-2 right-2"
                 >
-                  {t('Disabled')}
+                  {activeSubscription ? t('Active') : t('Disabled')}
                 </Badge>
                 <div className="z-20 relative h-full flex flex-col justify-between  p-4 pt-8">
                   <h1 className={`${pixelatedFont()} text-3xl`}>
-                    {t("We noticed that you still don't have a plan")}
+                    {activeSubscription
+                      ? t('You have an active plan')
+                      : t("We noticed that you still don't have a plan")}
                   </h1>
+
+                  {activeSubscription?.status === 'trialing' &&
+                    activeSubscription.trialEnd &&
+                    isBefore(currentDate, activeSubscription.trialEnd) &&
+                    user && (
+                      <h2 className="text-yellow-300 text-xs">
+                        {t('Your trial period will expire, there are still:')}
+                        <br />
+                        {formatDistance(
+                          currentDate,
+                          activeSubscription.trialEnd,
+                          {
+                            locale: dateLocale[user.locale as Locale],
+                          },
+                        )}
+                      </h2>
+                    )}
 
                   <Button
                     asChild
-                    className="border border-pink-600 relative ml-auto mt-8"
+                    className="group-data-[active-subscription=false]:border group-data-[active-subscription=false]:border-pink-600 relative ml-auto mt-8"
                     variant="secondary"
                   >
                     <Link href="/subscriptions">
                       <Badge
                         variant="discount"
-                        className="absolute tracking-widest font-normal -top-2 -right-2"
+                        className="absolute tracking-widest font-normal -top-2 -right-2 group-data-[active-subscription=false]:block hidden"
                       >
                         {env.NEXT_PUBLIC_DISCOUNT}%
                       </Badge>
-                      {t('To create a plan')}
+                      {activeSubscription
+                        ? t('See more')
+                        : t('To create a plan')}
                     </Link>
                   </Button>
                 </div>
@@ -183,17 +228,40 @@ const UserProfile = async () => {
                         >
                           {langs(t, user.profile.localeToLearn as Locale)}
                         </h1>
-                        <div className="mt-2 text-xs  whitespace-nowrap">
-                          <span className="text-zinc-400">{wordsPerYear}</span>{' '}
-                          /{' '}
-                          <span className="text-zinc-400">{words.length}</span>
-                        </div>
+                        <TooltipProvider>
+                          <Tooltip delayDuration={0}>
+                            <TooltipTrigger>
+                              <div className="mt-2 text-xs  whitespace-nowrap">
+                                <span className="text-zinc-400">
+                                  {wordsToLearn}
+                                </span>{' '}
+                                /{' '}
+                                <span className="text-zinc-400">
+                                  {words.length}
+                                </span>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                {t.rich(
+                                  'Your goal is to learn {words} words, {wordsRemaining} words remaining',
+                                  {
+                                    words: wordsToLearn,
+                                    wordsRemaining,
+                                    questionHelp: () => null,
+                                  },
+                                )}
+                                <br />
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </div>
                     <div>
                       <div className="p-0.5 rounded-full bg-gradient-to-tr from-orange-800 to-orange-400">
                         <div className="rounded-full bg-zinc-800 py-1 px-4 text-xs">
-                          {(words.length / wordsPerYear) * 100 || 0}%
+                          {(words.length / wordsToLearn) * 100 || 0}%
                         </div>
                       </div>
                     </div>
@@ -243,53 +311,87 @@ const UserProfile = async () => {
           </div>
           <div
             data-color={scoreColor(averageScore)}
-            className="mt-4 p-4 rounded-xl w-full bg-gradient-to-tr to-zinc-800  from-zinc-700/20  flex-1 h-full relative"
+            className="mt-4  rounded-xl w-full bg-gradient-to-tr to-zinc-800  from-zinc-700/20  flex-1 h-full relative"
           >
             <div className=" rounded-xl h-full bg-[url('/assets/imgs/sakura.png')] bg-[100%_100%] bg-no-repeat bg-[length:200px_134px] md:bg-[length:auto] absolute w-full opacity-20"></div>
 
-            <div className="z-20 relative">
-              <div className="flex gap-4 justify-between">
-                <div>
-                  <h1 className={`${pixelatedFont()} text-2xl`}>
-                    {t('Words that you had contact with')}
-                  </h1>
-                  <h2
-                    className={`${pixelatedFont()} tracking-wider text-md md:text-lg text-zinc-500`}
-                  >
-                    {t('Your average score is {points} points', {
-                      points: averageScore,
-                    })}{' '}
-                  </h2>
+            {words.length > 0 ? (
+              <div className="z-20 relative p-4">
+                <div className="flex gap-4 justify-between">
+                  <div>
+                    <h1 className={`${pixelatedFont()} text-2xl`}>
+                      {t('Words that you had contact with')}
+                    </h1>
+
+                    <h2
+                      className={`${pixelatedFont()} tracking-wider text-md md:text-lg text-zinc-500`}
+                    >
+                      {t('Your average score is {points} points', {
+                        points: averageScore,
+                      })}{' '}
+                    </h2>
+                  </div>
+                  <Dialog
+                    wordsListData={wordsListData}
+                    model={modelsData.histories[0]}
+                  />
                 </div>
-                <Dialog wordsListData={wordsListData} />
-              </div>
 
-              <div className="overflow-x-auto w-full">
-                <Command className="dark:bg-transparent">
-                  <CommandList className="pr-4 [&>div]:flex [&>div]:flex-wrap [&>div]:gap-x-2 overflow-y-hidden max-h-[200px] md:max-h-[340px]">
-                    <CommandEmpty>{t('No results found')}.</CommandEmpty>
-
-                    {words.reverse().map((word) => (
-                      <CommmandItemComponent
-                        variant="popover"
-                        word={word}
-                        key={word.word}
-                        style={{
-                          flexBasis: [
-                            '16rem',
-                            '14rem',
-                            '10rem',
-                            '20rem',
-                            '18rem',
-                          ][Math.floor(Math.random() * 5)],
-                        }}
-                        className="basis-64 grow bg-zinc-900/30 dark:aria-selected:bg-zinc-900/40 backdrop-blur-sm"
-                      />
-                    ))}
-                  </CommandList>
-                </Command>
+                <div className="overflow-x-auto w-full">
+                  <Command className="dark:bg-transparent">
+                    <CommandList className="pr-4 [&>div]:flex [&>div]:flex-wrap [&>div]:gap-x-2 overflow-y-hidden max-h-[200px] md:max-h-[340px]">
+                      {words.reverse().map((word) => (
+                        <CommmandItemComponent
+                          variant="popover"
+                          word={word}
+                          key={word.word}
+                          model={modelsData.histories[0]}
+                          style={{
+                            flexBasis: [
+                              '16rem',
+                              '14rem',
+                              '10rem',
+                              '20rem',
+                              '18rem',
+                            ][Math.floor(Math.random() * 5)],
+                          }}
+                          className="basis-64 grow bg-zinc-900/30 dark:aria-selected:bg-zinc-900/40 backdrop-blur-sm"
+                        />
+                      ))}
+                    </CommandList>
+                  </Command>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="z-20 relative h-full text-center p-4">
+                <h1 className={`${pixelatedFont()} text-2xl text-red-500`}>
+                  {t('No content')}
+                </h1>
+                <h2 className={`${pixelatedFont()} text-xl`}>
+                  {t('Pronounce any word and it will appear here')}
+                </h2>
+                {modelsData.histories[0] && modelsData.histories[0].slug && (
+                  <Button
+                    className="mt-2 inline-flex items-center gap-2"
+                    asChild
+                  >
+                    <Link href={`/models/${modelsData.histories[0].slug}`}>
+                      {t('Pronounce')} <ChevronRightIcon className="w-4" />
+                    </Link>
+                  </Button>
+                )}
+
+                <div className="flex items-center justify-center h-full pb-10">
+                  <Image
+                    className="opacity-60"
+                    width={200}
+                    height={154}
+                    alt="Panda"
+                    src="/assets/imgs/panda-4.png"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

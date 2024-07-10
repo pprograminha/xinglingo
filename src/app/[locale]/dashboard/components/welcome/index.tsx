@@ -13,6 +13,12 @@ import Image from 'next/image'
 import { YourPerformance } from './your-performance'
 import { createHistory } from '@/actions/models/create-history'
 import { redirect } from '@/navigation'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type WelcomeProps = {
   user: User | null
@@ -29,7 +35,7 @@ export const Welcome = ({
 }: WelcomeProps) => {
   const {
     green: { words },
-    count: { wordsPerYear, intensive },
+    count: { intensive, wordsToLearn, wordsRemaining },
   } = wordsListData
 
   return (
@@ -56,15 +62,34 @@ export const Welcome = ({
                           >
                             {langs(t, user.profile.localeToLearn as Locale)}
                           </h1>
-                          <div className="mt-2 text-xs  whitespace-nowrap">
-                            <span className="text-zinc-400">
-                              {wordsPerYear}
-                            </span>{' '}
-                            /{' '}
-                            <span className="text-zinc-400">
-                              {words.length}
-                            </span>
-                          </div>
+                          <TooltipProvider>
+                            <Tooltip delayDuration={0}>
+                              <TooltipTrigger>
+                                <div className="mt-2 text-xs  whitespace-nowrap">
+                                  <span className="text-zinc-400">
+                                    {wordsToLearn}
+                                  </span>{' '}
+                                  /{' '}
+                                  <span className="text-zinc-400">
+                                    {words.length}
+                                  </span>
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>
+                                  {t.rich(
+                                    'Your goal is to learn {words} words, {wordsRemaining} words remaining',
+                                    {
+                                      words: wordsToLearn,
+                                      wordsRemaining,
+                                      questionHelp: () => null,
+                                    },
+                                  )}
+                                  <br />
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                         <Intensive value={intensive} />
                       </div>
@@ -94,9 +119,9 @@ export const Welcome = ({
                       {t('Progress towards fluency')}
                     </h1>
                     <div className="flex gap-2 items-center ">
-                      <Progress value={(words.length / wordsPerYear) * 100} />{' '}
+                      <Progress value={(words.length / wordsToLearn) * 100} />{' '}
                       <span className="text-xs">
-                        %{((words.length / wordsPerYear) * 100).toFixed(2)}
+                        %{((words.length / wordsToLearn) * 100).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -126,7 +151,7 @@ export const Welcome = ({
                       action={async () => {
                         'use server'
                         if (user) {
-                          redirect('/rooms')
+                          redirect('/models')
                           createHistory({
                             userId: user.id,
                             modelId: history.id,

@@ -105,6 +105,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
         wordsPerYear,
         wordsSameDate('green', isSameYear).length,
       )
+      const wordsRemaining = sub(wordsPerYear, wordsSameDate('green').length)
 
       const wordsPerMonth = Math.round(div(wordsPerYearRemaining, 12))
       const wordsPerMonthCurrent = wordsSameDate('green', isSameMonth).length
@@ -186,8 +187,11 @@ export const getWordsList = async (props?: GetWordsProps) => {
 
       const emblems = Math.floor(wordsData.length / wordsPerYear)
 
+      const wordsToLearn = wordsPerYear * (emblems + 1)
+
       const response = {
         words: wordsData,
+
         green: {
           words: wordsSameDate('green'),
           wordsSameYear: wordsSameDate('green', isSameYear),
@@ -209,7 +213,9 @@ export const getWordsList = async (props?: GetWordsProps) => {
         count: {
           intensive,
           emblems,
-          wordsPerYear: wordsPerYear * (emblems + 1),
+          wordsToLearn,
+          wordsRemaining,
+          wordsPerYear,
           wordsPerYearCurrent,
           wordsPerYearRemaining,
           wordsPerMonth,
