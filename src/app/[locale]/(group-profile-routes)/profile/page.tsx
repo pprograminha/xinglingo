@@ -317,7 +317,7 @@ const UserProfile = async () => {
 
             {words.length > 0 ? (
               <div className="z-20 relative p-4">
-                <div className="flex gap-4 justify-between">
+                <div className="flex gap-4 flex-wrap-reverse justify-between">
                   <div>
                     <h1 className={`${pixelatedFont()} text-2xl`}>
                       {t('Words that you had contact with')}

@@ -141,10 +141,10 @@ export function Loading({ className, ...props }: LoadingProps) {
       {...props}
     >
       <div className="h-full relative bg-[url('/assets/svgs/bg.svg')]">
-        <div className="w-[300px] h-[300px] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4 ">
+        <div className="w-[300px] h-[300px] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4 scale-[0.5] md:scale-[1]">
           <div
             ref={fireContainerRef}
-            className="w-[100px] h-[100px] absolute bottom-0"
+            className="w-[100px] h-[100px] absolute bottom-0 "
             id="fireNodes1"
           >
             <CfFrame className="bg-yellow-200" />

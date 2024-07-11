@@ -1,11 +1,23 @@
 import { User } from '../db/drizzle/types'
 
-const retrieveActiveSubscription = (user: User | null) =>
-  user?.subscriptions?.find(
+const retrieveSubscription = (user?: User | null) => user?.subscriptions?.[0]
+const retrieveActiveSubscription = (
+  user?: User | null,
+  subscription?: NonNullable<User['subscriptions']>[number] | null,
+) => {
+  if (
+    subscription &&
+    (subscription.status === 'active' || subscription.status === 'trialing')
+  ) {
+    return subscription
+  }
+
+  return user?.subscriptions?.find(
     (sub) => sub.status === 'active' || sub.status === 'trialing',
   )
+}
 
-const retrieveInactiveSubscription = (user: User | null) => {
+const retrieveInactiveSubscription = (user?: User | null) => {
   const inactiveSubscriptions = user?.subscriptions?.every(
     (sub) => sub.status !== 'active' && sub.status !== 'trialing',
   )
@@ -16,8 +28,17 @@ const retrieveInactiveSubscription = (user: User | null) => {
     )
   }
 }
+const retrieveCancelledSubscription = (user?: User | null) => {
+  const cancelledSubscriptions = user?.subscriptions?.every(
+    (sub) => sub.status === 'canceled',
+  )
 
-const retrieveUnpaidSubscription = (user: User | null) => {
+  if (cancelledSubscriptions) {
+    return user?.subscriptions?.find((sub) => sub.status === 'canceled')
+  }
+}
+
+const retrieveUnpaidSubscription = (user?: User | null) => {
   const unpaidSubscriptions = user?.subscriptions?.every(
     (sub) => sub.status === 'unpaid' || sub.status === 'past_due',
   )
@@ -29,7 +50,7 @@ const retrieveUnpaidSubscription = (user: User | null) => {
   }
 }
 
-const retrieveIncompleteSubscription = (user: User | null) => {
+const retrieveIncompleteSubscription = (user?: User | null) => {
   const unpaidSubscriptions = user?.subscriptions?.every(
     (sub) => sub.status === 'incomplete' || sub.status === 'incomplete_expired',
   )
@@ -43,6 +64,8 @@ const retrieveIncompleteSubscription = (user: User | null) => {
 }
 
 export {
+  retrieveSubscription,
+  retrieveCancelledSubscription,
   retrieveActiveSubscription,
   retrieveInactiveSubscription,
   retrieveUnpaidSubscription,

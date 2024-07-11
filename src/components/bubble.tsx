@@ -1,6 +1,7 @@
 'use client'
 import { getServerEnv } from '@/actions/env/get-server-env'
 import { env as baseEnv } from '@/env'
+import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { Bubble as BubblePrimitive } from '@typebot.io/nextjs'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -10,6 +11,7 @@ export const Bubble = () => {
 
   const [env, setEnv] = useState<typeof baseEnv | null>(null)
   const locale = useLocale()
+  const isMd = useBreakpoint('md')
 
   useEffect(() => {
     getServerEnv().then((response) => setEnv(response))
@@ -23,9 +25,15 @@ export const Bubble = () => {
       apiHost={env.TYPEBOT_BOT_URL}
       typebot={`${env.TYPEBOT_BOT_KEY}-${locale.toLowerCase()}`}
       previewMessage={{
-        avatarUrl: 'https://xinglingo.com/assets/imgs/tutor-ai-03.png',
-        message: t('Do you have any doubts?'),
-        autoShowDelay: 1000,
+        ...(isMd
+          ? {
+              avatarUrl: 'https://xinglingo.com/assets/imgs/tutor-ai-03.png',
+              message: t('Do you have any doubts?'),
+              autoShowDelay: 1000,
+            }
+          : {
+              message: '',
+            }),
       }}
       theme={{
         button: {

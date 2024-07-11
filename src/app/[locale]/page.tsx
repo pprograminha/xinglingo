@@ -34,6 +34,7 @@ type LangData = {
 
 export default async function Home() {
   const t = await getTranslations()
+  await new Promise((resolve) => setTimeout(resolve, 10000))
 
   const langs: LangData[] = [
     {
@@ -91,7 +92,7 @@ export default async function Home() {
       <Subscriptions variant="dialog" />
 
       <div className="grid h-full bg-[url('/assets/svgs/layered-steps.svg')] bg-repeat-y overflow-y-auto">
-        <header className="px-4 lg:px-6 h-14 flex justify-between items-center">
+        <header className="px-4 lg:px-6 h-14 flex gap-4 pt-2 flex-wrap justify-between items-center relative z-20">
           <Logo />
           <Timer
             expireAt={expireAt}
@@ -124,7 +125,7 @@ export default async function Home() {
             <section className="py-12 md:pt-24 lg:pt-32 flex flex-col-reverse lg:flex-row justify-between gap-8 ">
               <div className="grid max-w-[800px] gap-4 sm:gap-6 md:gap-8">
                 <div className="gap-2 text-yellow-300 max-w-[550px] items-center inline-flex  rounded-md">
-                  <CircleAlertIcon />
+                  <CircleAlertIcon className="hidden md:block" />
                   <h1 className={`${pixelatedFont()} text-4xl `}>
                     {t('{days} days free trial', {
                       days: env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS,
@@ -167,7 +168,7 @@ export default async function Home() {
             </section>
 
             <section className="bg-gradient-to-tr relative from-pink-500 to-pink-100 p-0.5 rounded-xl mb-5">
-              <div className="bg-zinc-800 p-4 rounded-xl flex justify-between gap-2 items-center md:pr-20">
+              <div className="bg-zinc-800 p-4 rounded-xl flex flex-wrap justify-between gap-4 items-center md:pr-20">
                 <div>
                   <h1
                     className={`${pixelatedFont()} text-xl text-pink-400 mb-2`}

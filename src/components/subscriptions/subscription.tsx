@@ -1,11 +1,15 @@
 'use client'
+import { env } from '@/env'
+import { useAuth } from '@/hooks/use-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
-import { getCurrency, Locale } from '@/lib/intl/locales'
-import { BigNumber } from 'bignumber.js'
+import { cn } from '@/lib/utils'
+import { useRouter } from '@/navigation'
+import { format } from 'date-fns'
 import { CheckIcon, CircleHelpIcon, Loader2 } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
-import { useMemo, useTransition } from 'react'
+import { useTranslations } from 'next-intl'
+import { useTransition } from 'react'
 import { Product } from '.'
+import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import {
   Tooltip,
@@ -13,12 +17,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip'
-import { Badge } from '../ui/badge'
-import { format } from 'date-fns'
-import { env } from '@/env'
-import { cn } from '@/lib/utils'
-import { useAuth } from '@/hooks/use-auth'
-import { useRouter } from '@/navigation'
 
 type SubscriptionProps = {
   product: Product
@@ -33,84 +31,14 @@ export const Subscription = ({
 }: SubscriptionProps) => {
   const [isPending, startTransition] = useTransition()
   const t = useTranslations()
-  const locale = useLocale()
   const { isAuthenticated } = useAuth()
   const router = useRouter()
 
   type TranslationKeys = Parameters<typeof t>[0]
 
-  const price = product.prices[0]
-
-  const feats = {
-    Standart: {
-      color: 'slate',
-      description: t(
-        'Explore our trained LLM models to test your pronunciation and receive accurate answer feedback',
-      ),
-      items: [
-        {
-          id: 1,
-          message: t('{count} advanced voices', {
-            count: 6,
-          }),
-        },
-        {
-          id: 2,
-          message: t('{count} trained LLM models', {
-            count: 3,
-          }),
-          question: t('Large Language Model'),
-        },
-        {
-          id: 3,
-          message: t('Test your pronunciation with NLP'),
-          question: t('Natural Language Processing'),
-        },
-        {
-          id: 4,
-          message: t('Answer correction with LLM'),
-        },
-      ],
-    },
-    Shorly: {
-      color: 'red',
-      description: null,
-      items: [],
-    },
-  }
-
-  const currency = getCurrency(locale as Locale)
-
-  const priceAmountWithoutDiscount = useMemo(() => {
-    if (!price || price.unitAmount === null) return 0
-
-    if (currency === 'BRL') {
-      return new BigNumber(price.unitAmount.toString()).div(100).toNumber()
-    }
-
-    return 17.84 // tmp
-  }, [currency, price])
-
-  const priceAmount = Number(
-    (
-      priceAmountWithoutDiscount -
-      priceAmountWithoutDiscount * (env.NEXT_PUBLIC_DISCOUNT / 100)
-    ).toFixed(2),
-  )
-
-  const productFeats = feats[product.name as keyof typeof feats]
-  const productColor = productFeats.color
-
-  const formatPrice = (priceAmount: number) =>
-    new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency!,
-    }).format(priceAmount)
-
-  if (!productFeats) return null
   return (
     <div
-      data-color={productColor}
+      data-color={product.color}
       className={cn(
         `p-0.5
         bg-gradient-to-br
@@ -137,7 +65,7 @@ export const Subscription = ({
     >
       <div className="bg-zinc-800 rounded-xl h-full">
         <div className="flex flex-col h-full relative px-6 py-10 w-full max-w-sm bg-gradient-to-tr from-zinc-800 via-zinc-800 to-pink-600/20 shadow-lg rounded-xl dark:bg-zinc-850 justify-between ">
-          {price && (
+          {product.color !== 'red' && (
             <Badge variant="discount" className="px-4 absolute top-2 right-2">
               {t('Discount of {discount} until {date}', {
                 discount: `${env.NEXT_PUBLIC_DISCOUNT}%`,
@@ -156,9 +84,9 @@ export const Subscription = ({
                 {t(product.name as TranslationKeys)}
               </h3>
             )}
-            <p className="text-xs text-zinc-500">{productFeats.description}</p>
+            <p className="text-xs text-zinc-500">{product.description}</p>
 
-            {productColor !== 'red' && (
+            {product.color !== 'red' && (
               <h2 className="rounded-md text-orange-400 font-bold  mt-2 text-xs inline-block">
                 {t('{days} days free trial', {
                   days: env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS,
@@ -170,20 +98,18 @@ export const Subscription = ({
             >
               <div className="">
                 <span className="text-2xl text-zinc-500 line-through inline-block">
-                  {productColor === 'red'
-                    ? formatPrice(priceAmountWithoutDiscount).replaceAll(
-                        '0',
-                        '?',
-                      )
-                    : formatPrice(priceAmountWithoutDiscount)}
+                  {product.color === 'red'
+                    ? product.priceAmountWithoutDiscount.replaceAll('0', '?')
+                    : product.priceAmountWithoutDiscount}
                 </span>{' '}
               </div>
 
-              {productColor === 'red'
-                ? formatPrice(priceAmount).replaceAll('0', '?')
-                : formatPrice(priceAmount)}
-              {price?.intervalVariant && (
-                <span>/{t(price.intervalVariant)}</span>
+              {product.color === 'red'
+                ? product.priceAmount.replaceAll('0', '?')
+                : product.priceAmount}
+
+              {product.intervalVariant && (
+                <span>/{t(product.intervalVariant)}</span>
               )}
             </div>
             <div
@@ -220,7 +146,7 @@ export const Subscription = ({
               group-data-[color=slate]:hover:dark:bg-blue-300/80
               dark:text-zinc-900
               `}
-                disabled={isPending || productColor === 'red'}
+                disabled={isPending || product.color === 'red'}
                 onClick={() => {
                   if (isAuthenticated) {
                     startTransition(() => {
@@ -239,9 +165,9 @@ export const Subscription = ({
               </Button>
             </div>
             <ul className="mt-4 space-y-2">
-              {productFeats.items.map((feat, i) => (
+              {product.benefits.map((feat, i) => (
                 <li
-                  data-lastest={i + 1 === productFeats.items.length}
+                  data-lastest={i + 1 === product.benefits.length}
                   className="flex items-center text-xs py-3 border-b data-[lastest=true]:border-none border-zinc-700 text-zinc-400"
                   key={feat.id}
                 >

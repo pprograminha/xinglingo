@@ -48,11 +48,18 @@ export async function checkoutWithStripe(
     }
 
     const locale = (cookies().get('NEXT_LOCALE')?.value || 'en') as Locale
+    console.log(couponCode)
 
-    const promotionCode = await db.query.promotionCodes.findFirst({
+    let promotionCode = await db.query.promotionCodes.findFirst({
       where: (tablePromotionCodes, { eq }) =>
         eq(tablePromotionCodes.code, couponCode),
     })
+
+    if (!promotionCode)
+      promotionCode = await db.query.promotionCodes.findFirst({
+        where: (tablePromotionCodes, { eq }) =>
+          eq(tablePromotionCodes.code, env.NEXT_PUBLIC_COUPON),
+      })
 
     let params: Stripe.Checkout.SessionCreateParams = {
       // allow_promotion_codes: true,

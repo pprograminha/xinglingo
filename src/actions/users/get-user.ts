@@ -1,6 +1,8 @@
 'use server'
 import { db } from '@/lib/db/drizzle/query'
+import { subscriptions } from '@/lib/db/drizzle/schema'
 import { User } from '@/lib/db/drizzle/types'
+import { desc } from 'drizzle-orm'
 import { signOut } from 'next-auth/react'
 import { cache } from 'react'
 
@@ -12,7 +14,16 @@ export const getUser = cache(async function getUser(
     with: {
       availability: true,
       profile: true,
-      subscriptions: true,
+      subscriptions: {
+        orderBy: [desc(subscriptions.created)],
+        with: {
+          price: {
+            with: {
+              product: true,
+            },
+          },
+        },
+      },
     },
   })
 
