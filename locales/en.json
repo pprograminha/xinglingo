@@ -294,5 +294,7 @@
   "My plans": "My plans",
   "Current subscription billing cycle": "Current subscription billing cycle",
   "Hey! Noticed any issues with your subscription?": "Hey! Noticed any issues with your subscription?",
-  "Talk to support by clicking here": "Talk to support by clicking <span>here</span>"
+  "Talk to support by clicking here": "Talk to support by clicking <span>here</span>",
+  "Something went wrong!": "Something went wrong!",
+  "Try again": "Try again"
 }

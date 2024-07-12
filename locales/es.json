@@ -294,5 +294,7 @@
     "Your browser does not support Geolocation": "Tu navegador no admite la geolocalización.",
     "Try again in another browser!": "¡Inténtalo de nuevo en otro navegador!",
     "Could not obtain your location": "No se pudo obtener tu ubicación.",
-    "Please allow your location to continue!": "¡Permite tu ubicación para continuar!"
+    "Please allow your location to continue!": "¡Permite tu ubicación para continuar!",
+    "Something went wrong!": "Algo salió mal!",
+    "Try again": "Inténtalo de nuevo"
 }

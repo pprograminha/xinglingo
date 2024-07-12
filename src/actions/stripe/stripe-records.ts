@@ -402,10 +402,9 @@ const manageSubscriptionStatusChange = async (
         subscriptionData.userId = undefined
       }
     }
-
     if (existingSubscription) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id: _, ...updateSubscriptionData } = subscriptionData
+      const { ...updateSubscriptionData } = subscriptionData
+
       await db
         .update(subscriptions)
         .set(updateSubscriptionData)
@@ -413,6 +412,7 @@ const manageSubscriptionStatusChange = async (
     } else {
       await db.insert(subscriptions).values([subscriptionData])
     }
+
     console.log(
       `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`,
     )

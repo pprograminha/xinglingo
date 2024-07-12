@@ -34,7 +34,6 @@ type LangData = {
 
 export default async function Home() {
   const t = await getTranslations()
-  await new Promise((resolve) => setTimeout(resolve, 10000))
 
   const langs: LangData[] = [
     {

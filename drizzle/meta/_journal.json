@@ -225,6 +225,20 @@
       "when": 1720482403750,
       "tag": "0031_mean_rocket_racer",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1720741859310,
+      "tag": "0032_panoramic_lorna_dane",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1720742198013,
+      "tag": "0033_fast_sasquatch",
+      "breakpoints": true
     }
   ]
 }
