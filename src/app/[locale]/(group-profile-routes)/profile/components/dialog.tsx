@@ -322,7 +322,7 @@ export function Dialog({ wordsListData, model }: DialogProps) {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <div>
-          <div className="flex gap-2 pr-10 items-center my-5">
+          <div className="flex flex-col  gap-2 pr-10 items-start my-5">
             <Image
               src="/assets/imgs/tutor-ai-02.png"
               width={200}
@@ -330,7 +330,7 @@ export function Dialog({ wordsListData, model }: DialogProps) {
               alt="Petutor AI"
             />
 
-            <p className={`${pixelatedFont()}`}>
+            <p className={`${pixelatedFont()} px-4 md:px-8`}>
               <Typing
                 text={`- ${t('Here are all the words you learned with us, feel free to explore')}`}
               />

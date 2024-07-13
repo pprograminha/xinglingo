@@ -1,4 +1,5 @@
 'use server'
+import { WORDS_TO_LEARN } from '@/config/word'
 import { getAuth, withAuth } from '@/lib/auth/get-auth'
 import { db } from '@/lib/db/drizzle/query'
 import {
@@ -24,82 +25,90 @@ type GetWordsProps = {
   sort?: 'desc' | 'asc'
   user?: User
   date?: Date
+  locale?: boolean
 }
 
 export const getWordsList = async (props?: GetWordsProps) => {
   return (
     await withAuth(async (props?: GetWordsProps) => {
-      const { sort = 'desc' } = props || {}
+      const { sort = 'desc', locale = true } = props || {}
 
       const { user } = await getAuth()
 
-      const sqWithoutWhere = db
+      if (!user) throw new Error('User does not exist')
+
+      const sq = db
         .select({
           word: words.word,
+          locale: words.locale,
           accuracyScore: words.accuracyScore,
           createdAt: words.createdAt,
         })
         .from(words)
-
-      const sqWithWhere =
-        user &&
-        sqWithoutWhere
-          .innerJoin(
-            pronunciationsAssessment,
-            eq(words.pronunciationAssessmentId, pronunciationsAssessment.id),
-          )
-          .where(eq(pronunciationsAssessment.creatorId, user.id))
-          .as('sq')
-
-      let sq: typeof sqWithoutWhere | typeof sqWithWhere = sqWithoutWhere
-
-      if (sqWithWhere) {
-        sq = sqWithWhere
-      } else {
-        sq = sqWithoutWhere.as('sq')
-      }
+        .innerJoin(
+          pronunciationsAssessment,
+          eq(words.pronunciationAssessmentId, pronunciationsAssessment.id),
+        )
+        .where(eq(pronunciationsAssessment.creatorId, user.id))
+        .as('sq')
 
       const sorts = {
         desc,
         asc,
       }
-      const wordsData = await db
-        .select({
-          word: sql`${words.word}`.mapWith(String),
-          wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(
-            Number,
-          ),
-          avgAccuracyScore:
-            sql<number>`avg(${words.accuracyScore}) as avgAccuracyScore`.mapWith(
+      const wordsDataWithoutLocale = () =>
+        db
+          .select({
+            word: sql`${words.word}`.mapWith(String),
+            locale: sql`${words.locale}`.mapWith(String),
+            wordCount: sql<number>`count(${words.word}) as wordCount`.mapWith(
               Number,
             ),
-          scoreColor: sql<string>`CASE
+            avgAccuracyScore:
+              sql<number>`avg(${words.accuracyScore}) as avgAccuracyScore`.mapWith(
+                Number,
+              ),
+            scoreColor: sql<string>`CASE
             WHEN avg(${words.accuracyScore}) >= 0 AND avg(${words.accuracyScore}) < 50 THEN 'red'
             WHEN avg(${words.accuracyScore}) >= 50 AND avg(${words.accuracyScore}) < 95 THEN 'yellow'
             ELSE 'green'
           END AS scoreColor`,
-          createdAt: sql<Date>`MIN(${words.createdAt}) as createdAt`.mapWith(
-            (d) => new Date(d),
-          ),
-        })
-        .from(sq)
-        .groupBy(sql`word`)
-        .orderBy(sorts[sort](sql`wordCount`))
+            createdAt: sql<Date>`MIN(${words.createdAt}) as createdAt`.mapWith(
+              (d) => new Date(d),
+            ),
+          })
+          .from(sq)
+          .groupBy(sql`word, locale`)
+          .orderBy(sorts[sort](sql`wordCount`))
+
+      let wordsData:
+        | Awaited<ReturnType<typeof wordsDataWithoutLocale>['where']>
+        | Awaited<ReturnType<typeof wordsDataWithoutLocale>>
+
+      if (locale && user && user.profile) {
+        wordsData = await wordsDataWithoutLocale().where(
+          sql`locale = ${user.profile.localeToLearn}`,
+        )
+      } else {
+        wordsData = await wordsDataWithoutLocale()
+      }
 
       const wordsSameDate = (
         scoreColor: string,
         isSame?: (d1: Date | string, d2: Date | string) => boolean,
       ) =>
-        wordsData
-          .filter((w) => !isSame || isSame(w.createdAt, currentDate))
-          .filter((w) => w.scoreColor === scoreColor)
+        Array.isArray(wordsData)
+          ? wordsData
+              .filter((w) => !isSame || isSame(w.createdAt, currentDate))
+              .filter((w) => w.scoreColor === scoreColor)
+          : []
 
       const currentDate = new Date()
       const sub = (n1: number, n2: number) => (n1 - n2 < 0 ? 0 : n1 - n2)
       const div = (n1: number, n2: number) =>
         n1 / n2 === Infinity ? 0 : n1 / n2
 
-      const wordsPerYear = 5000
+      const wordsPerYear = WORDS_TO_LEARN
       const wordsPerYearCurrent = wordsSameDate('green', isSameYear).length
       const wordsPerYearRemaining = sub(
         wordsPerYear,
@@ -129,7 +138,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
         wordsSameDate('green', isSameDay).length,
       )
 
-      let intensive = 0
+      let offensive = 0
 
       if (user) {
         let conversationsCreatedAt = (
@@ -166,7 +175,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
           isEqual(c, startOfDay(currentDate)),
         )
 
-        intensive += isStudiedToday ? 1 : 0
+        offensive += isStudiedToday ? 1 : 0
 
         let oldConversationsCreatedAt:
           | (typeof conversationsCreatedAt)[number]
@@ -181,7 +190,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
 
           if (diff > 1) break
 
-          intensive += 1
+          offensive += 1
         }
       }
 
@@ -211,7 +220,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
           wordsSameDay: wordsSameDate('yellow', isSameDay),
         },
         count: {
-          intensive,
+          offensive,
           emblems,
           wordsToLearn,
           wordsRemaining,

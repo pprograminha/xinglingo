@@ -296,5 +296,14 @@
   "Hey! Noticed any issues with your subscription?": "Hey! Noticed any issues with your subscription?",
   "Talk to support by clicking here": "Talk to support by clicking <span>here</span>",
   "Something went wrong!": "Something went wrong!",
-  "Try again": "Try again"
+  "Try again": "Try again",
+  "Languages": "Languages",
+  "Logout": "Logout",
+  "Profile": "Profile",
+  "Access not permitted": "Access not permitted",
+  "All languages are available to you": "All languages are available to you",
+  "Select language": "Select language",
+  "You have successfully set up a new language to learn!": "You have successfully set up a new language to learn!",
+  "Don't forget to study with the Petutors": "Don't forget to study with the Petutors",
+  "Current": "Current"
 }

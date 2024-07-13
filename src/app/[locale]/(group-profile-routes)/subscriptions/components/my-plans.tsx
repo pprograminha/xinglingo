@@ -14,7 +14,7 @@ import {
 import { User } from '@/lib/db/drizzle/types'
 import { openSansFont } from '@/lib/font/google/open-sans-font'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
-import { dateLocale, Locale } from '@/lib/intl/locales'
+import { localeDate, Locale } from '@/lib/intl/locales'
 import {
   retrieveActiveSubscription,
   retrieveCancelledSubscription,
@@ -73,7 +73,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
                       t(`MMMM dd, yyyy 'at' h:mm aa`), // January 20, 1970 at 6:57 PM
                       user
                         ? {
-                            locale: dateLocale[user.locale as Locale],
+                            locale: localeDate[user.locale as Locale],
                           }
                         : undefined,
                     ),
@@ -89,7 +89,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
                           t(`MMMM dd, yyyy 'at' h:mm aa`), // January 20, 1970 at 6:57 PM
                           user
                             ? {
-                                locale: dateLocale[user.locale as Locale],
+                                locale: localeDate[user.locale as Locale],
                               }
                             : undefined,
                         ),
@@ -100,7 +100,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
                           t(`MMMM dd, yyyy 'at' h:mm aa`), // January 20, 1970 at 6:57 PM
                           user
                             ? {
-                                locale: dateLocale[user.locale as Locale],
+                                locale: localeDate[user.locale as Locale],
                               }
                             : undefined,
                         ),
@@ -128,7 +128,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
                     t(`MMMM dd, yyyy`), // January 20, 1970 at 6:57 PM
                     user
                       ? {
-                          locale: dateLocale[user.locale as Locale],
+                          locale: localeDate[user.locale as Locale],
                         }
                       : undefined,
                   ),
@@ -137,7 +137,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
                     t(`MMMM dd, yyyy`), // January 20, 1970 at 6:57 PM
                     user
                       ? {
-                          locale: dateLocale[user.locale as Locale],
+                          locale: localeDate[user.locale as Locale],
                         }
                       : undefined,
                   ),

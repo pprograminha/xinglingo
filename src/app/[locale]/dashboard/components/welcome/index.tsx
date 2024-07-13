@@ -1,12 +1,12 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { getModels } from '@/actions/models/get-models'
-import { Intensive } from '@/components/intensive'
+import { Offensive } from '@/components/offensive'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { User } from '@/lib/db/drizzle/types'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
-import { Locale, imagesSrc, langs } from '@/lib/intl/locales'
+import { Locale, localeImages, langs } from '@/lib/intl/locales'
 import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
@@ -35,7 +35,7 @@ export const Welcome = ({
 }: WelcomeProps) => {
   const {
     green: { words },
-    count: { intensive, wordsToLearn, wordsRemaining },
+    count: { offensive, wordsToLearn, wordsRemaining },
   } = wordsListData
 
   return (
@@ -49,7 +49,7 @@ export const Welcome = ({
                   <div className="flex flex-col gap-2">
                     <div className="flex gap-4 flex-wrap">
                       <Image
-                        src={imagesSrc[user.profile.localeToLearn as Locale]}
+                        src={localeImages[user.profile.localeToLearn as Locale]}
                         width={100}
                         height={100}
                         className="w-[70px] h-[70px] md:w-[100px] md:h-[100px]"
@@ -91,7 +91,7 @@ export const Welcome = ({
                             </Tooltip>
                           </TooltipProvider>
                         </div>
-                        <Intensive value={intensive} />
+                        <Offensive value={offensive} />
                       </div>
                     </div>
                     <form

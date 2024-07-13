@@ -6,7 +6,7 @@ import { stripe } from '@/lib/stripe/config'
 import { cookies } from 'next/headers'
 import Stripe from 'stripe'
 import { createOrRetrieveCustomer } from './stripe-records'
-import { getCurrency, Locale, parsedLocales } from '@/lib/intl/locales'
+import { getCurrency, Locale, stripeLocales } from '@/lib/intl/locales'
 import { db } from '@/lib/db/drizzle/query'
 
 type CheckoutResponse = {
@@ -69,7 +69,7 @@ export async function checkoutWithStripe(
         coupon_code: couponCode,
       },
 
-      locale: parsedLocales[locale],
+      locale: stripeLocales[locale],
       customer_update: {
         address: 'auto',
         name: 'auto',

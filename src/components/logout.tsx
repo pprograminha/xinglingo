@@ -3,12 +3,10 @@ import { Button } from '@/components/ui/button'
 import { signOut, useSession } from 'next-auth/react'
 import { LogOut as LogOutIcon } from 'lucide-react'
 import { useRouter } from '@/navigation'
-import { useEffect } from 'react'
+import { HtmlHTMLAttributes, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
-type LogOutProps = {
-  className?: string
-}
+type LogOutProps = HtmlHTMLAttributes<HTMLButtonElement>
 
 export const LogOut = ({ className, ...props }: LogOutProps) => {
   const { status } = useSession()

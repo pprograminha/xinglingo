@@ -296,5 +296,14 @@
     "Could not obtain your location": "No se pudo obtener tu ubicación.",
     "Please allow your location to continue!": "¡Permite tu ubicación para continuar!",
     "Something went wrong!": "Algo salió mal!",
-    "Try again": "Inténtalo de nuevo"
+    "Try again": "Inténtalo de nuevo",
+    "Languages": "Idiomas",
+    "Logout": "Cerrar sesión",
+    "Profile": "Perfil",
+    "Access not permitted": "Acceso no permitido",
+    "All languages are available to you": "Todos los idiomas están disponibles para ti",
+    "Select language": "Seleccionar idioma",
+    "You have successfully set up a new language to learn!": "¡Has configurado exitosamente un nuevo idioma para aprender!",
+    "Don't forget to study with the Petutors": "No olvides estudiar con los Petutors",
+    "Current": "Actual"
 }

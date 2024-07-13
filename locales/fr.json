@@ -296,5 +296,14 @@
     "We hope you come back someday": "Nous espérons que vous reviendrez un jour.",
     "If you see this message, please contact support": "Si vous voyez ce message, veuillez contacter le support.",
     "Something went wrong!": "Quelque chose s'est mal passé !",
-    "Try again": "Réessayez"
+    "Try again": "Réessayez",
+    "Languages": "Langues",
+    "Logout": "Déconnexion",
+    "Profile": "Profil",
+    "Access not permitted": "Accès non autorisé",
+    "All languages are available to you": "Toutes les langues vous sont disponibles",
+    "Select language": "Sélectionnez la langue",
+    "You have successfully set up a new language to learn!": "Vous avez réussi à configurer une nouvelle langue à apprendre !",
+    "Don't forget to study with the Petutors": "N'oubliez pas d'étudier avec les Petutors",
+    "Current": "Actuel"
 }

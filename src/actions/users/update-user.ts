@@ -1,8 +1,13 @@
 'use server'
 import { db } from '@/lib/db/drizzle/query'
-import { users } from '@/lib/db/drizzle/schema'
+import { users, usersProfile } from '@/lib/db/drizzle/schema'
 import { User } from '@/lib/db/drizzle/types'
 import { eq } from 'drizzle-orm'
+
+type UpdateUserData = Omit<Partial<User>, 'id' | 'profile'> &
+  Partial<{
+    profile: Omit<Partial<User['profile']>, 'id' | 'createdAt' | 'updatedAt'>
+  }> & { userId: string }
 
 export async function updateUser({
   email,
@@ -11,8 +16,14 @@ export async function updateUser({
   role,
   fullName,
   image,
-}: Omit<Partial<User>, 'id'> & { userId: string }) {
-  const [user] = await db.select().from(users).where(eq(users.id, userId))
+  profile,
+}: UpdateUserData) {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, userId),
+    with: {
+      profile: true,
+    },
+  })
 
   if (user) {
     await db
@@ -27,6 +38,14 @@ export async function updateUser({
       })
       .where(eq(users.id, userId))
 
-    if (locale) user.locale = locale
+    if (user.profile && profile) {
+      await db
+        .update(usersProfile)
+        .set({
+          ...profile,
+          updatedAt: new Date(),
+        })
+        .where(eq(usersProfile.id, user.profile.id))
+    }
   }
 }

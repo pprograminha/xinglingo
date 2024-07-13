@@ -4,6 +4,7 @@ import { it, ptBR, enUS, es, fr, Locale as DateLocale } from 'date-fns/locale'
 export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
 export type Locale = (typeof locales)[number]
+
 export const getCurrency = (locale: Locale) =>
   ({
     pt: 'BRL' as const,
@@ -12,7 +13,8 @@ export const getCurrency = (locale: Locale) =>
     fr: 'EUR' as const,
     es: 'EUR' as const,
   })[locale]
-export const parsedLocales: Record<
+
+export const stripeLocales: Record<
   Locale,
   'en' | 'es' | 'pt-BR' | 'it' | 'fr'
 > = {
@@ -23,14 +25,15 @@ export const parsedLocales: Record<
   fr: 'fr',
 }
 
-export const dateLocale: Record<Locale, DateLocale> = {
+export const localeDate: Record<Locale, DateLocale> = {
   'it-IT': it,
   pt: ptBR,
   en: enUS,
   es,
   fr,
 }
-export const imagesSrc: Record<Locale, string> = {
+
+export const localeImages: Record<Locale, string> = {
   'it-IT': '/assets/imgs/flags/italian.png',
   pt: '/assets/imgs/flags/brazil.png',
   en: '/assets/imgs/flags/usa.png',

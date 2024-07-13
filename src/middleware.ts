@@ -25,6 +25,7 @@ const isAuthPage = (pathname: string) => {
   )
   return authPathnameRegex.test(pathname)
 }
+
 const isPublicPage = (pathname: string) => {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages.join('|')})?/?$`,
@@ -40,7 +41,7 @@ const authMiddleware = withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token, req }) => {
+      authorized: async ({ token, req }) => {
         if (isAuthPage(req.nextUrl.pathname)) {
           return true
         }

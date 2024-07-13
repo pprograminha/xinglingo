@@ -273,7 +273,7 @@ export const speechs = pgTable('speechs', {
 
 export const words = pgTable('words', {
   id: uuid('id').primaryKey(),
-
+  locale: text('locale').notNull().default('en'),
   word: text('word').notNull(),
   pronunciationAssessmentId: uuid('pronunciationAssessmentId')
     .references(() => pronunciationsAssessment.id, {

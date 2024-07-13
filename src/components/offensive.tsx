@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
-type IntensiveProps = {
+type OffensiveProps = {
   value: number
   className?: string
 }
-export const Intensive = ({ value, className }: IntensiveProps) => {
+export const Offensive = ({ value, className }: OffensiveProps) => {
   return (
     <div
       className={cn(

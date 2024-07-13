@@ -35,7 +35,7 @@ export const Sakura = ({ t }: SakuraProps) => {
                   asChild
                   className="border border-zinc-700 mt-2 gap-2 items-center inline-flex"
                 >
-                  <Link href="/profile">
+                  <Link href="/languages">
                     {t('New language')} <ChevronRightIcon className="w-4" />
                   </Link>
                 </Button>

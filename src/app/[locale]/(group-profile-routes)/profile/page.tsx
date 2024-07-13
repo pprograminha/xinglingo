@@ -1,17 +1,24 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
-import { Intensive } from '@/components/intensive'
+import { getModels } from '@/actions/models/get-models'
+import { Offensive } from '@/components/offensive'
 import { SetLang } from '@/components/set-lang'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Command, CommandList } from '@/components/ui/command'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { env } from '@/env'
 import { getAuth } from '@/lib/auth/get-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import {
-  Locale,
-  dateLocale,
-  imagesSrc,
   langs,
+  Locale,
+  localeDate,
+  localeImages,
   locales,
 } from '@/lib/intl/locales'
 import { scoreColor } from '@/lib/score-color'
@@ -23,13 +30,6 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from '../../dashboard/components/welcome/your-performance'
 import { CommmandItemComponent, Dialog } from './components/dialog'
-import { getModels } from '@/actions/models/get-models'
-import {
-  TooltipContent,
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 export const dynamic = 'force-dynamic'
 
@@ -46,7 +46,7 @@ const UserProfile = async () => {
     green,
     red,
     yellow,
-    count: { wordsToLearn, intensive, wordsRemaining },
+    count: { wordsToLearn, offensive, wordsRemaining },
     words,
   } = wordsListData
 
@@ -96,8 +96,8 @@ const UserProfile = async () => {
           </div>
           <div className=" grid grid-cols-11 flex-wrap items-center justify-start gap-4 w-full mt-4">
             <div className="relative py-4 px-2 md:p-4  col-span-11 md:col-span-4 lg:col-span-3 bg-gradient-to-t from-zinc-800 h-full to-violet-400/30 rounded-xl ">
-              <Intensive
-                value={intensive}
+              <Offensive
+                value={offensive}
                 className="flex items-center justify-center absolute -top-2 -right-2 px-4"
               />
               <div className="p-1 rounded-full mx-auto shrink-0 sm:min-w-max min-w-[100px] max-w-min  mt-4 bg-gradient-to-tr from-violet-200 via-violet-600 to-fuchsia-600">
@@ -183,7 +183,7 @@ const UserProfile = async () => {
                           currentDate,
                           activeSubscription.trialEnd,
                           {
-                            locale: dateLocale[user.locale as Locale],
+                            locale: localeDate[user.locale as Locale],
                           },
                         )}
                       </h2>
@@ -215,7 +215,7 @@ const UserProfile = async () => {
                   <div className="flex flex-wrap gap-2 justify-between">
                     <div className="flex items-center  gap-2">
                       <Image
-                        src={imagesSrc[user.profile.localeToLearn as Locale]}
+                        src={localeImages[user.profile.localeToLearn as Locale]}
                         width={100}
                         height={100}
                         className="w-[70px] h-[70px] lg:w-[100px] lg:h-[100px]"
@@ -237,7 +237,7 @@ const UserProfile = async () => {
                                 </span>{' '}
                                 /{' '}
                                 <span className="text-zinc-400">
-                                  {words.length}
+                                  {green.words.length}
                                 </span>
                               </div>
                             </TooltipTrigger>
@@ -261,7 +261,7 @@ const UserProfile = async () => {
                     <div>
                       <div className="p-0.5 rounded-full bg-gradient-to-tr from-orange-800 to-orange-400">
                         <div className="rounded-full bg-zinc-800 py-1 px-4 text-xs">
-                          {(words.length / wordsToLearn) * 100 || 0}%
+                          {(green.words.length / wordsToLearn) * 100 || 0}%
                         </div>
                       </div>
                     </div>
@@ -272,14 +272,21 @@ const UserProfile = async () => {
                     </h1>
 
                     {getFlagsLocale().map((locale) => (
-                      <Button variant="secondary" size="icon" key={locale}>
-                        <Image
-                          src={imagesSrc[locale]}
-                          width={25}
-                          height={25}
-                          className="w-[25px] h-[25px]"
-                          alt="Country"
-                        />
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        key={locale}
+                        asChild
+                      >
+                        <Link href="/languages">
+                          <Image
+                            src={localeImages[locale]}
+                            width={25}
+                            height={25}
+                            className="w-[25px] h-[25px]"
+                            alt="Country"
+                          />
+                        </Link>
                       </Button>
                     ))}
                   </div>
@@ -298,7 +305,7 @@ const UserProfile = async () => {
                   />
                   <div className="self-end">
                     <Image
-                      src={imagesSrc[locale]}
+                      src={localeImages[locale]}
                       width={100}
                       height={100}
                       className="w-[70px] h-[70px] lg:w-[100px]  lg:h-[100px]"
@@ -317,7 +324,7 @@ const UserProfile = async () => {
 
             {words.length > 0 ? (
               <div className="z-20 relative p-4">
-                <div className="flex gap-4 flex-wrap-reverse justify-between">
+                <div className="flex gap-4 flex-wrap-reverse items-center justify-between">
                   <div>
                     <h1 className={`${pixelatedFont()} text-2xl`}>
                       {t('Words that you had contact with')}

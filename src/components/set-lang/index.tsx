@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useAuth } from '@/hooks/use-auth'
-import { Locale, imagesSrc, langs } from '@/lib/intl/locales'
+import { Locale, localeImages, langs } from '@/lib/intl/locales'
 import { cn } from '@/lib/utils'
 import { usePathname, useRouter } from '@/navigation'
 import { useLocale, useTranslations } from 'next-intl'
@@ -42,7 +42,7 @@ export function SetLang({ className, collateral }: SetLangProps) {
     label,
   }))
 
-  const currentImageSrc = imagesSrc[value as Locale]
+  const currentImageSrc = localeImages[value as Locale]
 
   const lang = langsValues.find((l) => l.value === value)
 
@@ -99,7 +99,7 @@ export function SetLang({ className, collateral }: SetLangProps) {
                 />
                 <div className="flex gap-2">
                   <Image
-                    src={imagesSrc[lang.value as Locale]}
+                    src={localeImages[lang.value as Locale]}
                     alt={lang.label}
                     className="shrink-0"
                     width={20}

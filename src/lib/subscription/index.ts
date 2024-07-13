@@ -64,10 +64,10 @@ const retrieveIncompleteSubscription = (user?: User | null) => {
 }
 
 export {
-  retrieveSubscription,
-  retrieveCancelledSubscription,
   retrieveActiveSubscription,
+  retrieveCancelledSubscription,
   retrieveInactiveSubscription,
-  retrieveUnpaidSubscription,
   retrieveIncompleteSubscription,
+  retrieveSubscription,
+  retrieveUnpaidSubscription,
 }
