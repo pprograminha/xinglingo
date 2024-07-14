@@ -99,13 +99,13 @@ export const Subscription = ({
               <div className="">
                 <span className="text-2xl text-zinc-500 line-through inline-block">
                   {product.color === 'red'
-                    ? product.priceAmountWithoutDiscount.replaceAll('0', '?')
+                    ? product.priceAmountWithoutDiscount?.replaceAll('0', '?')
                     : product.priceAmountWithoutDiscount}
                 </span>{' '}
               </div>
 
               {product.color === 'red'
-                ? product.priceAmount.replaceAll('0', '?')
+                ? product.priceAmount?.replaceAll('0', '?')
                 : product.priceAmount}
 
               {product.intervalVariant && (
@@ -165,9 +165,9 @@ export const Subscription = ({
               </Button>
             </div>
             <ul className="mt-4 space-y-2">
-              {product.benefits.map((feat, i) => (
+              {product.benefits?.map((feat, i) => (
                 <li
-                  data-lastest={i + 1 === product.benefits.length}
+                  data-lastest={i + 1 === product.benefits?.length}
                   className="flex items-center text-xs py-3 border-b data-[lastest=true]:border-none border-zinc-700 text-zinc-400"
                   key={feat.id}
                 >

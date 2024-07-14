@@ -21,12 +21,13 @@ export const YourPerformance = ({
   className,
 }: YourPerformanceProps) => {
   const {
-    green: { words },
+    words,
+    green: { words: greenWords },
     red: { words: redWords },
     yellow: { words: yellowWords },
   } = wordsListData
 
-  const allWordsCount = words.length + redWords.length + yellowWords.length
+  const allWordsCount = words.length
 
   const getPercentage = (n1: number, n2: number) => (n1 / n2) * 100 || 0
 
@@ -106,13 +107,15 @@ export const YourPerformance = ({
           <div className="flex flex-col mt-auto gap-2 ">
             <div className="bg-zinc-900 rounded-xl p-1 lg:h-full mt-auto">
               <div
-                data-start={getPercentage(words.length, allWordsCount) <= 20}
+                data-start={
+                  getPercentage(greenWords.length, allWordsCount) <= 20
+                }
                 style={{
-                  width: `${getPercentage(words.length, allWordsCount)}%`,
+                  width: `${getPercentage(greenWords.length, allWordsCount)}%`,
                 }}
                 className={`bg-green-500/5 flex gap-2 lg:flex-col data-[start=true]:items-start justify-between items-end text-green-300 p-1 rounded-xl text-xs`}
               >
-                %{getPercentage(words.length, allWordsCount).toFixed(2)}
+                %{getPercentage(greenWords.length, allWordsCount).toFixed(2)}
               </div>
             </div>
             <div className="bg-zinc-900 rounded-xl p-1 lg:h-full">

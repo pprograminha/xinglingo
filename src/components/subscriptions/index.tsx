@@ -3,13 +3,19 @@ import { checkoutWithStripe } from '@/actions/stripe/checkout-with-stripe'
 import { getProducts } from '@/actions/stripe/get-products'
 import { getServerAuth } from '@/actions/users/get-server-auth'
 import { env } from '@/env'
+import { User } from '@/lib/db/drizzle/types'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { getCurrency, Locale } from '@/lib/intl/locales'
+import { lingos } from '@/lib/storage/local'
 import { getStripe } from '@/lib/stripe/client'
+import { retrieveActiveSubscription } from '@/lib/subscription'
 import { cn } from '@/lib/utils'
+import BigNumber from 'bignumber.js'
 import { AlertCircleIcon } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import {
   HtmlHTMLAttributes,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -23,11 +29,6 @@ import {
   DialogTitle,
 } from '../ui/dialog'
 import { Subscription } from './subscription'
-import { User } from '@/lib/db/drizzle/types'
-import { retrieveActiveSubscription } from '@/lib/subscription'
-import { lingos } from '@/lib/storage/local'
-import { getCurrency, Locale } from '@/lib/intl/locales'
-import BigNumber from 'bignumber.js'
 import { SubscriptionList } from './subscription-list'
 import { SubscriptionListSkeleton } from './subscription-list-skeleton'
 
@@ -42,55 +43,32 @@ type Benefit = {
 }
 
 export type Product = Awaited<ReturnType<typeof getProducts>>[number] &
-  Benefit & {
-    priceAmount: string
-    priceAmountWithoutDiscount: string
-    intervalVariant?: 'day' | 'week' | 'month' | 'year' | null
-  }
+  Partial<
+    Benefit & {
+      priceAmount: string
+      priceAmountWithoutDiscount: string
+      intervalVariant?: 'day' | 'week' | 'month' | 'year' | null
+    }
+  >
 type SubscriptionsProps = HtmlHTMLAttributes<HTMLDivElement> & {
   variant: 'dialog' | 'list'
   user?: User | null
+  onOpenChange?: (open: boolean) => void
+  products?: Product[]
 }
 
 export const Subscriptions = ({
   className,
   variant,
+  onOpenChange,
+  products: defaultProducts,
   user: defaultUser,
   ...props
 }: SubscriptionsProps) => {
-  const [products, setProducts] = useState<Product[]>([])
   const [user, setUser] = useState<User | null>(defaultUser || null)
   const [isPending, startTransition] = useTransition()
   const locale = useLocale()
   const t = useTranslations()
-
-  async function stripeCheckoutHandler(product: Product) {
-    if (!user) {
-      return toast(t('You do not have permission'), {
-        description: t('Please try again later'),
-      })
-    }
-
-    const { sessionId, error } = await checkoutWithStripe(
-      user,
-      product.prices[0],
-      lingos.storage.get('coupon-code') || env.NEXT_PUBLIC_COUPON,
-    )
-
-    if (!sessionId || error) {
-      return toast(error?.message || t('An unknown error occurred'), {
-        description: t(
-          'Please try again later or contact a system administrator',
-        ),
-      })
-    }
-
-    const stripe = await getStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-
-    await stripe?.redirectToCheckout({
-      sessionId,
-    })
-  }
 
   const benefits: Record<string, Benefit> = useMemo(
     () => ({
@@ -133,67 +111,106 @@ export const Subscriptions = ({
     [t],
   )
 
+  const parseProducts = useCallback(
+    (products: Product[]) => {
+      return [
+        ...products,
+        {
+          id: 'shorly',
+          active: true,
+          description: null,
+          image: null,
+          metadata: null,
+          name: 'Shorly',
+          prices: [],
+        },
+      ].map((product) => {
+        const price = product.prices[0]
+
+        const currency = getCurrency(locale as Locale)
+
+        const priceAmountWithoutDiscount = (() => {
+          if (!price || price.unitAmount === null) return 0
+
+          if (currency === 'BRL') {
+            return new BigNumber(price.unitAmount.toString())
+              .div(100)
+              .toNumber()
+          }
+
+          return 17.84 // tmp
+        })()
+
+        const priceAmount = Number(
+          (
+            priceAmountWithoutDiscount -
+            priceAmountWithoutDiscount * (env.NEXT_PUBLIC_DISCOUNT / 100)
+          ).toFixed(2),
+        )
+
+        const formatPrice = (priceAmount: number) =>
+          new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currency!,
+          }).format(priceAmount)
+
+        return {
+          ...product,
+          ...(benefits[product.name as keyof typeof benefits] || {}),
+          priceAmount: formatPrice(priceAmount),
+          priceAmountWithoutDiscount: formatPrice(priceAmountWithoutDiscount),
+          intervalVariant: price?.intervalVariant,
+        }
+      })
+    },
+    [benefits, locale],
+  )
+
+  const [products, setProducts] = useState<Product[]>(
+    parseProducts(defaultProducts || []),
+  )
+
+  async function stripeCheckoutHandler(product: Product) {
+    if (!user) {
+      return toast(t('You do not have permission'), {
+        description: t('Please try again later'),
+      })
+    }
+
+    const { sessionId, error } = await checkoutWithStripe(
+      user,
+      product.prices[0],
+      lingos.storage.get('coupon-code') || env.NEXT_PUBLIC_COUPON,
+    )
+
+    if (!sessionId || error) {
+      return toast(error?.message || t('An unknown error occurred'), {
+        description: t(
+          'Please try again later or contact a system administrator',
+        ),
+      })
+    }
+
+    const stripe = await getStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
+    await stripe?.redirectToCheckout({
+      sessionId,
+    })
+  }
+
   useEffect(() => {
+    if (!defaultUser && !defaultProducts) {
+      return
+    }
     startTransition(() => {
       if (!defaultUser) getServerAuth().then(({ user }) => setUser(user))
 
-      getProducts().then((products) => {
-        setProducts(
-          [
-            ...products,
-            {
-              id: 'shorly',
-              active: true,
-              description: null,
-              image: null,
-              metadata: null,
-              name: 'Shorly',
-              prices: [],
-            },
-          ].map((product) => {
-            const price = product.prices[0]
-
-            const currency = getCurrency(locale as Locale)
-
-            const priceAmountWithoutDiscount = (() => {
-              if (!price || price.unitAmount === null) return 0
-
-              if (currency === 'BRL') {
-                return new BigNumber(price.unitAmount.toString())
-                  .div(100)
-                  .toNumber()
-              }
-
-              return 17.84 // tmp
-            })()
-
-            const priceAmount = Number(
-              (
-                priceAmountWithoutDiscount -
-                priceAmountWithoutDiscount * (env.NEXT_PUBLIC_DISCOUNT / 100)
-              ).toFixed(2),
-            )
-
-            const formatPrice = (priceAmount: number) =>
-              new Intl.NumberFormat(locale, {
-                style: 'currency',
-                currency: currency!,
-              }).format(priceAmount)
-
-            return {
-              ...product,
-              ...(benefits[product.name as keyof typeof benefits] || {}),
-              priceAmount: formatPrice(priceAmount),
-              priceAmountWithoutDiscount: formatPrice(
-                priceAmountWithoutDiscount,
-              ),
-              intervalVariant: price?.intervalVariant,
-            }
-          }),
-        )
-      })
+      if (!defaultProducts)
+        getProducts().then((products) => {
+          setProducts(parseProducts(products))
+        })
     })
-  }, [benefits, locale, defaultUser])
+  }, [defaultUser, defaultProducts, parseProducts])
 
   const hasActiveSubscription = retrieveActiveSubscription(user)
 
@@ -225,7 +242,7 @@ export const Subscriptions = ({
   if (hasActiveSubscription) return null
 
   return (
-    <Dialog defaultOpen>
+    <Dialog defaultOpen onOpenChange={onOpenChange}>
       <DialogContent className="max-w-max ">
         <DialogTitle
           className={`text-4xl ${pixelatedFont()} text-zinc-300 tracking-wide flex gap-2 items-center animate-pulse`}

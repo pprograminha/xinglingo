@@ -141,7 +141,7 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
                         <Image
                           src={item.img}
                           width={50}
-                          height={50}
+                          height={33.6}
                           alt="Petutor"
                         />
                       )}

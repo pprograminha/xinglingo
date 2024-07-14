@@ -1,5 +1,11 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
-import { CardContent, CardTitle, Card, CardHeader } from '@/components/ui/card'
+import {
+  CardContent,
+  CardTitle,
+  Card,
+  CardHeader,
+  CardDescription,
+} from '@/components/ui/card'
 import { getTranslations } from 'next-intl/server'
 
 import {
@@ -25,10 +31,10 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
   } = wordsListData
 
   return (
-    <Card className="bg-gradient-to-tr col-span-4 md:col-span-2 lg:col-span-1 dark:from-zinc-920 dark:to-zinc-900">
-      <div className="h-full flex flex-col justify-between bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl ">
+    <Card className="bg-gradient-to-tr hidden md:block col-span-4 md:col-span-2 lg:col-span-1 dark:to-zinc-920 dark:from-zinc-800">
+      <div className="h-full flex flex-col justify-between  w-full bg-repeat-y rounded-xl ">
         <div>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="space-y-0 pb-2">
             <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
               {t.rich(
                 'Your goal is to learn {words} words, {wordsRemaining} words remaining',
@@ -61,14 +67,13 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
                   ),
                 },
               )}
-              <br />
-              <span className="text-lg">
-                {t('All the words you learned in the year 2024', {
-                  year: new Date().getFullYear(),
-                })}
-                :
-              </span>
             </CardTitle>
+            <CardDescription className="text-xs">
+              {t('All the words you learned in the year 2024', {
+                year: new Date().getFullYear(),
+              })}
+              :
+            </CardDescription>
           </CardHeader>
           <GoalTabs wordsListData={wordsListData} t={t} />
         </div>

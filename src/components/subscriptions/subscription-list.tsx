@@ -91,12 +91,12 @@ export const SubscriptionList = ({
               >
                 <span className="text-2xl text-zinc-500 line-through block">
                   {product.color === 'red'
-                    ? product.priceAmountWithoutDiscount.replaceAll('0', '?')
+                    ? product.priceAmountWithoutDiscount?.replaceAll('0', '?')
                     : product.priceAmountWithoutDiscount}
                 </span>{' '}
                 <span>
                   {product.color === 'red'
-                    ? product.priceAmount.replaceAll('0', '?')
+                    ? product.priceAmount?.replaceAll('0', '?')
                     : product.priceAmount}
                   {product.intervalVariant && (
                     <span>/{t(product.intervalVariant)}</span>

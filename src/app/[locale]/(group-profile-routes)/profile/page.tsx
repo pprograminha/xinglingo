@@ -278,7 +278,13 @@ const UserProfile = async () => {
                         key={locale}
                         asChild
                       >
-                        <Link href="/languages">
+                        <Link
+                          href={
+                            retrieveActiveSubscription(user)
+                              ? '/languages'
+                              : '/subscriptions'
+                          }
+                        >
                           <Image
                             src={localeImages[locale]}
                             width={25}

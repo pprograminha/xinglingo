@@ -9,6 +9,7 @@ import { Welcome } from './components/welcome'
 import { Petutors } from './components/petutors'
 import { Bubble } from '@/components/bubble'
 import { getModels } from '@/actions/models/get-models'
+import { getProducts } from '@/actions/stripe/get-products'
 
 export const metadata: Metadata = {
   title: 'Xinglingo | Dashboard',
@@ -20,10 +21,11 @@ export const dynamic = 'force-dynamic'
 export default async function DashboardPage() {
   const { user } = await getAuth()
 
-  const [wordsListData, modelsData, t] = await Promise.all([
+  const [wordsListData, modelsData, t, products] = await Promise.all([
     getWordsList(),
     getModels(user),
     getTranslations(),
+    getProducts(),
   ])
 
   return (
@@ -36,13 +38,19 @@ export default async function DashboardPage() {
               user={user}
               wordsListData={wordsListData}
               modelsData={modelsData}
+              products={products}
             />
-            <Sakura t={t} />
+            <Sakura t={t} user={user} products={products} />
           </div>
 
           <div className="grid gap-4 grid-cols-4 lg:grid-cols-3">
             <Goal t={t} wordsListData={wordsListData} />
-            <Petutors t={t} user={user} modelsData={modelsData} />
+            <Petutors
+              t={t}
+              user={user}
+              modelsData={modelsData}
+              products={products}
+            />
           </div>
         </div>
       </div>
