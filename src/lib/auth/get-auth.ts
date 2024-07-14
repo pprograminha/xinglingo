@@ -4,7 +4,7 @@ import { User } from '../db/drizzle/types'
 import { authOptions } from './auth-options'
 import { redirect } from '@/navigation'
 
-export const getAuth = async () => {
+export const getAuth = async (isPublicPage = false) => {
   const session = await getServerSession(authOptions)
 
   const sessionUser = session?.user as
@@ -17,7 +17,7 @@ export const getAuth = async () => {
   if (user) {
     user = await getUser(user.id)
   } else {
-    redirect('/auth')
+    if (!isPublicPage) redirect('/auth')
     return {
       user: null,
     }

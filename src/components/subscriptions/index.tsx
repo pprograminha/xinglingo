@@ -199,11 +199,11 @@ export const Subscriptions = ({
   }
 
   useEffect(() => {
-    if (!defaultUser && !defaultProducts) {
+    if (defaultUser && defaultProducts) {
       return
     }
     startTransition(() => {
-      if (!defaultUser) getServerAuth().then(({ user }) => setUser(user))
+      if (!defaultUser) getServerAuth(true).then(({ user }) => setUser(user))
 
       if (!defaultProducts)
         getProducts().then((products) => {
