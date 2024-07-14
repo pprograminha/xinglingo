@@ -167,7 +167,7 @@ export const Subscriptions = ({
   )
 
   const [products, setProducts] = useState<Product[]>(
-    parseProducts(defaultProducts || []),
+    defaultProducts ? parseProducts(defaultProducts) : [],
   )
 
   async function stripeCheckoutHandler(product: Product) {
