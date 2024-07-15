@@ -94,7 +94,7 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
             >
               <TooltipProvider>
                 <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger asChild ignorePrevent>
                     <Link
                       href={item.hasAccess ? item.href : '#'}
                       aria-disabled={!item.hasAccess}

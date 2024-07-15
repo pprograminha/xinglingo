@@ -57,7 +57,7 @@ export const YourPerformance = ({
                     <TooltipTrigger>
                       <HelpCircleIcon className="w-4 text-zinc-500" />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-md grid gap-2">
+                    <TooltipContent className="grid gap-2 ">
                       <p>
                         {t.rich(
                           'Words with a score above or equal to 95 are represented in <g>green</g>',
