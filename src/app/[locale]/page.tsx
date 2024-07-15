@@ -21,6 +21,7 @@ import {
   CircleAlertIcon,
   UserIcon,
 } from 'lucide-react'
+import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Timer } from './components/timer'
@@ -30,6 +31,49 @@ type LangData = {
   title: string
   description: string
   icon: React.FC<React.HtmlHTMLAttributes<SVGElement>>
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations()
+  const metadata: Metadata = {
+    title: {
+      absolute: 'Xinglingo',
+    },
+    keywords: [
+      t('language learning'),
+      t('artificial intelligence'),
+      t('content personalization'),
+      t('learning efficiency'),
+      t('learning platform'),
+      t('AI models'),
+      t('AI-powered pronunciation testing'),
+      t('AI-powered response correction'),
+      t('personalized learning experience'),
+      t('simplified language study'),
+      t('accelerated learning'),
+    ],
+    description: t(
+      'Simplify Your Studies of a New Language with AI\nLearn Faster and More Effectively with Our Platform\nOur platform uses artificial intelligence to personalize language learning, adapting to your individual needs and pace Models are used to offer personalized learning experiences, making the learning process simpler and more effective',
+    ),
+    openGraph: {
+      description: t(
+        'Simplify Your Studies of a New Language with AI\nLearn Faster and More Effectively with Our Platform\nOur platform uses artificial intelligence to personalize language learning, adapting to your individual needs and pace Models are used to offer personalized learning experiences, making the learning process simpler and more effective',
+      ),
+
+      siteName: 'Xinglingo',
+      images: ['/assets/imgs/panda-3.png'],
+      authors: ['Marcos Proença'],
+    },
+    twitter: {
+      creator: 'Marcos Proença',
+      description: t(
+        'Simplify Your Studies of a New Language with AI\nLearn Faster and More Effectively with Our Platform\nOur platform uses artificial intelligence to personalize language learning, adapting to your individual needs and pace Models are used to offer personalized learning experiences, making the learning process simpler and more effective',
+      ),
+      images: ['/assets/imgs/panda-3.png'],
+    },
+  }
+
+  return metadata
 }
 
 export default async function Home() {

@@ -23,6 +23,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.9.4
         version: 0.9.4
+      '@next/third-parties':
+        specifier: ^14.2.5
+        version: 14.2.5(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-avatar':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -93,17 +96,17 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.3.3)(zod@3.23.8)
       '@typebot.io/js':
-        specifier: ^0.3.4
-        version: 0.3.4(@internationalized/date@3.5.4)(@types/react@18.2.61)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(scheduler@0.23.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.106.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.103.0))(slate@0.103.0)
+        specifier: ^0.3.6
+        version: 0.3.6(@internationalized/date@3.5.4)(@types/react@18.2.61)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(scheduler@0.23.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.106.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.103.0))(slate@0.103.0)(zod@3.23.8)
       '@typebot.io/nextjs':
-        specifier: ^0.3.4
-        version: 0.3.4(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        specifier: ^0.3.6
+        version: 0.3.6(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       ably:
         specifier: ^1.2.49
         version: 1.2.49(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       ai:
-        specifier: ^3.2.22
-        version: 3.2.22(openai@4.52.7)(react@18.2.0)(solid-js@1.7.8)(svelte@4.2.12)(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)
+        specifier: ^3.2.23
+        version: 3.2.23(openai@4.52.7)(react@18.2.0)(solid-js@1.7.8)(svelte@4.2.12)(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)
       animejs:
         specifier: ^3.2.2
         version: 3.2.2
@@ -153,8 +156,8 @@ importers:
         specifier: ^4.24.7
         version: 4.24.7(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-intl:
-        specifier: ^3.17.0
-        version: 3.17.0(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        specifier: ^3.17.1
+        version: 3.17.1(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       next-pwa:
         specifier: ^5.6.0
         version: 5.6.0(@babel/core@7.24.4)(esbuild@0.19.12)(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(webpack@5.91.0(esbuild@0.19.12))
@@ -199,7 +202,7 @@ importers:
         version: 2.4.0
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.4)
+        version: 1.0.7(tailwindcss@3.4.5)
       tsx:
         specifier: ^4.16.2
         version: 4.16.2
@@ -212,7 +215,7 @@ importers:
     devDependencies:
       '@kamona/tailwindcss-perspective':
         specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.4)
+        version: 0.1.1(tailwindcss@3.4.5)
       '@rocketseat/eslint-config':
         specifier: ^2.2.2
         version: 2.2.2(@types/eslint@8.56.10)(eslint@8.57.0)(typescript@5.3.3)
@@ -256,8 +259,8 @@ importers:
         specifier: ^8
         version: 8.4.35
       tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4
+        specifier: ^3.4.5
+        version: 3.4.5
       typescript:
         specifier: ^5
         version: 5.3.3
@@ -297,8 +300,8 @@ packages:
     resolution: {integrity: sha512-oOwPQD8i2Ynpn22cur4sk26FW3mSy6t6/X/K1Ay2yGBKYiSpRyLfObhOrZEGsXDx+3euKy4nEZ193R36NM+tpQ==}
     engines: {node: '>=18'}
 
-  '@ai-sdk/react@0.0.20':
-    resolution: {integrity: sha512-L/PFqvT+rZd/aYZekEWXuVW3zooJEZAf2O5wL5JeKi71slBEuKZGGZP/7GzyX+8Uhl3JOg4wOdJTO/dogWzbAQ==}
+  '@ai-sdk/react@0.0.21':
+    resolution: {integrity: sha512-d2Kaa0+QtsR08mR5sx0tccKohUG3kw6m5P1tFciVInpnxaS3Yqgyumuan0OQkRm1V3Obbr8HTy0HAYV9hSPhig==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ^19
@@ -309,8 +312,8 @@ packages:
       zod:
         optional: true
 
-  '@ai-sdk/solid@0.0.14':
-    resolution: {integrity: sha512-9esGkm7/jocNELfGstrd3TYgWycXLP0OG6LXGGaEXd7v75eEp067avoLgQuPdWmzjnJD2U7N8u4wXa0lLd0WQQ==}
+  '@ai-sdk/solid@0.0.15':
+    resolution: {integrity: sha512-7ox9WmuyOMWFfflLywxZ6SzqrWlnc1hEUqVcuauBlvw3SF/3QcmjbaBqlRFMa3YZyHeu8AQBHKWYCqIV2X1C0w==}
     engines: {node: '>=18'}
     peerDependencies:
       solid-js: ^1.7.7
@@ -318,8 +321,8 @@ packages:
       solid-js:
         optional: true
 
-  '@ai-sdk/svelte@0.0.15':
-    resolution: {integrity: sha512-k4WwNgAddrQhumC6ogjZ/MPEk9kn3xEcD4CLX4CURX7y+641ktDIcZr5KeS+4o9U/jTrjSbYBJVr5HjoWm+Ixg==}
+  '@ai-sdk/svelte@0.0.16':
+    resolution: {integrity: sha512-CVaFlR5iw/N+tSAS2yFUhP7BBql+jP5Sohlg2OY7e8hsktxwnDahMMnn896ohM4sfRun81hZWdYWkwi3v6QNWw==}
     engines: {node: '>=18'}
     peerDependencies:
       svelte: ^3.0.0 || ^4.0.0
@@ -336,8 +339,17 @@ packages:
       zod:
         optional: true
 
-  '@ai-sdk/vue@0.0.15':
-    resolution: {integrity: sha512-e8JBjZWV7MYdGcgiZCNp2qso/HdqJ2hSRD54oEELfiHgVf2y3FLnnRnc4M1MwyvX6WaVYvAd6+pdDgwVjU7h1Q==}
+  '@ai-sdk/ui-utils@0.0.13':
+    resolution: {integrity: sha512-BUPlYgWGns2X0JFNpwywhgcrXwmW+mW3NYIMx9JREAsT6PwE1dtgeykSIZOra/+pLkHqMlZs1HRDXbD7Da6DBg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
+  '@ai-sdk/vue@0.0.16':
+    resolution: {integrity: sha512-Yms/6lUWpVepwaBhLw2BCQuBXv4msKFNYMWIllbFQG2hsNfw5y634ur+LWwjRdiEVZega8CRBRAdMR7Juf+zxA==}
     engines: {node: '>=18'}
     peerDependencies:
       vue: ^3.3.4
@@ -1768,6 +1780,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@next/third-parties@14.2.5':
+    resolution: {integrity: sha512-PDRJm8RZ3rnGNporHKjcdCeZqoW8iJ5uP0clo1Z08TqJiQzuntJ66zrGYCJyqTakx62UJNOp73YsQCFo6kbYYg==}
+    peerDependencies:
+      next: ^13.0.0 || ^14.0.0
+      react: ^18.2.0
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -2760,11 +2778,11 @@ packages:
       typescript:
         optional: true
 
-  '@typebot.io/js@0.3.4':
-    resolution: {integrity: sha512-6d2WLXhY1PaWtjjDZDdI0ieCrWlshr0b+5ju9YyhGTF6OySEbYgxcZW2DpQfcKtvFPFw7NqCXM7JoVNOlROqDg==}
+  '@typebot.io/js@0.3.6':
+    resolution: {integrity: sha512-3ILY4FUkXrAlJCN2mWxOyGyHV5pVRH9OuvLiiO7fnk/XeygWYbM4rJjtS66famHFNuGQ2WPbMEFYBKo1Bkel4g==}
 
-  '@typebot.io/nextjs@0.3.4':
-    resolution: {integrity: sha512-SOku2oASKBXx4iMgMzMCSklUtrwyj+6YzzsLW9Fu360FpWHv+NKoI9DSqH2LWEu9vfTARVLvPBZ6kemqcI5+hg==}
+  '@typebot.io/nextjs@0.3.6':
+    resolution: {integrity: sha512-9gCDqTJZPLVEHw1Dj4dkqOZTn7il3JwI5oXeYRNJAIaIObtiyX+vh52k8SRoSGfJxzxrpEuxjfstUCUz6TW2cA==}
     peerDependencies:
       next: 12.x || 13.x || 14.x
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
@@ -3502,8 +3520,8 @@ packages:
     resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
     engines: {node: '>= 8.0.0'}
 
-  ai@3.2.22:
-    resolution: {integrity: sha512-2u2YT6cf/bTRexUtSiSDco/3/z/xlQ9iiW3y2aH05RwDlj9Q6rpALsTdjRNcglI+OBPaXUEORB/bD1dRwxob6Q==}
+  ai@3.2.23:
+    resolution: {integrity: sha512-2jT2uUrttlwNeVmoNxV5Id99WsdY0TyqNMMEpF8CCBHJPy/ehIJJpt61AU13SpnOOZYJOPrDBdTyb43JzqrDkw==}
     engines: {node: '>=18'}
     peerDependencies:
       openai: ^4.42.0
@@ -5163,8 +5181,8 @@ packages:
       nodemailer:
         optional: true
 
-  next-intl@3.17.0:
-    resolution: {integrity: sha512-D6susJo5V6OzhTwpCDErG77cvtF5TSTzras6o2puczJpNsyHk6hkUZ58xfvWSVkVHaoXVwVr1lRhCqOTxndLNw==}
+  next-intl@3.17.1:
+    resolution: {integrity: sha512-cRstsLyCZ+yS8sGIwM13xW/EqMulUi0z+J4NcCcwAkmB/OETu6d+xEQfvrQ0ZQ+Fj+qwl9df698Lozyx5kAYhw==}
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -6014,8 +6032,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss@3.4.4:
-    resolution: {integrity: sha512-ZoyXOdJjISB7/BcLTR6SEsLgKtDStYyYZVLsUtWChO4Ps20CBad7lfJKVDiejocV4ME1hLmyY0WJE3hSDcmQ2A==}
+  tailwindcss@3.4.5:
+    resolution: {integrity: sha512-DlTxttYcogpDfx3tf/8jfnma1nfAYi2cBUYV2YNoPPecwmO3YGiFlOX9D8tGAu+EDF38ryBzvrDKU/BLMsUwbw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -6061,6 +6079,9 @@ packages:
 
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
+
+  third-party-capital@1.0.20:
+    resolution: {integrity: sha512-oB7yIimd8SuGptespDAZnNkzIz+NWaJCu2RMsbs4Wmp9zSDUM8Nhi3s2OOcqYuv3mN4hitXc8DVx+LyUmbUDiA==}
 
   tiny-invariant@1.3.1:
     resolution: {integrity: sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==}
@@ -6215,8 +6236,8 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
 
-  use-intl@3.17.0:
-    resolution: {integrity: sha512-2X4r3xy6PWD+7U9l/u4lmdwQZ1b7QyhF5A87SdF4UFbLlGH4vSiUdQJ/g3OM+wc78I6aBLT5aFaEPb14dG2TDA==}
+  use-intl@3.17.1:
+    resolution: {integrity: sha512-TxpacwmqjhyAfWnNVJKmQNCRC0/apFhetAD/EByrlakoww+jxGkW7Xh0f0iwr+mSD/V1tMakmyaEbozH+yb0qA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
@@ -6489,27 +6510,27 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@0.0.20(react@18.2.0)(zod@3.23.8)':
+  '@ai-sdk/react@0.0.21(react@18.2.0)(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.2(zod@3.23.8)
-      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.13(zod@3.23.8)
       swr: 2.2.0(react@18.2.0)
     optionalDependencies:
       react: 18.2.0
       zod: 3.23.8
 
-  '@ai-sdk/solid@0.0.14(solid-js@1.7.8)(zod@3.23.8)':
+  '@ai-sdk/solid@0.0.15(solid-js@1.7.8)(zod@3.23.8)':
     dependencies:
-      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.13(zod@3.23.8)
     optionalDependencies:
       solid-js: 1.7.8
     transitivePeerDependencies:
       - zod
 
-  '@ai-sdk/svelte@0.0.15(svelte@4.2.12)(zod@3.23.8)':
+  '@ai-sdk/svelte@0.0.16(svelte@4.2.12)(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.2(zod@3.23.8)
-      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.13(zod@3.23.8)
       sswr: 2.1.0(svelte@4.2.12)
     optionalDependencies:
       svelte: 4.2.12
@@ -6523,10 +6544,17 @@ snapshots:
     optionalDependencies:
       zod: 3.23.8
 
-  '@ai-sdk/vue@0.0.15(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)':
+  '@ai-sdk/ui-utils@0.0.13(zod@3.23.8)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.2(zod@3.23.8)
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.23.8
+
+  '@ai-sdk/vue@0.0.16(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 0.0.14(zod@3.23.8)
-      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.13(zod@3.23.8)
       swrv: 1.0.4(vue@3.4.21(typescript@5.3.3))
     optionalDependencies:
       vue: 3.4.21(typescript@5.3.3)
@@ -8205,9 +8233,9 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@kamona/tailwindcss-perspective@0.1.1(tailwindcss@3.4.4)':
+  '@kamona/tailwindcss-perspective@0.1.1(tailwindcss@3.4.5)':
     dependencies:
-      tailwindcss: 3.4.4
+      tailwindcss: 3.4.5
 
   '@neondatabase/serverless@0.9.4':
     dependencies:
@@ -8274,6 +8302,12 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@14.2.5':
     optional: true
+
+  '@next/third-parties@14.2.5(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      next: 14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      third-party-capital: 1.0.20
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -9410,8 +9444,9 @@ snapshots:
     optionalDependencies:
       typescript: 5.3.3
 
-  '@typebot.io/js@0.3.4(@internationalized/date@3.5.4)(@types/react@18.2.61)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(scheduler@0.23.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.106.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.103.0))(slate@0.103.0)':
+  '@typebot.io/js@0.3.6(@internationalized/date@3.5.4)(@types/react@18.2.61)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(scheduler@0.23.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.106.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.103.0))(slate@0.103.0)(zod@3.23.8)':
     dependencies:
+      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
       '@ark-ui/solid': 3.3.0(@internationalized/date@3.5.4)(solid-js@1.7.8)
       '@stripe/stripe-js': 1.54.1
       '@udecode/plate-common': 30.4.5(@types/react@18.2.61)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(scheduler@0.23.0)(slate-history@0.100.0(slate@0.103.0))(slate-hyperscript@0.100.0(slate@0.103.0))(slate-react@0.106.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.103.0))(slate@0.103.0)
@@ -9432,8 +9467,9 @@ snapshots:
       - slate-history
       - slate-hyperscript
       - slate-react
+      - zod
 
-  '@typebot.io/nextjs@0.3.4(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)':
+  '@typebot.io/nextjs@0.3.6(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)':
     dependencies:
       next: 14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -10834,15 +10870,15 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@3.2.22(openai@4.52.7)(react@18.2.0)(solid-js@1.7.8)(svelte@4.2.12)(vue@3.4.21(typescript@5.3.3))(zod@3.23.8):
+  ai@3.2.23(openai@4.52.7)(react@18.2.0)(solid-js@1.7.8)(svelte@4.2.12)(vue@3.4.21(typescript@5.3.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.12
       '@ai-sdk/provider-utils': 1.0.2(zod@3.23.8)
-      '@ai-sdk/react': 0.0.20(react@18.2.0)(zod@3.23.8)
-      '@ai-sdk/solid': 0.0.14(solid-js@1.7.8)(zod@3.23.8)
-      '@ai-sdk/svelte': 0.0.15(svelte@4.2.12)(zod@3.23.8)
-      '@ai-sdk/ui-utils': 0.0.12(zod@3.23.8)
-      '@ai-sdk/vue': 0.0.15(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)
+      '@ai-sdk/react': 0.0.21(react@18.2.0)(zod@3.23.8)
+      '@ai-sdk/solid': 0.0.15(solid-js@1.7.8)(zod@3.23.8)
+      '@ai-sdk/svelte': 0.0.16(svelte@4.2.12)(zod@3.23.8)
+      '@ai-sdk/ui-utils': 0.0.13(zod@3.23.8)
+      '@ai-sdk/vue': 0.0.16(vue@3.4.21(typescript@5.3.3))(zod@3.23.8)
       '@opentelemetry/api': 1.9.0
       eventsource-parser: 1.1.2
       json-schema: 0.4.0
@@ -11626,7 +11662,7 @@ snapshots:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.33.2(eslint@8.57.0)
@@ -11656,12 +11692,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
@@ -11673,14 +11709,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11701,7 +11737,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.1
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -12593,13 +12629,13 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       uuid: 8.3.2
 
-  next-intl@3.17.0(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
+  next-intl@3.17.1(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
     dependencies:
       '@formatjs/intl-localematcher': 0.2.32
       negotiator: 0.6.3
       next: 14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
-      use-intl: 3.17.0(react@18.2.0)
+      use-intl: 3.17.1(react@18.2.0)
 
   next-pwa@5.6.0(@babel/core@7.24.4)(esbuild@0.19.12)(next@14.2.5(@babel/core@7.24.4)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(webpack@5.91.0(esbuild@0.19.12)):
     dependencies:
@@ -13489,11 +13525,11 @@ snapshots:
 
   tailwind-merge@2.4.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.4):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.5):
     dependencies:
-      tailwindcss: 3.4.4
+      tailwindcss: 3.4.5
 
-  tailwindcss@3.4.4:
+  tailwindcss@3.4.5:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -13558,6 +13594,8 @@ snapshots:
   thenify@3.3.1:
     dependencies:
       any-promise: 1.3.0
+
+  third-party-capital@1.0.20: {}
 
   tiny-invariant@1.3.1: {}
 
@@ -13702,7 +13740,7 @@ snapshots:
       dequal: 2.0.3
       react: 18.2.0
 
-  use-intl@3.17.0(react@18.2.0):
+  use-intl@3.17.1(react@18.2.0):
     dependencies:
       '@formatjs/fast-memoize': 2.2.0
       intl-messageformat: 10.5.14

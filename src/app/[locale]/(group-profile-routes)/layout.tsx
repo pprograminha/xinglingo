@@ -1,10 +1,5 @@
-import type { Metadata } from 'next'
-import { SideBar } from './profile/components/sidebar'
 import { Bubble } from '@/components/bubble'
-
-export const metadata: Metadata = {
-  title: 'Xinglingo',
-}
+import { SideBar } from './profile/components/sidebar'
 
 export default function RootLayout({
   children,

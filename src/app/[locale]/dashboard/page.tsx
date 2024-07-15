@@ -11,11 +11,15 @@ import { Bubble } from '@/components/bubble'
 import { getModels } from '@/actions/models/get-models'
 import { getProducts } from '@/actions/stripe/get-products'
 
-export const metadata: Metadata = {
-  title: 'Xinglingo | Dashboard',
-  description: 'Xinglingo dashboard',
-}
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations()
 
+  const metadata: Metadata = {
+    title: t('Dashboard'),
+  }
+
+  return metadata
+}
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
