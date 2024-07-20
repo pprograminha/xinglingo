@@ -318,5 +318,10 @@
     "AI-powered response correction": "correzione delle risposte alimentata dall'IA",
     "personalized learning experience": "esperienza di apprendimento personalizzata",
     "simplified language study": "studio semplificato della lingua",
-    "accelerated learning": "apprendimento accelerato"
+    "accelerated learning": "apprendimento accelerato",
+    "Section {count}, Unit {unitCount}": "Sezione {count}, Unità {unitCount}",
+    "Start": "Inizia",
+    "You are learning {lang}": "Stai imparando {lang}",
+    "Do you want to learn another language? Click here": "Vuoi imparare un'altra lingua? Clicca qui",
+    "Your progress": "Il tuo progresso"
 }

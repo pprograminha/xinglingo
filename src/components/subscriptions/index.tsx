@@ -31,6 +31,7 @@ import {
 import { Subscription } from './subscription'
 import { SubscriptionList } from './subscription-list'
 import { SubscriptionListSkeleton } from './subscription-list-skeleton'
+import { sendGAEvent } from '@next/third-parties/google'
 
 type Benefit = {
   color: string
@@ -190,6 +191,10 @@ export const Subscriptions = ({
         ),
       })
     }
+
+    sendGAEvent({
+      event: 'begin_checkout',
+    })
 
     const stripe = await getStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 

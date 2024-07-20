@@ -1,15 +1,14 @@
 import { Metadata } from 'next'
 
 import { getWordsList } from '@/actions/conversations/get-words-list'
-import { getAuth } from '@/lib/auth/get-auth'
-import { getTranslations } from 'next-intl/server'
-import { Goal } from './components/goal'
-import { Sakura } from './components/sakura'
-import { Welcome } from './components/welcome'
-import { Petutors } from './components/petutors'
-import { Bubble } from '@/components/bubble'
 import { getModels } from '@/actions/models/get-models'
 import { getProducts } from '@/actions/stripe/get-products'
+import { Bubble } from '@/components/bubble'
+import { getAuth } from '@/lib/auth/get-auth'
+import { getTranslations } from 'next-intl/server'
+import { Petutors } from './components/petutors'
+import { Sakura } from './components/sakura'
+import { Welcome } from './components/welcome'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations()
@@ -46,9 +45,9 @@ export default async function DashboardPage() {
             />
             <Sakura t={t} user={user} products={products} />
           </div>
-
-          <div className="grid gap-4 grid-cols-4 lg:grid-cols-3">
-            <Goal t={t} wordsListData={wordsListData} />
+          {/* grid gap-4 grid-cols-4 lg:grid-cols-3 */}
+          <div className="">
+            {/* <Goal t={t} wordsListData={wordsListData} /> */}
             <Petutors
               t={t}
               user={user}

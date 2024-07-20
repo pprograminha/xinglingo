@@ -51,7 +51,8 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
     },
   }
   return (
-    <Card className="bg-gradient-to-tr col-span-4 md:col-span-2  dark:from-zinc-920 dark:to-zinc-900">
+    // col-span-4 md:col-span-2
+    <Card className="bg-gradient-to-tr w-full  dark:from-zinc-920 dark:to-zinc-900">
       <div className="h-full md:bg-none bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl relative">
         <CardHeader className="mb-2">
           <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>

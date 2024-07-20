@@ -318,5 +318,10 @@
   "AI-powered response correction": "AI-powered response correction",
   "personalized learning experience": "personalized learning experience",
   "simplified language study": "simplified language study",
-  "accelerated learning": "accelerated learning"
+  "accelerated learning": "accelerated learning",
+  "Section {count}, Unit {unitCount}": "Section {count}, Unit {unitCount}",
+  "Start": "Start",
+  "You are learning {lang}": "You are learning {lang}",
+  "Do you want to learn another language? Click here": "Do you want to learn another language? <link>Click here</link>",
+  "Your progress": "Your progress"
 }

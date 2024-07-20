@@ -11,12 +11,19 @@ import { useAuth } from '@/hooks/use-auth'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { cn } from '@/lib/utils'
 import { Link, usePathname } from '@/navigation'
-import { LanguagesIcon, LayoutDashboardIcon, WalletIcon } from 'lucide-react'
+import {
+  LanguagesIcon,
+  LayoutDashboardIcon,
+  UserIcon,
+  WalletIcon,
+} from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { HtmlHTMLAttributes, useEffect, useState } from 'react'
 
-type SideBarProps = HtmlHTMLAttributes<HTMLUListElement>
+type SideBarProps = HtmlHTMLAttributes<HTMLUListElement> & {
+  noModels?: boolean
+}
 
 type List = {
   hasAccess: boolean
@@ -27,7 +34,7 @@ type List = {
   className?: string
 }
 
-export const SideBar = ({ className, ...props }: SideBarProps) => {
+export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
   const pathname = usePathname()
   const t = useTranslations()
   const { user } = useAuth()
@@ -38,8 +45,15 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
   const items: List[] = [
     {
       hasAccess: true,
-      href: '/profile',
+      href: '/dashboard',
       icon: <LayoutDashboardIcon />,
+      label: t('Dashboard'),
+      className: undefined,
+    },
+    {
+      hasAccess: true,
+      href: '/profile',
+      icon: <UserIcon />,
       label: t('Profile'),
       className: undefined,
     },
@@ -73,8 +87,9 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
   ]
 
   useEffect(() => {
-    getModels(user).then((response) => setHistories(response.histories))
-  }, [user])
+    if (!noModels)
+      getModels(user).then((response) => setHistories(response.histories))
+  }, [user, noModels])
 
   return (
     <ul

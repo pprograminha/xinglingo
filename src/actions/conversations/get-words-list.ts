@@ -146,7 +146,6 @@ export const getWordsList = async (props?: GetWordsProps) => {
             where: (conversations, { eq }) =>
               eq(conversations.recipientId, user.id),
             columns: {
-              text: true,
               createdAt: true,
             },
             orderBy: [desc(conversations.createdAt)],
@@ -181,22 +180,33 @@ export const getWordsList = async (props?: GetWordsProps) => {
           | (typeof conversationsCreatedAt)[number]
           | null = null
 
-        for (const createdAt of conversationsCreatedAt) {
-          if (!oldConversationsCreatedAt) {
-            oldConversationsCreatedAt = createdAt
-            continue
+        if (
+          conversationsCreatedAt[0] &&
+          differenceInDays(
+            startOfDay(currentDate),
+            conversationsCreatedAt[0],
+          ) <= 1
+        ) {
+          for (const createdAt of conversationsCreatedAt) {
+            if (!oldConversationsCreatedAt) {
+              oldConversationsCreatedAt = createdAt
+              continue
+            }
+            const diff = differenceInDays(oldConversationsCreatedAt, createdAt)
+
+            if (diff > 1) break
+
+            offensive += 1
           }
-          const diff = differenceInDays(oldConversationsCreatedAt, createdAt)
-
-          if (diff > 1) break
-
-          offensive += 1
         }
       }
 
       const emblems = Math.floor(wordsData.length / wordsPerYear)
 
       const wordsToLearn = wordsPerYear * (emblems + 1)
+      const progress = Number(
+        ((wordsSameDate('green').length / wordsToLearn) * 100 || 0).toFixed(2),
+      )
 
       const response = {
         words: wordsData,
@@ -221,6 +231,7 @@ export const getWordsList = async (props?: GetWordsProps) => {
         },
         count: {
           offensive,
+          progress,
           emblems,
           wordsToLearn,
           wordsRemaining,

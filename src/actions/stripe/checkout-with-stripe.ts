@@ -48,7 +48,6 @@ export async function checkoutWithStripe(
     }
 
     const locale = (cookies().get('NEXT_LOCALE')?.value || 'en') as Locale
-    console.log(couponCode)
 
     let promotionCode = await db.query.promotionCodes.findFirst({
       where: (tablePromotionCodes, { eq }) =>
