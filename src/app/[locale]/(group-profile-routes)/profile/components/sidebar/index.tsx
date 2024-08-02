@@ -76,7 +76,7 @@ export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
 
     ...histories.map((h) => ({
       hasAccess: Boolean(retrieveActiveSubscription(user)),
-      href: `/models/${h.slug}`,
+      href: `/board/${h.id}`,
       icon: undefined,
       img: `/assets/imgs/${h.image}`,
       className: 'dark:aria-disabled:!border-red-500',

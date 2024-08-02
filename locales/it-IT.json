@@ -322,6 +322,6 @@
     "Section {count}, Unit {unitCount}": "Sezione {count}, Unità {unitCount}",
     "Start": "Inizia",
     "You are learning {lang}": "Stai imparando {lang}",
-    "Do you want to learn another language? Click here": "Vuoi imparare un'altra lingua? Clicca qui",
+    "Do you want to learn another language? Click here": "Vuoi imparare un'altra lingua? <link>Clicca qui</link>",
     "Your progress": "Il tuo progresso"
 }

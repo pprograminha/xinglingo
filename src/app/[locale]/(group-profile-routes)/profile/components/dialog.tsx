@@ -160,7 +160,7 @@ export function CommmandItemComponent({
                   asChild
                 >
                   <Link
-                    href={`/models/${model.slug}/channels/${'channel.id'}/?word=${word.word}`}
+                    href={`/board/${model.id}/channels/${'channel.id'}/?word=${word.word}`}
                   >
                     {t('Learn word')}
                     <ChevronRightIcon className="w-4" />
@@ -223,7 +223,7 @@ export function CommmandItemComponent({
                   asChild
                 >
                   <Link
-                    href={`/models/${model.slug}/channels/${'channel.id'}/?word=${word.word}`}
+                    href={`/board/${model.id}/channels/${'channel.id'}/?word=${word.word}`}
                   >
                     {t('Learn word')}
                     <ChevronRightIcon className="w-4" />

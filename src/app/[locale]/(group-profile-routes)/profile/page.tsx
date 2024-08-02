@@ -25,7 +25,7 @@ import { scoreColor } from '@/lib/score-color'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { Link } from '@/navigation'
 import { formatDistance, isBefore } from 'date-fns'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronRightIcon } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { YourPerformance } from '../../dashboard/components/welcome/your-performance'
@@ -79,12 +79,12 @@ const UserProfile = async () => {
               variant="secondary"
               className="absolute top-4 left-4 border border-zinc-700"
             >
-              <Link href="/dashboard">
+              {/* <Link href="/dashboard">
                 <ChevronLeftIcon className="w-4 " />
                 <span className="hidden ml-2 sm:inline-block">
                   {t('Return to dashboard')}
                 </span>
-              </Link>
+              </Link> */}
             </Button>
             <Image
               alt="Dog"
@@ -383,12 +383,12 @@ const UserProfile = async () => {
                 <h2 className={`${pixelatedFont()} text-xl`}>
                   {t('Pronounce any word and it will appear here')}
                 </h2>
-                {modelsData.histories[0] && modelsData.histories[0].slug && (
+                {modelsData.histories[0] && modelsData.histories[0].id && (
                   <Button
                     className="mt-2 inline-flex items-center gap-2"
                     asChild
                   >
-                    <Link href={`/models/${modelsData.histories[0].slug}`}>
+                    <Link href={`/board/${modelsData.histories[0].id}`}>
                       {t('Pronounce')} <ChevronRightIcon className="w-4" />
                     </Link>
                   </Button>

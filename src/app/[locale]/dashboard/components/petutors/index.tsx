@@ -76,7 +76,7 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
                     userId: user.id,
                   })
 
-                  redirect(`/models/${model.slug}`)
+                  redirect(`/board/${model.id}`)
                 }
               }}
               data-recommended={
@@ -120,7 +120,7 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
                     ))}
                   </div>
                   <Image
-                    src={`/assets/imgs/${model.image}`}
+                    src={model.imageUrl}
                     className="group-data-[recommended=true]:group-hover:animate-float mx-auto max-w-[200px] h-[130px] md:max-w-[300px] md:h-[200px] "
                     width={300}
                     height={200}

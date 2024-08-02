@@ -22,5 +22,10 @@ export const useAuth = () => {
     }
   }, [sessionUser?.more])
 
-  return { user, isAuthenticated: status === 'authenticated', uid }
+  const CAN_ADD_AND_UPDATE =
+    user?.role === 'admin' || user?.role === 'superadmin'
+  const permissions = {
+    CAN_ADD_AND_UPDATE,
+  }
+  return { user, permissions, isAuthenticated: status === 'authenticated', uid }
 }

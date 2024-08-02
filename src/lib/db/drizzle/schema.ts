@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm'
 import {
+  AnyPgColumn,
   bigint,
   boolean,
   doublePrecision,
@@ -36,6 +37,19 @@ export const customers = pgTable('customers', {
       onDelete: 'cascade',
     }),
   stripeCustomerId: text('stripeCustomerId'),
+})
+
+export const texts = pgTable('texts', {
+  id: uuid('id').primaryKey(),
+
+  text: text('text').notNull(),
+  parentTextId: uuid('parentId').references((): AnyPgColumn => texts.id, {
+    onDelete: 'cascade',
+  }),
+  locale: text('locale').notNull(),
+
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
 // Products Table
@@ -216,9 +230,155 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
 
 export const models = pgTable('models', {
   id: text('id').primaryKey(),
-  name: text('name'),
-  slug: text('slug'),
-  image: text('image'),
+  name: text('name').notNull(),
+  slug: text('slug').notNull(),
+  image: text('image').notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const units = pgTable('units', {
+  id: text('id').primaryKey(),
+  modelId: text('modelId')
+    .references(() => models.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  title: uuid('title')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  prompt: uuid('prompt')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  slug: uuid('slug')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  description: uuid('description').references(() => texts.id, {
+    onDelete: 'cascade',
+  }),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const userUnits = pgTable('userUnits', {
+  id: text('id').primaryKey(),
+  unitId: text('unitId')
+    .references(() => units.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  userId: uuid('userId')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  completed: boolean('completed').notNull(),
+  current: boolean('current').notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const sectionsVariantEnum = pgEnum('variant', ['default', 'book'])
+export const sections = pgTable('sections', {
+  id: text('id').primaryKey(),
+  unitId: text('unitId')
+    .references(() => units.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  title: uuid('title')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  prompt: uuid('prompt')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  slug: uuid('slug').references(() => texts.id, {
+    onDelete: 'cascade',
+  }),
+  description: uuid('description').references(() => texts.id, {
+    onDelete: 'cascade',
+  }),
+  variant: sectionsVariantEnum('variant').notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const userSections = pgTable('userSections', {
+  id: text('id').primaryKey(),
+  userUnitId: text('userUnitId')
+    .references(() => userUnits.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  userId: uuid('userId')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  sectionId: text('sectionId')
+    .references(() => sections.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  completed: boolean('completed').notNull(),
+  current: boolean('current').notNull(),
+
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+export const lessons = pgTable('lessons', {
+  id: text('id').primaryKey(),
+  title: uuid('title')
+    .references(() => texts.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  prompt: uuid('prompt').references(() => texts.id, {
+    onDelete: 'cascade',
+  }),
+  description: uuid('description').references(() => texts.id, {
+    onDelete: 'cascade',
+  }),
+
+  sectionId: text('sectionId')
+    .references(() => sections.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
+export const userLessons = pgTable('userLessons', {
+  id: text('id').primaryKey(),
+  lessonId: text('lessonId')
+    .references(() => lessons.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  userId: uuid('userId')
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  userSectionId: text('userSectionId')
+    .references(() => userSections.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  completed: boolean('completed'),
+  current: boolean('current'),
+
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -300,6 +460,101 @@ export const phonemes = pgTable('phonemes', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
+export const unitsRelations = relations(units, ({ one, many }) => ({
+  model: one(models, {
+    fields: [units.modelId],
+    references: [models.id],
+  }),
+  promptText: one(texts, {
+    fields: [units.prompt],
+    references: [texts.id],
+  }),
+  titleText: one(texts, {
+    fields: [units.title],
+    references: [texts.id],
+  }),
+  descriptionText: one(texts, {
+    fields: [units.description],
+    references: [texts.id],
+  }),
+  slugText: one(texts, {
+    fields: [units.slug],
+    references: [texts.id],
+  }),
+  userUnits: many(userUnits),
+  sections: many(sections),
+}))
+
+export const textsRelations = relations(texts, ({ one, many }) => ({
+  parentText: one(texts, {
+    fields: [texts.parentTextId],
+    references: [texts.id],
+  }),
+  units: many(units),
+}))
+
+export const userUnitsRelations = relations(userUnits, ({ one, many }) => ({
+  unit: one(units, {
+    fields: [userUnits.unitId],
+    references: [units.id],
+  }),
+  user: one(users, {
+    fields: [userUnits.userId],
+    references: [users.id],
+  }),
+  sections: many(userSections),
+}))
+
+export const sectionsRelations = relations(sections, ({ one, many }) => ({
+  unit: one(units, {
+    fields: [sections.unitId],
+    references: [units.id],
+  }),
+  userSections: many(userSections),
+  lessons: many(lessons),
+}))
+
+export const userSectionsRelations = relations(
+  userSections,
+  ({ one, many }) => ({
+    section: one(sections, {
+      fields: [userSections.sectionId],
+      references: [sections.id],
+    }),
+    user: one(users, {
+      fields: [userSections.userId],
+      references: [users.id],
+    }),
+    userUnit: one(userUnits, {
+      fields: [userSections.userUnitId],
+      references: [userUnits.id],
+    }),
+    lessons: many(userLessons),
+  }),
+)
+export const lessonsRelations = relations(lessons, ({ one, many }) => ({
+  section: one(sections, {
+    fields: [lessons.sectionId],
+    references: [sections.id],
+  }),
+  userLessons: many(userLessons),
+}))
+
+export const userLessonsRelations = relations(userLessons, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [userLessons.lessonId],
+    references: [lessons.id],
+  }),
+  user: one(users, {
+    fields: [userLessons.userId],
+    references: [users.id],
+  }),
+  userSection: one(userSections, {
+    fields: [userLessons.userSectionId],
+    references: [userSections.id],
+  }),
+}))
+
 export const historiesRelations = relations(histories, ({ one }) => ({
   user: one(users, {
     fields: [histories.userId],
@@ -313,6 +568,7 @@ export const historiesRelations = relations(histories, ({ one }) => ({
 
 export const modelsRelations = relations(models, ({ many }) => ({
   histories: many(histories),
+  units: many(units),
 }))
 
 export const speechsToConversationsRelations = relations(
@@ -348,6 +604,9 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   profile: one(usersProfile),
   customer: one(customers),
   histories: many(histories),
+  lessons: many(userLessons),
+  sections: many(userSections),
+  units: many(userUnits),
   pronunciationsAssessment: many(pronunciationsAssessment),
   subscriptions: many(subscriptions),
 }))

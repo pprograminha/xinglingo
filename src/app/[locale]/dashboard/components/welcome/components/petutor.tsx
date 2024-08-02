@@ -39,7 +39,7 @@ export const Petutor = ({
             modelId: history.id,
           })
 
-          redirect(`/models/${history.slug}`)
+          redirect(`/board/${history.id}`)
         }
       }}
       style={{
@@ -55,7 +55,7 @@ export const Petutor = ({
         type="submit"
       >
         <Image
-          src={`/assets/imgs/${history.image}`}
+          src={history.imageUrl}
           width={180}
           className="m-auto md:w-[180px] md:h-[120px] w-[100px] h-[70px]"
           height={150}

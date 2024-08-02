@@ -4,14 +4,17 @@ import {
   coupons,
   customers,
   histories,
+  lessons,
   models,
   phonemes,
   prices,
   products,
   promotionCodes,
   pronunciationsAssessment,
+  sections,
   speechs,
   subscriptions,
+  units,
   users,
   usersAvailability,
   usersProfile,
@@ -37,6 +40,9 @@ export type PronunciationAssessment = InferSelectModel<
   typeof pronunciationsAssessment
 >
 export type Word = InferSelectModel<typeof words>
+export type Unit = InferSelectModel<typeof units>
+export type Section = InferSelectModel<typeof sections>
+export type Lesson = InferSelectModel<typeof lessons>
 export type Phoneme = InferSelectModel<typeof phonemes>
 export type Subscription = InferSelectModel<typeof subscriptions>
 export type Customer = InferSelectModel<typeof customers>

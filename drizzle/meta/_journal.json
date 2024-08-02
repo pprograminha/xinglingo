@@ -246,6 +246,83 @@
       "when": 1720809982681,
       "tag": "0034_flaky_lenny_balinger",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1721933620888,
+      "tag": "0035_square_power_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1721942140946,
+      "tag": "0036_dark_oracle",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1722547712147,
+      "tag": "0037_military_pepper_potts",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1722548629934,
+      "tag": "0038_uneven_texas_twister",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1722549507918,
+      "tag": "0039_legal_namor",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1722550059402,
+      "tag": "0040_slim_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1722550127230,
+      "tag": "0041_cute_nightshade",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1722550326429,
+      "tag": "0042_chilly_giant_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1722550408974,
+      "tag": "0043_dusty_vance_astro",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1722550649999,
+      "tag": "0044_daffy_luminals",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1722551331999,
+      "tag": "0045_dry_doctor_doom",
+      "breakpoints": true
     }
   ]
 }

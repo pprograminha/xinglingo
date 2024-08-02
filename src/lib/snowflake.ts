@@ -17,7 +17,7 @@ const CONFIG = {
   SEQUENCE_BITS: 12,
 }
 
-const SnowflakeId = ({
+export const SnowflakeId = ({
   workerId = DEFAULTS.WORKER_ID,
   epoch = DEFAULTS.EPOCH,
 } = {}) => {
@@ -75,3 +75,5 @@ const SnowflakeId = ({
 }
 
 export const snowflakeId = () => SnowflakeId().generate()
+// console.log(new Date().toISOString())
+// console.log(snowflakeId())

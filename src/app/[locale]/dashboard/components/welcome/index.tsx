@@ -111,7 +111,7 @@ export const Welcome = ({
                             userId: user.id,
                             modelId: modelsData.histories[0].id,
                           })
-                          redirect(`/models/${modelsData.histories[0].slug}`)
+                          redirect(`/board/${modelsData.histories[0].id}`)
                         }
                       }}
                     >

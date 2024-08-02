@@ -321,7 +321,7 @@
     "accelerated learning": "aprendizaje acelerado",
     "Start": "Comienzo",
     "You are learning {lang}": "Estás aprendiendo {lang}",
-    "Do you want to learn another language? Click here": "¿Quieres aprender otro idioma? Haz clic aquí",
+    "Do you want to learn another language? Click here": "¿Quieres aprender otro idioma? Haz <link>clic aquí</link>",
     "Your progress": "Tu progreso",
     "Section {count}, Unit {unitCount}": "Sección {count}, Unidad {unitCount}"
 }

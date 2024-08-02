@@ -2,7 +2,7 @@
 
 import { openai } from '@/lib/ai/openai'
 import { withAuth } from '@/lib/auth/get-auth'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 
 const phrases: string[] = []
 

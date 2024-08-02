@@ -35,7 +35,7 @@ export default function Auth() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/dashboard')
+      router.push('/board')
     }
   }, [status, router])
 

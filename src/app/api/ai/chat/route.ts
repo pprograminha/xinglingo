@@ -5,6 +5,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai'
 export const runtime = 'edge'
 
 export async function POST(req: Request) {
+  // await withSubscription()
   const { messages } = await req.json()
 
   const response = await openai.chat.completions.create({

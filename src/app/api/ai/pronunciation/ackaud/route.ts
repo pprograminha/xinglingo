@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as Ably from 'ably/promises'
+import { getConversation } from '@/actions/conversations/get-conversation'
+import { RecognitionResult } from '@/app/[locale]/components/pronunciation-assessment/pronunciation-assesment-dash'
+import { env } from '@/env'
+import { getAuth } from '@/lib/auth/get-auth'
 import { db } from '@/lib/db/drizzle/query'
 import {
   phonemes,
   pronunciationsAssessment,
   words,
 } from '@/lib/db/drizzle/schema'
-import { eq } from 'drizzle-orm'
-import crypto from 'node:crypto'
-import { z } from 'zod'
-import { env } from '@/env'
 import {
   Conversation,
   Phoneme,
   PronunciationAssessment,
   Word,
 } from '@/lib/db/drizzle/types'
-import { getConversation } from '@/actions/conversations/get-conversation'
-import { getAuth } from '@/lib/auth/get-auth'
-import { RecognitionResult } from '@/app/[locale]/components/pronunciation-assessment/pronunciation-assesment-dash'
+import * as Ably from 'ably/promises'
+import { eq } from 'drizzle-orm'
+import crypto from 'node:crypto'
+import { z } from 'zod'
 
 type Conversations = (Conversation & {
   pronunciationAssessment:
@@ -31,6 +31,7 @@ type Conversations = (Conversation & {
 })[]
 
 export async function POST(req: Request) {
+  // await withSubscription()
   const formData = await req.formData()
   const { user } = await getAuth()
 
