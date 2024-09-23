@@ -1,16 +1,37 @@
-type LessonProps = {
+import { getSection } from '@/actions/units/get-section'
+import { type Metadata } from 'next'
+import { Section } from './components/section'
+import { AI } from '@/lib/chat/actions'
+import { Chat } from '../../../../../components/chat/chat'
+
+type SectionPageProps = {
   params: {
     'model-id': string
     'section-id': string
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function Lesson({ params }: LessonProps) {
+
+export async function generateMetadata({
+  params,
+}: SectionPageProps): Promise<Metadata> {
+  const section = await getSection({
+    sectionId: params['section-id'],
+  })
+
+  return section
+    ? {
+        title: section.title.root.data.text,
+      }
+    : {}
+}
+
+export default function SectionPage({ params }: SectionPageProps) {
   return (
-    <div className="p-4 md:p-8 min-h-full h-full">
-      <section className="bg-[url('/assets/svgs/radiant-gradient.svg')] bg-cover w-full h-full overflow-y-auto px-4 pb-4 pt-4 md:pt-16 bg-zinc-900 border border-zinc-800 rounded-xl items-center justify-center md:mb-0 mb-20">
-        <div className="md:container !max-w-[1000px]">sasa</div>
-      </section>
-    </div>
+    <>
+      {/* <Section params={params} /> */}
+      <AI initialAIState={{ messages: [], chatId: 'currentLesson.id' }}>
+        <Chat initialMessages={[]} />
+      </AI>
+    </>
   )
 }

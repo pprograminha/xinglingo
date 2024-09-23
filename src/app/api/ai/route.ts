@@ -72,7 +72,6 @@ export async function POST(req: Request) {
         typeof ChatPromptTemplate.fromMessages
       >[0]),
     ]
-    console.log(prompt)
 
     const prefix = ChatPromptTemplate.fromMessages(chatPromptTeplateMessages)
 

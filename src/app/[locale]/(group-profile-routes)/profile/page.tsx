@@ -8,7 +8,6 @@ import { Command, CommandList } from '@/components/ui/command'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { env } from '@/env'
@@ -228,34 +227,32 @@ const UserProfile = async () => {
                         >
                           {langs(t, user.profile.localeToLearn as Locale)}
                         </h1>
-                        <TooltipProvider>
-                          <Tooltip delayDuration={0}>
-                            <TooltipTrigger>
-                              <div className="mt-2 text-xs  whitespace-nowrap">
-                                <span className="text-zinc-400">
-                                  {wordsToLearn}
-                                </span>{' '}
-                                /{' '}
-                                <span className="text-zinc-400">
-                                  {green.words.length}
-                                </span>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                {t.rich(
-                                  'Your goal is to learn {words} words, {wordsRemaining} words remaining',
-                                  {
-                                    words: wordsToLearn,
-                                    wordsRemaining,
-                                    questionHelp: () => null,
-                                  },
-                                )}
-                                <br />
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger>
+                            <div className="mt-2 text-xs  whitespace-nowrap">
+                              <span className="text-zinc-400">
+                                {wordsToLearn}
+                              </span>{' '}
+                              /{' '}
+                              <span className="text-zinc-400">
+                                {green.words.length}
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              {t.rich(
+                                'Your goal is to learn {words} words, {wordsRemaining} words remaining',
+                                {
+                                  words: wordsToLearn,
+                                  wordsRemaining,
+                                  questionHelp: () => null,
+                                },
+                              )}
+                              <br />
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </div>
                     <div>

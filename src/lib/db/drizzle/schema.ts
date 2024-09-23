@@ -186,24 +186,21 @@ export const usersAvailability = pgTable('usersAvailability', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
-export const conversationRoleEnum = pgEnum('role', [
-  'assistant',
-  'tool',
-  'user',
-])
-
 export const conversations = pgTable('conversations', {
   id: uuid('id').primaryKey(),
   text: text('text').notNull(),
   authorId: uuid('authorId').references(() => users.id, {
     onDelete: 'cascade',
   }),
+  lessonId: text('lessonId').references(() => lessons.id, {
+    onDelete: 'set null',
+  }),
   recipientId: uuid('recipientId')
     .references(() => users.id, {
       onDelete: 'cascade',
     })
     .notNull(),
-  role: conversationRoleEnum('role').default('user').notNull(),
+  role: text('role').default('user').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -537,6 +534,7 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     fields: [lessons.sectionId],
     references: [sections.id],
   }),
+  conversations: many(conversations),
   userLessons: many(userLessons),
 }))
 
@@ -646,6 +644,10 @@ export const conversationsRelations = relations(
     author: one(users, {
       fields: [conversations.authorId],
       references: [users.id],
+    }),
+    lesson: one(lessons, {
+      fields: [conversations.lessonId],
+      references: [lessons.id],
     }),
     recipient: one(users, {
       fields: [conversations.recipientId],

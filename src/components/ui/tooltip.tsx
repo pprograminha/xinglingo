@@ -41,18 +41,20 @@ const Tooltip: React.FC<TooltipPrimitive.TooltipProps> = ({
   const isMd = useBreakpoint('md')
 
   return (
-    <TooltipPrimitive.Root
-      delayDuration={isMd ? props.delayDuration : 0}
-      onOpenChange={(e) => {
-        setOpen(e)
-      }}
-      open={open}
-      {...props}
-    >
-      <TooltipTriggerContext.Provider value={{ open, setOpen }}>
-        {children}
-      </TooltipTriggerContext.Provider>
-    </TooltipPrimitive.Root>
+    <TooltipProvider>
+      <TooltipPrimitive.Root
+        delayDuration={isMd ? props.delayDuration : 0}
+        onOpenChange={(e) => {
+          setOpen(e)
+        }}
+        open={open}
+        {...props}
+      >
+        <TooltipTriggerContext.Provider value={{ open, setOpen }}>
+          {children}
+        </TooltipTriggerContext.Provider>
+      </TooltipPrimitive.Root>
+    </TooltipProvider>
   )
 }
 // eslint-disable-next-line react/display-name

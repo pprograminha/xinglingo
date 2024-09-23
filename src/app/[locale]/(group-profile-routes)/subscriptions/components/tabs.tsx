@@ -6,15 +6,11 @@ import {
   Tabs as TabsPrimitive,
   TabsTrigger,
 } from '@/components/ui/tabs'
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
 import { User } from '@/lib/db/drizzle/types'
 import { retrieveSubscription } from '@/lib/subscription'
-import { MyPlans } from './my-plans'
 import { useTranslations } from 'next-intl'
+import { MyPlans } from './my-plans'
 type TabsProps = {
   user?: User | null
 }
@@ -37,13 +33,11 @@ export const Tabs = ({ user }: TabsProps) => {
           className="flex-1"
           value="my-plans"
         >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="w-full h-full">
-                {t('My plans')}
-              </TooltipTrigger>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="w-full h-full">
+              {t('My plans')}
+            </TooltipTrigger>
+          </Tooltip>
         </TabsTrigger>
       </TabsList>
       <TabsContent value="plans">

@@ -2,7 +2,6 @@ import { getWordsList } from '@/actions/conversations/get-words-list'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
@@ -52,51 +51,49 @@ export const YourPerformance = ({
                 <h1 className={`text-2xl ${pixelatedFont()}`}>
                   {t('Your performance')}{' '}
                 </h1>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircleIcon className="w-4 text-zinc-500" />
-                    </TooltipTrigger>
-                    <TooltipContent className="grid gap-2 ">
-                      <p>
-                        {t.rich(
-                          'Words with a score above or equal to 95 are represented in <g>green</g>',
-                          {
-                            g: (chunks) => (
-                              <span className="px-1 bg-green-300/10 text-green-300 rounded-md">
-                                {chunks}
-                              </span>
-                            ),
-                          },
-                        )}
-                      </p>
-                      <p>
-                        {t.rich(
-                          'Words with a score of 50 points or more but less than 95 points are represented in <y>yellow</y>',
-                          {
-                            y: (chunks) => (
-                              <span className="px-1 bg-yellow-300/10 text-yellow-300 rounded-md">
-                                {chunks}
-                              </span>
-                            ),
-                          },
-                        )}
-                      </p>
-                      <p>
-                        {t.rich(
-                          'Words with a score between 0 and 49 points are represented in <r>red</r>',
-                          {
-                            r: (chunks) => (
-                              <span className="px-1 bg-red-300/10 text-red-400 rounded-md">
-                                {chunks}
-                              </span>
-                            ),
-                          },
-                        )}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircleIcon className="w-4 text-zinc-500" />
+                  </TooltipTrigger>
+                  <TooltipContent className="grid gap-2 ">
+                    <p>
+                      {t.rich(
+                        'Words with a score above or equal to 95 are represented in <g>green</g>',
+                        {
+                          g: (chunks) => (
+                            <span className="px-1 bg-green-300/10 text-green-300 rounded-md">
+                              {chunks}
+                            </span>
+                          ),
+                        },
+                      )}
+                    </p>
+                    <p>
+                      {t.rich(
+                        'Words with a score of 50 points or more but less than 95 points are represented in <y>yellow</y>',
+                        {
+                          y: (chunks) => (
+                            <span className="px-1 bg-yellow-300/10 text-yellow-300 rounded-md">
+                              {chunks}
+                            </span>
+                          ),
+                        },
+                      )}
+                    </p>
+                    <p>
+                      {t.rich(
+                        'Words with a score between 0 and 49 points are represented in <r>red</r>',
+                        {
+                          r: (chunks) => (
+                            <span className="px-1 bg-red-300/10 text-red-400 rounded-md">
+                              {chunks}
+                            </span>
+                          ),
+                        },
+                      )}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <p className="flex gap-2 items-center text-xs text-zinc-400">
                 {t('Earn points by talking to the petutors')}

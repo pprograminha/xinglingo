@@ -11,12 +11,7 @@ import { useTransition } from 'react'
 import { Product } from '.'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 type SubscriptionProps = {
   product: Product
@@ -176,16 +171,14 @@ export const Subscription = ({
                   />
                   {feat.message}
                   {feat.question && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <CircleHelpIcon className="ml-2 w-4" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{feat.question}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <CircleHelpIcon className="ml-2 w-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{feat.question}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
                 </li>
               ))}

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { textsSchema } from './text'
 
 const ACTION_SCHEMAS = {
   DEFAULT: z
@@ -21,9 +22,13 @@ export const lessonsSchema = (data: UnitFormSchemaData = {}) => {
         _id: z.string().min(1),
         _action: _actionSchema,
         lessonId: z.string().min(1).optional(),
-        title: z.string().min(1),
-        description: z.string().optional().nullable(),
-        prompt: z.string().min(1).optional().nullable(),
+        title: textsSchema(),
+        description: textsSchema({
+          variant: 'NULLABLE',
+        }),
+        prompt: textsSchema({
+          variant: 'NULLABLE',
+        }),
       }),
     )
     .optional()
@@ -40,11 +45,15 @@ export const sectionsSchema = (data: UnitFormSchemaData = {}) => {
         _id: z.string().min(1),
         _action: _actionSchema,
         sectionId: z.string().min(1).optional(),
-        title: z.string().min(1),
-        slug: z.string().min(1).optional().nullable(),
+        title: textsSchema(),
+        slug: textsSchema({
+          variant: 'NULLABLE',
+        }),
+        prompt: textsSchema(),
+        description: textsSchema({
+          variant: 'NULLABLE',
+        }),
         variant: z.enum(['book', 'default']),
-        description: z.string().optional().nullable(),
-        prompt: z.string().min(1),
         lessons: lessonsSchema(data),
       }),
     )
@@ -60,11 +69,13 @@ export const unitFormSchema = function (data: UnitFormSchemaData = {}) {
     z.object({
       _action: _actionSchema,
       unitId: z.string().min(1).optional(),
-      title: z.string().min(1),
-      slug: z.string().min(1),
-      description: z.string().optional().nullable(),
+      title: textsSchema(),
+      slug: textsSchema(),
+      prompt: textsSchema(),
+      description: textsSchema({
+        variant: 'NULLABLE',
+      }),
       modelId: z.string().min(1),
-      prompt: z.string().min(1),
       sections: sectionsSchema(data),
     }),
   )

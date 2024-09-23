@@ -1,0 +1,1 @@
+ALTER TABLE "conversations" ALTER COLUMN "role" SET DATA TYPE text;

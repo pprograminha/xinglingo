@@ -41,15 +41,14 @@ import { Switch } from '@/components/ui/switch'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Model } from '@/lib/db/drizzle/types'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { scoreColor } from '@/lib/score-color'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 import { Link } from '@/navigation'
-import { Model } from '@/lib/db/drizzle/types'
+import Image from 'next/image'
 
 type CommmandItemComponentProps = {
   word: Awaited<ReturnType<typeof getWordsList>>['words'][number]
@@ -115,18 +114,16 @@ export function CommmandItemComponent({
               <span className="group-data-[color=green]:text-green-300 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
                 {word.word}
               </span>
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger>
-                    <span className="ml-2 inline-block border text-xs px-1 rounded-md border-zinc-500 text-zinc-400 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
-                      {word.avgAccuracyScore.toFixed(0)}
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p>{t('Scoring')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger>
+                  <span className="ml-2 inline-block border text-xs px-1 rounded-md border-zinc-500 text-zinc-400 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
+                    {word.avgAccuracyScore.toFixed(0)}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{t('Scoring')}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
             <PopoverTrigger asChild>
               <Button
@@ -182,18 +179,16 @@ export function CommmandItemComponent({
               <span className="group-data-[color=green]:text-green-300 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
                 {word.word}
               </span>
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger>
-                    <span className="ml-2 inline-block border text-xs px-1 rounded-md border-zinc-500 text-zinc-400 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
-                      {word.avgAccuracyScore.toFixed(0)}
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('Scoring')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger>
+                  <span className="ml-2 inline-block border text-xs px-1 rounded-md border-zinc-500 text-zinc-400 group-data-[color=yellow]:text-yellow-300 group-data-[color=red]:text-red-400">
+                    {word.avgAccuracyScore.toFixed(0)}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t('Scoring')}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
             <CollapsibleTrigger asChild>
               <Button size="icon" variant="secondary" className="ml-auto">
@@ -359,31 +354,29 @@ export function Dialog({ wordsListData, model }: DialogProps) {
         </div>
         <div className="flex items-center justify-between px-4 gap-2">
           <CommandInput placeholder={`${t('Search your word')}...`} />
-          <TooltipProvider>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger>
-                <Switch
-                  checked={sortedRef.current}
-                  onClick={() => {
-                    sortedRef.current = !sortedRef.current
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger>
+              <Switch
+                checked={sortedRef.current}
+                onClick={() => {
+                  sortedRef.current = !sortedRef.current
 
-                    if (sortedRef.current) {
-                      setWords((words) => [
-                        ...words.sort(
-                          (a, b) => a.avgAccuracyScore - b.avgAccuracyScore,
-                        ),
-                      ])
-                    } else {
-                      setWords([...defaultWords])
-                    }
-                  }}
-                />
-              </TooltipTrigger>
-              <TooltipContent side="left">
-                <p>{t('Sort by worst scores')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                  if (sortedRef.current) {
+                    setWords((words) => [
+                      ...words.sort(
+                        (a, b) => a.avgAccuracyScore - b.avgAccuracyScore,
+                      ),
+                    ])
+                  } else {
+                    setWords([...defaultWords])
+                  }
+                }}
+              />
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <p>{t('Sort by worst scores')}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
         <CommandList className="px-4">
           <CommandEmpty>{t('No results found')}.</CommandEmpty>

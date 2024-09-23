@@ -22,16 +22,25 @@ import {
 } from '@/components/ui/select'
 import { useAuth } from '@/hooks/use-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { Locale } from '@/lib/intl/locales'
 import { snowflakeId } from '@/lib/snowflake'
 import { unitFormSchema as unitFormSchemaFn } from '@/schemas/unit-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PlusIcon } from 'lucide-react'
+import { useLocale } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Unit } from '../../page'
 import { GenerateUnitsButton } from './generate-units-button'
+import { UnitLocales } from './locales'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import { CaretSortIcon } from '@radix-ui/react-icons'
 
 type UnitFormProps = {
   units: Unit[]
@@ -49,6 +58,8 @@ export const UnitForm = ({
   })
   const { user } = useAuth()
 
+  const currentLocale = useLocale() as Locale
+
   const [models, setModels] = useState<
     Awaited<ReturnType<typeof getModels>>['models']
   >([])
@@ -62,7 +73,7 @@ export const UnitForm = ({
 
   useEffect(() => {
     const units = defaultUnits.map((u) => {
-      const result = {
+      const result: z.infer<typeof unitFormSchema>['units'][number] = {
         _action: 'no action' as const,
         modelId: u.modelId,
         prompt: u.prompt,
@@ -94,8 +105,9 @@ export const UnitForm = ({
 
     setValue('units', units)
   }, [defaultUnits, setValue])
-
+  console.log(form.getValues('units'))
   const upsertUnitHandler = async (values: z.infer<typeof unitFormSchema>) => {
+    console.log(values)
     const ignoreAction = (
       units: typeof values.units,
       actionsToIgnore: (typeof values.units)[number]['_action'][],
@@ -300,6 +312,12 @@ export const UnitForm = ({
       )
   }, [unitErrors])
 
+  const getLocaleTextIndex = (
+    locales: { locale: Locale }[],
+    locale: Locale,
+  ) => {
+    return locales.findIndex((l) => l.locale === locale)
+  }
   return (
     <>
       <Dialog>
@@ -345,7 +363,7 @@ export const UnitForm = ({
                   units={units}
                   sectionUnitId={unit._id}
                   sections={unit.sections}
-                  title={unit.title}
+                  title={unit.title.root.data.text}
                   onUnits={(units) => {
                     setValue('units', [...units])
                   }}
@@ -356,74 +374,219 @@ export const UnitForm = ({
                     className="w-full"
                   >
                     <div>
-                      <Editable.Root>
-                        <Editable.Trigger
-                          onSave={(value) => {
-                            updateUnits({
-                              unit,
-                              unitKey: 'title',
-                              unitValue: value as string,
-                            })
-                          }}
-                        />
-                        <Editable.Content>
-                          <h1
-                            className={`text-2xl leading-none ${pixelatedFont()}`}
-                          >
-                            {unit.title}
-                          </h1>
-                        </Editable.Content>
-                        <Editable.Input
-                          className="w-full"
-                          defaultValue={unit.title}
-                        />
-                      </Editable.Root>
+                      <UnitLocales
+                        localeComponent={({ locale }) => (
+                          <>
+                            <Editable.Root>
+                              <Editable.Trigger
+                                onSave={(value) => {
+                                  updateUnits({
+                                    unit,
+                                    unitKey: 'title',
+                                    unitValue: (() => {
+                                      const index = getLocaleTextIndex(
+                                        unit.title.metadata,
+                                        locale as Locale,
+                                      )
 
-                      <div className="mt-2" />
-                      <Editable.Root>
-                        <Editable.Trigger
-                          className="p-0 h-6 w-6 [&_svg]:!w-3"
-                          onSave={(value) =>
-                            updateUnits({
-                              unit,
-                              unitKey: 'prompt',
-                              unitValue: value as string,
-                            })
-                          }
-                        />
-                        <Editable.Content>
-                          <p className="text-xs text-zinc-500 max-w-md">
-                            Prompt: {unit.prompt}
-                          </p>
-                        </Editable.Content>
-                        <Editable.Input
-                          className="w-full h-6 text-zinc-500 "
-                          defaultValue={unit.prompt}
-                        />
-                      </Editable.Root>
-                      <div className="mt-2" />
-                      <Editable.Root>
-                        <Editable.Trigger
-                          className="p-0 h-6 w-6 [&_svg]:!w-3"
-                          onSave={(value) =>
-                            updateUnits({
-                              unit,
-                              unitKey: 'slug',
-                              unitValue: value as string,
-                            })
-                          }
-                        />
-                        <Editable.Content>
-                          <p className="text-xs text-zinc-500 max-w-md">
-                            Slug: {unit.slug}
-                          </p>
-                        </Editable.Content>
-                        <Editable.Input
-                          className="w-full h-6 text-zinc-500 "
-                          defaultValue={unit.slug}
-                        />
-                      </Editable.Root>
+                                      const metadata =
+                                        unit.title.metadata[index]
 
+                                      if (!metadata) {
+                                        unit.title.metadata.push({
+                                          data: {
+                                            id: snowflakeId(),
+                                            text: value as string,
+                                          },
+                                          locale: locale as Locale,
+                                        })
+                                      } else {
+                                        const data = {
+                                          ...metadata,
+                                          data: {
+                                            ...metadata?.data,
+                                            text: value as string,
+                                          },
+                                        }
+
+                                        unit.title.metadata[index] = data
+                                      }
+
+                                      if (currentLocale === locale) {
+                                        unit.title.root.data = {
+                                          ...unit.title.root.data,
+                                          text: value as string,
+                                        }
+                                      }
+
+                                      return unit.title
+                                    })(),
+                                  })
+                                }}
+                              />
+                              <Editable.Content>
+                                <h1
+                                  className={`text-2xl leading-none ${pixelatedFont()}`}
+                                >
+                                  {
+                                    unit.title.metadata.find(
+                                      (md) => md.locale === locale,
+                                    )?.data.text
+                                  }
+                                </h1>
+                              </Editable.Content>
+                              <Editable.Input
+                                className="w-full"
+                                defaultValue={
+                                  unit.title.metadata.find(
+                                    (md) => md.locale === locale,
+                                  )?.data.text ?? ''
+                                }
+                              />
+                            </Editable.Root>
+
+                            <div className="mt-2" />
+                            <Editable.Root>
+                              <Editable.Trigger
+                                className="p-0 h-6 w-6 [&_svg]:!w-3"
+                                onSave={(value) => {
+                                  updateUnits({
+                                    unit,
+                                    unitKey: 'prompt',
+                                    unitValue: (() => {
+                                      const index = getLocaleTextIndex(
+                                        unit.prompt.metadata,
+                                        locale as Locale,
+                                      )
+                                      const metadata =
+                                        unit.prompt.metadata[index]
+
+                                      if (!metadata) {
+                                        unit.prompt.metadata.push({
+                                          data: {
+                                            id: snowflakeId(),
+                                            text: value as string,
+                                          },
+                                          locale: locale as Locale,
+                                        })
+                                      } else {
+                                        const data = {
+                                          ...metadata,
+                                          data: {
+                                            ...metadata?.data,
+                                            text: value as string,
+                                          },
+                                        }
+
+                                        unit.prompt.metadata[index] = data
+                                      }
+
+                                      if (currentLocale === locale) {
+                                        unit.prompt.root = {
+                                          ...unit.prompt.root,
+                                          data: {
+                                            ...unit.prompt.root.data,
+                                            text: value as string,
+                                          },
+                                        }
+                                      }
+
+                                      return unit.prompt
+                                    })(),
+                                  })
+                                }}
+                              />
+                              <Editable.Content>
+                                <p className="text-xs text-zinc-500 max-w-md">
+                                  Prompt:{' '}
+                                  {
+                                    unit.prompt.metadata.find(
+                                      (md) => md.locale === locale,
+                                    )?.data.text
+                                  }
+                                </p>
+                              </Editable.Content>
+                              <Editable.Input
+                                className="w-full h-6 text-zinc-500 "
+                                defaultValue={
+                                  unit.prompt.metadata.find(
+                                    (md) => md.locale === locale,
+                                  )?.data.text ?? ''
+                                }
+                              />
+                            </Editable.Root>
+                            <div className="mt-2" />
+                            <Editable.Root>
+                              <Editable.Trigger
+                                className="p-0 h-6 w-6 [&_svg]:!w-3"
+                                onSave={(value) => {
+                                  updateUnits({
+                                    unit,
+                                    unitKey: 'slug',
+                                    unitValue: (() => {
+                                      const index = getLocaleTextIndex(
+                                        unit.slug.metadata,
+                                        locale as Locale,
+                                      )
+                                      const metadata = unit.slug.metadata[index]
+
+                                      if (!metadata) {
+                                        unit.slug.metadata.push({
+                                          data: {
+                                            id: snowflakeId(),
+                                            text: value as string,
+                                          },
+                                          locale: locale as Locale,
+                                        })
+                                      } else {
+                                        const data = {
+                                          ...metadata,
+                                          data: {
+                                            ...metadata?.data,
+                                            text: value as string,
+                                          },
+                                        }
+
+                                        unit.slug.metadata[index] = data
+                                      }
+
+                                      if (currentLocale === locale) {
+                                        unit.slug.root = {
+                                          ...unit.slug.root,
+                                          data: {
+                                            ...unit.slug.root.data,
+                                            text: value as string,
+                                          },
+                                        }
+                                      }
+
+                                      return unit.slug
+                                    })(),
+                                  })
+                                }}
+                              />
+                              <Editable.Content>
+                                <p className="text-xs text-zinc-500 max-w-md">
+                                  Slug:{' '}
+                                  {
+                                    unit.slug.metadata.find(
+                                      (md) => md.locale === locale,
+                                    )?.data.text
+                                  }
+                                </p>
+                              </Editable.Content>
+                              <Editable.Input
+                                className="w-full h-6 text-zinc-500 "
+                                defaultValue={
+                                  unit.slug.metadata.find(
+                                    (md) => md.locale === locale,
+                                  )?.data.text ?? ''
+                                }
+                              />
+                            </Editable.Root>
+                          </>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name={`units.${ui}.modelId`}
@@ -461,299 +624,765 @@ export const UnitForm = ({
                       />
                     </div>
                     <div className="mt-4">
-                      {unit.sections.length > 0 && (
-                        <h1 className={`text-2xl mb-2 ${pixelatedFont()}`}>
-                          Seções
-                        </h1>
-                      )}
+                      <Collapsible>
+                        <div className="flex items-center justify-between space-x-4 px-4">
+                          <h1 className={`text-2xl mb-2 ${pixelatedFont()}`}>
+                            Seções
+                          </h1>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <CaretSortIcon className="h-4 w-4" />
+                              <span className="sr-only">Toggle</span>
+                            </Button>
+                          </CollapsibleTrigger>
+                        </div>
 
-                      <div className="flex flex-wrap gap-2 ">
-                        {unit.sections.map((section, si) => (
-                          <div
-                            key={section._id}
-                            data-section-remove={
-                              section._action === 'remove' ||
-                              section._action === 'purge'
-                            }
-                            className="p-4 border w-full border-zinc-800 data-[section-remove=true]:border-red-400 group rounded-xl"
-                          >
-                            <Editable.Root>
-                              <Editable.Trigger
-                                className="p-0 [&_svg]:!w-3"
-                                onSave={(value) =>
-                                  updateUnits({
-                                    unit,
-                                    section,
-                                    sectionKey: 'title',
-                                    sectionValue: value as string,
-                                  })
-                                }
-                              />
-                              <Editable.Content>
-                                <h1 className={`text-2xl ${pixelatedFont()}`}>
-                                  {section.title}
-                                </h1>
-                              </Editable.Content>
-                              <Editable.Input
-                                className="w-full"
-                                defaultValue={section.title}
-                              />
-                            </Editable.Root>
-                            <div className="mt-2" />
-                            <Editable.Root>
-                              <Editable.Trigger
-                                className="p-0 h-6 w-6 [&_svg]:!w-3"
-                                onSave={(value) =>
-                                  updateUnits({
-                                    unit,
-                                    section,
-                                    sectionKey: 'prompt',
-                                    sectionValue: value as string,
-                                  })
-                                }
-                              />
-                              <Editable.Content>
-                                <p className="text-xs text-zinc-500 max-w-md">
-                                  Prompt: {section.prompt}
-                                </p>
-                              </Editable.Content>
-                              <Editable.Input
-                                className="w-full h-6 text-zinc-500 "
-                                defaultValue={section.prompt}
-                              />
-                            </Editable.Root>
-                            <div className="mt-2" />
-                            <Editable.Root>
-                              <Editable.Trigger
-                                className="p-0 h-6 w-6 [&_svg]:!w-3"
-                                onSave={(value) =>
-                                  updateUnits({
-                                    unit,
-                                    section,
-                                    sectionKey: 'slug',
-                                    sectionValue: value as string,
-                                  })
-                                }
-                              />
-                              <Editable.Content>
-                                <p className="text-xs text-zinc-500 max-w-md">
-                                  Slug: {section.slug}
-                                </p>
-                              </Editable.Content>
-                              <Editable.Input
-                                className="w-full h-6 text-zinc-500 "
-                                defaultValue={section.slug || undefined}
-                              />
-                            </Editable.Root>
-                            <div className="mt-2" />
-                            <FormField
-                              control={form.control}
-                              name={`units.${ui}.sections.${si}.variant`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Select
-                                      onValueChange={(v) => {
-                                        changeAction({
-                                          unit,
-                                          section,
-                                        })
-
-                                        field.onChange(v)
-                                      }}
-                                      defaultValue={field.value}
-                                    >
-                                      <SelectTrigger className="w-[180px] mt-2">
-                                        <SelectValue placeholder="Selecione o modelo" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectGroup>
-                                          <SelectLabel>Variante</SelectLabel>
-                                          <SelectItem value="book">
-                                            Book
-                                          </SelectItem>
-                                          <SelectItem value="default">
-                                            Default
-                                          </SelectItem>
-                                        </SelectGroup>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <div className="mt-4">
-                              {section.lessons.length > 0 && (
-                                <h1
-                                  className={`text-2xl mb-2 ${pixelatedFont()}`}
-                                >
-                                  Lições
-                                </h1>
-                              )}
-
-                              <div className="flex flex-col gap-2 ">
-                                {section.lessons.map((lesson) => (
-                                  <div
-                                    key={lesson._id}
-                                    data-lesson-remove={
-                                      lesson._action === 'remove' ||
-                                      lesson._action === 'purge'
-                                    }
-                                    className="p-4 border group border-zinc-800 data-[lesson-remove=true]:border-red-400 rounded-xl"
-                                  >
-                                    <Editable.Root>
-                                      <Editable.Trigger
-                                        className="p-0 [&_svg]:!w-3"
-                                        onSave={(value) =>
-                                          updateUnits({
-                                            unit,
-                                            section,
-                                            lesson,
-                                            lessonKey: 'title',
-                                            lessonValue: value as string,
-                                          })
-                                        }
-                                      />
-                                      <Editable.Content>
-                                        <h1
-                                          className={`text-2xl ${pixelatedFont()}`}
-                                        >
-                                          {lesson.title}
-                                        </h1>
-                                      </Editable.Content>
-                                      <Editable.Input
-                                        className="w-full"
-                                        defaultValue={lesson.title}
-                                      />
-                                    </Editable.Root>
-                                    <div className="mt-2" />
-                                    <Editable.Root>
-                                      <Editable.Trigger
-                                        className="p-0 h-6 w-6 [&_svg]:!w-3"
-                                        onSave={(value) =>
-                                          updateUnits({
-                                            unit,
-                                            section,
-                                            lesson,
-                                            lessonKey: 'prompt',
-                                            lessonValue: value as string,
-                                          })
-                                        }
-                                      />
-                                      <Editable.Content>
-                                        <p className="text-xs text-zinc-500 max-w-md">
-                                          Prompt: {lesson.prompt}
-                                        </p>
-                                      </Editable.Content>
-                                      <Editable.Input
-                                        className="w-full h-6 text-zinc-500 "
-                                        defaultValue={
-                                          lesson.prompt || undefined
-                                        }
-                                      />
-                                    </Editable.Root>
-                                    <div className="mt-2" />
-                                    <Button
-                                      type="button"
-                                      variant="secondary"
-                                      className="dark:text-red-400 group-data-[lesson-remove=true]:dark:text-zinc-400"
-                                      onClick={() => {
-                                        changeAction({
-                                          unit,
-                                          section,
-                                          lesson,
-                                          action:
-                                            lesson._action === 'remove' ||
-                                            lesson._action === 'purge'
-                                              ? undefined
-                                              : lesson.lessonId
-                                                ? 'purge'
-                                                : 'remove',
-                                        })
-                                      }}
-                                    >
-                                      {lesson._action === 'remove' ||
-                                      lesson._action === 'purge'
-                                        ? 'Resetar'
-                                        : 'Remover'}
-                                    </Button>
-                                  </div>
-                                ))}
-                                <button
-                                  onClick={() => {
-                                    updateUnits({
-                                      unit,
-                                      section,
-                                      sectionKey: 'lessons',
-                                      sectionValue: [
-                                        ...section.lessons,
-                                        {
-                                          _id: snowflakeId(),
-                                          _action: 'create',
-                                          title: '??????????????????',
-                                          description: null,
-                                          prompt: '?????????? ????????',
-                                        },
-                                      ],
-                                    })
-                                  }}
-                                  className="p-4 border border-zinc-800 transition-all text-zinc-600 flex items-center justify-center bg-zinc-800/40 hover:bg-zinc-800/80  rounded-xl"
-                                >
-                                  <PlusIcon />
-                                </button>
-                                <Button
-                                  type="button"
-                                  variant="secondary"
-                                  className="dark:text-red-400 group-data-[section-remove=true]:dark:text-zinc-400"
-                                  onClick={() => {
-                                    changeAction({
-                                      unit,
-                                      section,
-                                      action:
-                                        section._action === 'remove' ||
-                                        section._action === 'purge'
-                                          ? undefined
-                                          : section.sectionId
-                                            ? 'purge'
-                                            : 'remove',
-                                    })
-                                  }}
-                                >
-                                  {section._action === 'remove' ||
+                        <CollapsibleContent className="space-y-2">
+                          <div className="flex flex-wrap gap-2 ">
+                            {unit.sections.map((section, si) => (
+                              <div
+                                key={section._id}
+                                data-section-remove={
+                                  section._action === 'remove' ||
                                   section._action === 'purge'
-                                    ? 'Resetar'
-                                    : 'Remover'}
-                                </Button>
+                                }
+                                className="p-4 border w-full border-zinc-800 data-[section-remove=true]:border-red-400 group rounded-xl"
+                              >
+                                <UnitLocales
+                                  localeComponent={({ locale }) => (
+                                    <>
+                                      <Editable.Root>
+                                        <Editable.Trigger
+                                          className="p-0 [&_svg]:!w-3"
+                                          onSave={(value) =>
+                                            updateUnits({
+                                              unit,
+                                              section,
+                                              sectionKey: 'title',
+                                              sectionValue: (() => {
+                                                const index =
+                                                  getLocaleTextIndex(
+                                                    section.title.metadata,
+                                                    locale as Locale,
+                                                  )
+                                                const metadata =
+                                                  section.title.metadata[index]
+
+                                                if (!metadata) {
+                                                  section.title.metadata.push({
+                                                    data: {
+                                                      id: snowflakeId(),
+                                                      text: value as string,
+                                                    },
+                                                    locale: locale as Locale,
+                                                  })
+                                                } else {
+                                                  const data = {
+                                                    ...metadata,
+                                                    data: {
+                                                      ...metadata?.data,
+                                                      text: value as string,
+                                                    },
+                                                  }
+
+                                                  section.title.metadata[
+                                                    index
+                                                  ] = data
+                                                }
+
+                                                if (currentLocale === locale) {
+                                                  section.title.root.data = {
+                                                    ...section.title.root.data,
+                                                    text: value as string,
+                                                  }
+                                                }
+
+                                                return section.title
+                                              })(),
+                                            })
+                                          }
+                                        />
+                                        <Editable.Content>
+                                          <h1
+                                            className={`text-2xl ${pixelatedFont()}`}
+                                          >
+                                            {
+                                              section.title.metadata.find(
+                                                (md) => md.locale === locale,
+                                              )?.data.text
+                                            }
+                                          </h1>
+                                        </Editable.Content>
+                                        <Editable.Input
+                                          className="w-full"
+                                          defaultValue={
+                                            section.title.metadata.find(
+                                              (md) => md.locale === locale,
+                                            )?.data.text ?? ''
+                                          }
+                                        />
+                                      </Editable.Root>
+                                      <div className="mt-2" />
+                                      <Editable.Root>
+                                        <Editable.Trigger
+                                          className="p-0 h-6 w-6 [&_svg]:!w-3"
+                                          onSave={(value) =>
+                                            updateUnits({
+                                              unit,
+                                              section,
+                                              sectionKey: 'prompt',
+                                              sectionValue: (() => {
+                                                const index =
+                                                  getLocaleTextIndex(
+                                                    section.prompt.metadata,
+                                                    locale as Locale,
+                                                  )
+                                                const metadata =
+                                                  section.prompt.metadata[index]
+
+                                                if (!metadata) {
+                                                  section.prompt.metadata.push({
+                                                    data: {
+                                                      id: snowflakeId(),
+                                                      text: value as string,
+                                                    },
+                                                    locale: locale as Locale,
+                                                  })
+                                                } else {
+                                                  const data = {
+                                                    ...metadata,
+                                                    data: {
+                                                      ...metadata?.data,
+                                                      text: value as string,
+                                                    },
+                                                  }
+
+                                                  section.prompt.metadata[
+                                                    index
+                                                  ] = data
+                                                }
+
+                                                if (currentLocale === locale) {
+                                                  section.prompt.root = {
+                                                    ...section.prompt.root,
+                                                    data: {
+                                                      ...section.prompt.root
+                                                        .data,
+                                                      text: value as string,
+                                                    },
+                                                  }
+                                                }
+
+                                                return section.prompt
+                                              })(),
+                                            })
+                                          }
+                                        />
+                                        <Editable.Content>
+                                          <p className="text-xs text-zinc-500 max-w-md">
+                                            Prompt:{' '}
+                                            {
+                                              section.prompt.metadata.find(
+                                                (md) => md.locale === locale,
+                                              )?.data.text
+                                            }
+                                          </p>
+                                        </Editable.Content>
+                                        <Editable.Input
+                                          className="w-full h-6 text-zinc-500 "
+                                          defaultValue={
+                                            section.prompt.metadata.find(
+                                              (md) => md.locale === locale,
+                                            )?.data.text ?? ''
+                                          }
+                                        />
+                                      </Editable.Root>
+                                      <div className="mt-2" />
+                                      <Editable.Root>
+                                        <Editable.Trigger
+                                          className="p-0 h-6 w-6 [&_svg]:!w-3"
+                                          onSave={(value) =>
+                                            updateUnits({
+                                              unit,
+                                              section,
+                                              sectionKey: 'slug',
+                                              sectionValue: (() => {
+                                                const index =
+                                                  getLocaleTextIndex(
+                                                    section.slug.metadata,
+                                                    locale as Locale,
+                                                  )
+                                                const metadata =
+                                                  section.slug.metadata[index]
+
+                                                if (!metadata) {
+                                                  section.slug.metadata.push({
+                                                    data: {
+                                                      id: snowflakeId(),
+                                                      text: value as string,
+                                                    },
+                                                    locale: locale as Locale,
+                                                  })
+                                                } else {
+                                                  const data = {
+                                                    ...metadata,
+                                                    data: {
+                                                      ...metadata?.data,
+                                                      text: value as string,
+                                                    },
+                                                  }
+
+                                                  section.slug.metadata[index] =
+                                                    data
+                                                }
+
+                                                if (currentLocale === locale) {
+                                                  section.slug.root = {
+                                                    ...section.slug.root,
+                                                    data: {
+                                                      ...section.slug.root.data,
+                                                      text: value as string,
+                                                    },
+                                                  }
+                                                }
+
+                                                return section.slug
+                                              })(),
+                                            })
+                                          }
+                                        />
+                                        <Editable.Content>
+                                          <p className="text-xs text-zinc-500 max-w-md">
+                                            Slug:{' '}
+                                            {
+                                              section.slug.metadata.find(
+                                                (md) => md.locale === locale,
+                                              )?.data?.text
+                                            }
+                                          </p>
+                                        </Editable.Content>
+                                        <Editable.Input
+                                          className="w-full h-6 text-zinc-500 "
+                                          defaultValue={
+                                            section.slug.metadata.find(
+                                              (md) => md.locale === locale,
+                                            )?.data?.text ?? ''
+                                          }
+                                        />
+                                      </Editable.Root>
+                                    </>
+                                  )}
+                                />
+
+                                <div className="mt-2" />
+                                <FormField
+                                  control={form.control}
+                                  name={`units.${ui}.sections.${si}.variant`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <Select
+                                          onValueChange={(v) => {
+                                            changeAction({
+                                              unit,
+                                              section,
+                                            })
+
+                                            field.onChange(v)
+                                          }}
+                                          defaultValue={field.value}
+                                        >
+                                          <SelectTrigger className="w-[180px] mt-2">
+                                            <SelectValue placeholder="Selecione o modelo" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectGroup>
+                                              <SelectLabel>
+                                                Variante
+                                              </SelectLabel>
+                                              <SelectItem value="book">
+                                                Book
+                                              </SelectItem>
+                                              <SelectItem value="default">
+                                                Default
+                                              </SelectItem>
+                                            </SelectGroup>
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <div className="mt-4">
+                                  <Collapsible>
+                                    <div className="flex items-center justify-between space-x-4 px-4">
+                                      <h1
+                                        className={`text-2xl mb-2 ${pixelatedFont()}`}
+                                      >
+                                        Lições
+                                      </h1>
+                                      <CollapsibleTrigger asChild>
+                                        <Button variant="ghost" size="sm">
+                                          <CaretSortIcon className="h-4 w-4" />
+                                          <span className="sr-only">
+                                            Toggle
+                                          </span>
+                                        </Button>
+                                      </CollapsibleTrigger>
+                                    </div>
+
+                                    <CollapsibleContent className="space-y-2">
+                                      <div className="flex flex-col gap-2 ">
+                                        {section.lessons.map((lesson) => (
+                                          <div
+                                            key={lesson._id}
+                                            data-lesson-remove={
+                                              lesson._action === 'remove' ||
+                                              lesson._action === 'purge'
+                                            }
+                                            className="p-4 border group border-zinc-800 data-[lesson-remove=true]:border-red-400 rounded-xl"
+                                          >
+                                            <UnitLocales
+                                              localeComponent={({ locale }) => (
+                                                <>
+                                                  <Editable.Root>
+                                                    <Editable.Trigger
+                                                      className="p-0 [&_svg]:!w-3"
+                                                      onSave={(value) =>
+                                                        updateUnits({
+                                                          unit,
+                                                          section,
+                                                          lesson,
+                                                          lessonKey: 'title',
+                                                          lessonValue: (() => {
+                                                            const index =
+                                                              getLocaleTextIndex(
+                                                                lesson.title
+                                                                  .metadata,
+                                                                locale as Locale,
+                                                              )
+                                                            const metadata =
+                                                              lesson.title
+                                                                .metadata[index]
+
+                                                            if (!metadata) {
+                                                              lesson.title.metadata.push(
+                                                                {
+                                                                  data: {
+                                                                    id: snowflakeId(),
+                                                                    text: value as string,
+                                                                  },
+                                                                  locale:
+                                                                    locale as Locale,
+                                                                },
+                                                              )
+                                                            } else {
+                                                              const data = {
+                                                                ...metadata,
+                                                                data: {
+                                                                  ...metadata?.data,
+                                                                  text: value as string,
+                                                                },
+                                                              }
+
+                                                              lesson.title.metadata[
+                                                                index
+                                                              ] = data
+                                                            }
+
+                                                            if (
+                                                              currentLocale ===
+                                                              locale
+                                                            ) {
+                                                              lesson.title.root.data =
+                                                                {
+                                                                  ...lesson
+                                                                    .title.root
+                                                                    .data,
+                                                                  text: value as string,
+                                                                }
+                                                            }
+
+                                                            return lesson.title
+                                                          })(),
+                                                        })
+                                                      }
+                                                    />
+                                                    <Editable.Content>
+                                                      <h1
+                                                        className={`text-2xl ${pixelatedFont()}`}
+                                                      >
+                                                        {
+                                                          lesson.title.metadata.find(
+                                                            (md) =>
+                                                              md.locale ===
+                                                              locale,
+                                                          )?.data?.text
+                                                        }
+                                                      </h1>
+                                                    </Editable.Content>
+                                                    <Editable.Input
+                                                      className="w-full"
+                                                      defaultValue={
+                                                        lesson.title.metadata.find(
+                                                          (md) =>
+                                                            md.locale ===
+                                                            locale,
+                                                        )?.data?.text ?? ''
+                                                      }
+                                                    />
+                                                  </Editable.Root>
+                                                  <div className="mt-2" />
+                                                  <Editable.Root>
+                                                    <Editable.Trigger
+                                                      className="p-0 h-6 w-6 [&_svg]:!w-3"
+                                                      onSave={(value) =>
+                                                        updateUnits({
+                                                          unit,
+                                                          section,
+                                                          lesson,
+                                                          lessonKey: 'prompt',
+                                                          lessonValue: (() => {
+                                                            const index =
+                                                              getLocaleTextIndex(
+                                                                lesson.prompt
+                                                                  .metadata,
+                                                                locale as Locale,
+                                                              )
+                                                            const metadata =
+                                                              lesson.prompt
+                                                                .metadata[index]
+
+                                                            if (!metadata) {
+                                                              lesson.prompt.metadata.push(
+                                                                {
+                                                                  data: {
+                                                                    id: snowflakeId(),
+                                                                    text: value as string,
+                                                                  },
+                                                                  locale:
+                                                                    locale as Locale,
+                                                                },
+                                                              )
+                                                            } else {
+                                                              const data = {
+                                                                ...metadata,
+                                                                data: {
+                                                                  ...metadata?.data,
+                                                                  text: value as string,
+                                                                },
+                                                              }
+
+                                                              lesson.prompt.metadata[
+                                                                index
+                                                              ] = data
+                                                            }
+
+                                                            if (
+                                                              currentLocale ===
+                                                              locale
+                                                            ) {
+                                                              lesson.prompt.root =
+                                                                {
+                                                                  ...lesson
+                                                                    .prompt
+                                                                    .root,
+                                                                  data: {
+                                                                    ...lesson
+                                                                      .prompt
+                                                                      .root
+                                                                      .data,
+                                                                    text: value as string,
+                                                                  },
+                                                                }
+                                                            }
+
+                                                            return lesson.prompt
+                                                          })(),
+                                                        })
+                                                      }
+                                                    />
+                                                    <Editable.Content>
+                                                      <p className="text-xs text-zinc-500 max-w-md">
+                                                        Prompt:{' '}
+                                                        {
+                                                          lesson.prompt.metadata.find(
+                                                            (md) =>
+                                                              md.locale ===
+                                                              locale,
+                                                          )?.data?.text
+                                                        }
+                                                      </p>
+                                                    </Editable.Content>
+                                                    <Editable.Input
+                                                      className="w-full h-6 text-zinc-500 "
+                                                      defaultValue={
+                                                        lesson.prompt.metadata.find(
+                                                          (md) =>
+                                                            md.locale ===
+                                                            locale,
+                                                        )?.data?.text ?? ''
+                                                      }
+                                                    />
+                                                  </Editable.Root>
+                                                </>
+                                              )}
+                                            />
+
+                                            <div className="mt-2" />
+                                            <Button
+                                              type="button"
+                                              variant="secondary"
+                                              className="dark:text-red-400 group-data-[lesson-remove=true]:dark:text-zinc-400"
+                                              onClick={() => {
+                                                changeAction({
+                                                  unit,
+                                                  section,
+                                                  lesson,
+                                                  action:
+                                                    lesson._action ===
+                                                      'remove' ||
+                                                    lesson._action === 'purge'
+                                                      ? undefined
+                                                      : lesson.lessonId
+                                                        ? 'purge'
+                                                        : 'remove',
+                                                })
+                                              }}
+                                            >
+                                              {lesson._action === 'remove' ||
+                                              lesson._action === 'purge'
+                                                ? 'Resetar'
+                                                : 'Remover'}
+                                            </Button>
+                                          </div>
+                                        ))}
+                                        <button
+                                          onClick={() => {
+                                            updateUnits({
+                                              unit,
+                                              section,
+                                              sectionKey: 'lessons',
+                                              sectionValue: [
+                                                ...section.lessons,
+                                                {
+                                                  _id: snowflakeId(),
+                                                  _action: 'create',
+                                                  title: (() => {
+                                                    const rootId = snowflakeId()
+
+                                                    return {
+                                                      root: {
+                                                        data: {
+                                                          id: rootId,
+                                                          text: '????????',
+                                                        },
+                                                        locale: currentLocale,
+                                                      },
+                                                      metadata: [
+                                                        {
+                                                          data: {
+                                                            id: rootId,
+                                                            text: '????????',
+                                                          },
+                                                          locale: currentLocale,
+                                                        },
+                                                      ],
+                                                    }
+                                                  })(),
+                                                  description: (() => {
+                                                    const rootId = snowflakeId()
+
+                                                    return {
+                                                      root: {
+                                                        data: {
+                                                          id: rootId,
+                                                          text: '????????',
+                                                        },
+                                                        locale: currentLocale,
+                                                      },
+                                                      metadata: [
+                                                        {
+                                                          data: {
+                                                            id: rootId,
+                                                            text: '????????',
+                                                          },
+                                                          locale: currentLocale,
+                                                        },
+                                                      ],
+                                                    }
+                                                  })(),
+                                                  prompt: (() => {
+                                                    const rootId = snowflakeId()
+
+                                                    return {
+                                                      root: {
+                                                        data: {
+                                                          id: rootId,
+                                                          text: '????????',
+                                                        },
+                                                        locale: currentLocale,
+                                                      },
+                                                      metadata: [
+                                                        {
+                                                          data: {
+                                                            id: rootId,
+                                                            text: '????????',
+                                                          },
+                                                          locale: currentLocale,
+                                                        },
+                                                      ],
+                                                    }
+                                                  })(),
+                                                },
+                                              ],
+                                            })
+                                          }}
+                                          className="p-4 border border-zinc-800 transition-all text-zinc-600 flex items-center justify-center bg-zinc-800/40 hover:bg-zinc-800/80  rounded-xl"
+                                        >
+                                          <PlusIcon />
+                                        </button>
+                                        <Button
+                                          type="button"
+                                          variant="secondary"
+                                          className="dark:text-red-400 group-data-[section-remove=true]:dark:text-zinc-400"
+                                          onClick={() => {
+                                            changeAction({
+                                              unit,
+                                              section,
+                                              action:
+                                                section._action === 'remove' ||
+                                                section._action === 'purge'
+                                                  ? undefined
+                                                  : section.sectionId
+                                                    ? 'purge'
+                                                    : 'remove',
+                                            })
+                                          }}
+                                        >
+                                          {section._action === 'remove' ||
+                                          section._action === 'purge'
+                                            ? 'Resetar'
+                                            : 'Remover'}
+                                        </Button>
+                                      </div>
+                                    </CollapsibleContent>
+                                  </Collapsible>
+                                </div>
                               </div>
-                            </div>
+                            ))}
+                            <button
+                              onClick={() => {
+                                updateUnits({
+                                  unit,
+                                  unitKey: 'sections',
+                                  unitValue: [
+                                    ...unit.sections,
+                                    {
+                                      _id: snowflakeId(),
+                                      _action: 'create',
+                                      title: (() => {
+                                        const rootId = snowflakeId()
+
+                                        return {
+                                          root: {
+                                            data: {
+                                              id: rootId,
+                                              text: '????????',
+                                            },
+                                            locale: currentLocale,
+                                          },
+                                          metadata: [
+                                            {
+                                              data: {
+                                                id: rootId,
+                                                text: '????????',
+                                              },
+                                              locale: currentLocale,
+                                            },
+                                          ],
+                                        }
+                                      })(),
+                                      variant: 'book',
+                                      description: (() => {
+                                        const rootId = snowflakeId()
+
+                                        return {
+                                          root: {
+                                            data: {
+                                              id: rootId,
+                                              text: '????????',
+                                            },
+                                            locale: currentLocale,
+                                          },
+                                          metadata: [
+                                            {
+                                              data: {
+                                                id: rootId,
+                                                text: '????????',
+                                              },
+                                              locale: currentLocale,
+                                            },
+                                          ],
+                                        }
+                                      })(),
+                                      prompt: (() => {
+                                        const rootId = snowflakeId()
+
+                                        return {
+                                          root: {
+                                            data: {
+                                              id: rootId,
+                                              text: '????????',
+                                            },
+                                            locale: currentLocale,
+                                          },
+                                          metadata: [
+                                            {
+                                              data: {
+                                                id: rootId,
+                                                text: '????????',
+                                              },
+                                              locale: currentLocale,
+                                            },
+                                          ],
+                                        }
+                                      })(),
+                                      lessons: [],
+                                      slug: (() => {
+                                        const rootId = snowflakeId()
+
+                                        return {
+                                          root: {
+                                            data: {
+                                              id: rootId,
+                                              text: '????????',
+                                            },
+                                            locale: currentLocale,
+                                          },
+                                          metadata: [
+                                            {
+                                              data: {
+                                                id: rootId,
+                                                text: '????????',
+                                              },
+                                              locale: currentLocale,
+                                            },
+                                          ],
+                                        }
+                                      })(),
+                                    },
+                                  ],
+                                })
+                              }}
+                              className="p-4 border border-zinc-800 transition-all text-zinc-600 flex items-center justify-center bg-zinc-800/40 hover:bg-zinc-800/80  rounded-xl"
+                            >
+                              <PlusIcon />
+                            </button>
                           </div>
-                        ))}
-                        <button
-                          onClick={() => {
-                            updateUnits({
-                              unit,
-                              unitKey: 'sections',
-                              unitValue: [
-                                ...unit.sections,
-                                {
-                                  _id: snowflakeId(),
-                                  _action: 'create',
-                                  title: '?????????',
-                                  variant: 'book',
-                                  description: null,
-                                  prompt: '??????? ??????? ???????',
-                                  lessons: [],
-                                  slug: '???',
-                                },
-                              ],
-                            })
-                          }}
-                          className="p-4 border border-zinc-800 transition-all text-zinc-600 flex items-center justify-center bg-zinc-800/40 hover:bg-zinc-800/80  rounded-xl"
-                        >
-                          <PlusIcon />
-                        </button>
-                      </div>
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Button
@@ -795,12 +1424,84 @@ export const UnitForm = ({
                   ...units,
                   {
                     _action: 'create',
-                    title: '?????????',
+                    title: (() => {
+                      const rootId = snowflakeId()
+
+                      return {
+                        root: {
+                          data: {
+                            id: rootId,
+                            text: '????????',
+                          },
+                          locale: currentLocale,
+                        },
+                        metadata: [
+                          {
+                            data: {
+                              id: rootId,
+                              text: '????????',
+                            },
+                            locale: currentLocale,
+                          },
+                        ],
+                      }
+                    })(),
                     sections: [],
                     modelId: models[0]?.id,
-                    description: null,
-                    prompt: '??????? ??????? ???????',
-                    slug: '???',
+                    description: {
+                      root: {
+                        data: {
+                          id: null,
+                          text: null,
+                        },
+                        locale: currentLocale,
+                      },
+                      metadata: [],
+                    },
+                    prompt: (() => {
+                      const rootId = snowflakeId()
+
+                      return {
+                        root: {
+                          data: {
+                            id: rootId,
+                            text: '????????',
+                          },
+                          locale: currentLocale,
+                        },
+                        metadata: [
+                          {
+                            data: {
+                              id: rootId,
+                              text: '????????',
+                            },
+                            locale: currentLocale,
+                          },
+                        ],
+                      }
+                    })(),
+                    slug: (() => {
+                      const rootId = snowflakeId()
+
+                      return {
+                        root: {
+                          data: {
+                            id: rootId,
+                            text: '????????',
+                          },
+                          locale: currentLocale,
+                        },
+                        metadata: [
+                          {
+                            data: {
+                              id: rootId,
+                              text: '????????',
+                            },
+                            locale: currentLocale,
+                          },
+                        ],
+                      }
+                    })(),
                   },
                 ])
               }}

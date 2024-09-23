@@ -11,6 +11,7 @@ import { CSSProperties, useState } from 'react'
 import { Unit } from '../page'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { lingos } from '@/lib/storage/local'
 
 type SectionProps = {
   t: Awaited<ReturnType<typeof getTranslations>>
@@ -73,7 +74,9 @@ export const Section = ({
     onUnits([...units])
   }
 
-  const startHandler = () => {
+  const startHandler = (section: Unit['sections'][number]) => {
+    lingos.storage.set('unit:section', section)
+
     onRedirect()
   }
 
@@ -99,6 +102,7 @@ export const Section = ({
             onClick={() => popoverHandler({ unit, section })}
             className="rounded-full data-[colored=true]:p-2 data-[colored=true]:bg-zinc-700 data-[current=false]:!p-0 data-[current=false]:!bg-transparent group"
             data-current={section.current}
+            data-completed={section.current}
             data-colored={section.current || section.completed}
           >
             <div className="rounded-full group-data-[colored=true]:p-1.5 group-data-[colored=true]:pb-3.5 group-data-[colored=true]:bg-zinc-800 group-data-[current=false]:!p-0 relative">
@@ -113,11 +117,11 @@ export const Section = ({
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4
-                className={`text-2xl tracking-wide leading-none mb-3 mx-4 ${pixelatedFont()}`}
+                className={`text-2xl tracking-wide leading-none mb-3 ${pixelatedFont()}`}
               >
-                {section.title}
+                {section.title.root.data.text}
               </h4>
-              <div className="flex gap-2 items-baseline">
+              <div className="flex flex-col-reverse gap-2 items-baseline">
                 <span className="text-xs text-zinc-500 inline-block border border-zinc-700 rounded-md py-1 px-2">
                   {(
                     (section.lessonsCompletedCount / section.lessonsCount) *
@@ -134,8 +138,8 @@ export const Section = ({
             </div>
             <Button
               variant="secondary"
-              className="dark:bg-violet-400 hover:dark:bg-violet-500 mx-2"
-              onClick={() => startHandler()}
+              className="dark:bg-violet-400 hover:dark:bg-violet-500 mx-1"
+              onClick={() => startHandler(section)}
             >
               {t('Start')}
             </Button>

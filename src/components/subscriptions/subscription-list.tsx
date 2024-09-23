@@ -182,7 +182,6 @@ export const SubscriptionList = ({
                   />
                   {feat.message}
                   {feat.question && (
-                    <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
                           <CircleHelpIcon className="ml-2 w-4" />
@@ -191,7 +190,6 @@ export const SubscriptionList = ({
                           <p>{feat.question}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider>
                   )}
                 </li>
               ))}

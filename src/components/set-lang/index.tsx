@@ -26,9 +26,16 @@ import Image from 'next/image'
 type SetLangProps = {
   className?: string
   collateral?: boolean
+  action?: 'y' | 'n'
+  onChangeLang?: (locale: string) => void
 }
 
-export function SetLang({ className, collateral }: SetLangProps) {
+export function SetLang({
+  className,
+  collateral,
+  onChangeLang,
+  action = 'y',
+}: SetLangProps) {
   const [open, setOpen] = React.useState(false)
   const t = useTranslations()
 
@@ -80,23 +87,29 @@ export function SetLang({ className, collateral }: SetLangProps) {
                 onSelect={(locale) => {
                   const userId = uid()
 
+                  if (onChangeLang) onChangeLang(locale)
+
                   if (collateral && lang && userId) {
                     updateUser({
                       locale,
                       userId,
                     })
                   }
-                  router.replace(pathname, { locale: locale as Locale })
+
+                  if (action === 'y')
+                    router.replace(pathname, { locale: locale as Locale })
 
                   setOpen(false)
                 }}
               >
-                <Check
-                  className={cn(
-                    'mr-2 h-4 w-4',
-                    value === lang.value ? 'opacity-100' : 'opacity-0',
-                  )}
-                />
+                {action === 'y' && (
+                  <Check
+                    className={cn(
+                      'mr-2 h-4 w-4',
+                      value === lang.value ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                )}
                 <div className="flex gap-2">
                   <Image
                     src={localeImages[lang.value as Locale]}

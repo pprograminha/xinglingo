@@ -1,13 +1,5 @@
 'use client'
 
-import { useAuth } from '@/hooks/use-auth'
-import { usePronunciation } from '@/hooks/use-pronunciation'
-import { Conversation } from '@/lib/db/drizzle/types'
-import { cn } from '@/lib/utils'
-import * as Ably from 'ably'
-import { AblyProvider, useChannel } from 'ably/react'
-import { HTMLAttributes, useState } from 'react'
-import { useTranslations } from 'next-intl'
 import {
   Card,
   CardContent,
@@ -16,11 +8,19 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/use-auth'
+import { useChannels } from '@/hooks/use-channels'
+import { usePronunciation } from '@/hooks/use-pronunciation'
+import { Conversation } from '@/lib/db/drizzle/types'
+import { cn } from '@/lib/utils'
+import * as Ably from 'ably'
+import { AblyProvider, useChannel } from 'ably/react'
+import { useTranslations } from 'next-intl'
+import { HTMLAttributes, useState } from 'react'
+import { PronunciationAssessmentDash } from '../pronunciation-assessment/pronunciation-assesment-dash'
 import { ConversationContainer } from './conversation-container'
 import { ChatForm } from './form'
 import { PhraseGenerator } from './phrase-generator'
-import { PronunciationAssessmentDash } from '../pronunciation-assessment/pronunciation-assesment-dash'
-import { useChannels } from '@/hooks/use-channels'
 
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 

@@ -3,13 +3,8 @@ import { getAuth } from '@/lib/auth/get-auth'
 import { SparkleIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { ProfileLinkSkeleton } from './skeleton'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip'
 
 export const ProfileLinkContent = async () => {
   const { user } = await getAuth()
@@ -40,29 +35,27 @@ export const ProfileLinkContent = async () => {
             value: ((words.length / wordsToLearn) * 100).toFixed(2),
           })}
         </h1>
-        <TooltipProvider>
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger>
-              <div className="p-2 border border-yellow-200 inline-block rounded-md mt-2 whitespace-nowrap">
-                <span className="text-yellow-400">{wordsToLearn}</span> /{' '}
-                <span className="text-yellow-400">{words.length}</span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                {t.rich(
-                  'Your goal is to learn {words} words, {wordsRemaining} words remaining',
-                  {
-                    words: wordsToLearn,
-                    wordsRemaining,
-                    questionHelp: () => null,
-                  },
-                )}
-                <br />
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger>
+            <div className="p-2 border border-yellow-200 inline-block rounded-md mt-2 whitespace-nowrap">
+              <span className="text-yellow-400">{wordsToLearn}</span> /{' '}
+              <span className="text-yellow-400">{words.length}</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {t.rich(
+                'Your goal is to learn {words} words, {wordsRemaining} words remaining',
+                {
+                  words: wordsToLearn,
+                  wordsRemaining,
+                  questionHelp: () => null,
+                },
+              )}
+              <br />
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </>
   )

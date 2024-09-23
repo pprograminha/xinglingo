@@ -21,8 +21,6 @@ export const ButtonWithAccessChecker = ({
   onClick,
   ...props
 }: ButtonWithAccessCheckerProps) => {
-  const notAllowed = !retrieveActiveSubscription(user)
-
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -36,16 +34,12 @@ export const ButtonWithAccessChecker = ({
         />
       )}
       <Button
-        {...(!retrieveActiveSubscription(user)
-          ? {
-              onClick: (e) => {
-                onClick?.(e)
-                setIsOpen(notAllowed)
-              },
-            }
-          : {
-              onClick,
-            })}
+        onClick={(e) => {
+          if (!retrieveActiveSubscription(user)) {
+            setIsOpen(true)
+          }
+          onClick?.(e)
+        }}
         variant="none"
         size="none"
         className={cn('whitespace-pre-wrap text-left', className)}

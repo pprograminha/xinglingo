@@ -1,53 +1,41 @@
 'use server'
 
-import { withAuth } from '@/lib/auth/get-auth'
+import { Conversations } from '@/hooks/use-conversations'
 import { db } from '@/lib/db/drizzle/query'
 import { conversations, users } from '@/lib/db/drizzle/schema'
-import { Conversation, User } from '@/lib/db/drizzle/types'
 import { InferInsertModel, eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 export async function createConversation({
   text,
   recipientId,
+  role,
+  lessonId,
   authorId,
 }: Omit<InferInsertModel<typeof conversations>, 'id'>): Promise<
-  | (Conversation & {
-      author: User | null
-    })
-  | null
+  Conversations[number]
 > {
-  return (
-    await withAuth(async () => {
-      const [conversation] = (await db
-        .insert(conversations)
-        .values([
-          {
-            id: crypto.randomUUID(),
-            recipientId,
-            text,
-            authorId,
-          },
-        ])
-        .returning()) as [
-        Conversation & {
-          author: User | null
-        },
-      ]
+  const [conversation] = (await db
+    .insert(conversations)
+    .values([
+      {
+        id: crypto.randomUUID(),
+        recipientId,
+        role,
+        lessonId,
+        text,
+        authorId,
+      },
+    ])
+    .returning()) as Conversations
 
-      if (conversation.authorId) {
-        const [user] = await db
-          .select()
-          .from(users)
-          .where(eq(users.id, conversation.authorId))
+  if (conversation.authorId) {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, conversation.authorId))
 
-        conversation.author = user
-      }
+    conversation.author = user
+  }
 
-      return conversation as
-        | (Conversation & {
-            author: User | null
-          })
-        | null
-    }, null)
-  )()
+  return conversation
 }

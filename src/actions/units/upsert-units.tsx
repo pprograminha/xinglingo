@@ -5,6 +5,7 @@ import { SnowflakeId } from '@/lib/snowflake'
 import { unitFormSchema } from '@/schemas/unit-form'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { upsertText } from '../texts/upsert-text'
 
 export const upsertLessons = async (
   lessonsData: z.infer<
@@ -13,24 +14,46 @@ export const upsertLessons = async (
   sectionId: string,
 ) => {
   const promises = lessonsData.map(async (lesson, li) => {
+    const title = await upsertText(
+      lesson.title.metadata.map((md) => ({
+        locale: md.locale,
+        root: lesson.title.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
+    const prompt = await upsertText(
+      lesson.prompt.metadata.map((md) => ({
+        locale: md.locale,
+        root: lesson.prompt.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
     if (lesson._action === 'create') {
       const lessonId = SnowflakeId({ workerId: li }).generate()
-      await db.insert(lessons).values({
-        id: lessonId,
-        sectionId,
-        prompt: lesson.prompt,
-        title: lesson.title,
-      })
+
+      if (title)
+        await db.insert(lessons).values({
+          id: lessonId,
+          sectionId,
+          title,
+          prompt,
+        })
 
       return
     }
 
-    if (lesson._action === 'update' && lesson.lessonId) {
+    if (title && lesson._action === 'update' && lesson.lessonId) {
       await db
         .update(lessons)
         .set({
-          title: lesson.title,
-          prompt: lesson.prompt,
+          title,
+          prompt,
           sectionId,
           updatedAt: new Date(),
         })
@@ -64,16 +87,45 @@ export const upsertSections = async (
       return
     }
 
-    if (section._action === 'create') {
+    const title = await upsertText(
+      section.title.metadata.map((md) => ({
+        locale: md.locale,
+        root: section.title.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
+    const slug = await upsertText(
+      section.slug.metadata.map((md) => ({
+        locale: md.locale,
+        root: section.slug.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+    const prompt = await upsertText(
+      section.prompt.metadata.map((md) => ({
+        locale: md.locale,
+        root: section.prompt.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
+    if (section._action === 'create' && title && prompt) {
       const sectionId = SnowflakeId({ workerId: si }).generate()
 
       await db.insert(sections).values({
         id: sectionId,
         unitId,
         variant: section.variant,
-        prompt: section.prompt,
-        slug: section.slug,
-        title: section.title,
+        prompt,
+        slug,
+        title,
       })
 
       if (section.lessons.length > 0) {
@@ -86,11 +138,11 @@ export const upsertSections = async (
       await db
         .update(sections)
         .set({
-          prompt: section.prompt,
           unitId,
           variant: section.variant,
-          slug: section.slug,
-          title: section.title,
+          prompt,
+          slug,
+          title,
           updatedAt: new Date(),
         })
         .where(eq(sections.id, section.sectionId))
@@ -123,15 +175,44 @@ export const upsertUnits = async (
       return
     }
 
-    if (unit._action === 'create') {
+    const title = await upsertText(
+      unit.title.metadata.map((md) => ({
+        locale: md.locale,
+        root: unit.title.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
+    const slug = await upsertText(
+      unit.slug.metadata.map((md) => ({
+        locale: md.locale,
+        root: unit.slug.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+    const prompt = await upsertText(
+      unit.prompt.metadata.map((md) => ({
+        locale: md.locale,
+        root: unit.prompt.root.data.id === md.data.id,
+        parentTextId: md.data.parentTextId,
+        text: md.data.text,
+        textId: md.data.id,
+      })),
+    )
+
+    if (unit._action === 'create' && prompt && title && slug) {
       const unitId = SnowflakeId({ workerId: ui }).generate()
 
       await db.insert(units).values({
         id: unitId,
         modelId: unit.modelId,
-        prompt: unit.prompt,
-        slug: unit.slug,
-        title: unit.title,
+        prompt,
+        slug,
+        title,
       })
 
       if (unit.sections.length > 0) {
@@ -146,9 +227,9 @@ export const upsertUnits = async (
         .update(units)
         .set({
           modelId: unit.modelId,
-          prompt: unit.prompt,
-          slug: unit.slug,
-          title: unit.title,
+          prompt,
+          slug,
+          title,
           updatedAt: new Date(),
         })
         .where(eq(units.id, unit.unitId))

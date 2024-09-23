@@ -2,13 +2,15 @@
 'use client'
 
 import { Logo } from '@/components/logo'
+import { SetLang } from '@/components/set-lang'
 import { Button } from '@/components/ui/button'
 import { env } from '@/env'
+import { useAuth } from '@/hooks/use-auth'
 import { useSteps } from '@/hooks/use-steps'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { lingos } from '@/lib/storage/local'
 import { Link, useRouter } from '@/navigation'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useEffect } from 'react'
@@ -17,9 +19,8 @@ import {
   useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3'
 import { toast } from 'sonner'
-import { SetLang } from '@/components/set-lang'
-import { verifyReCAPTCHA } from './actions/verify-recaptcha.action'
 import { addAuthCookies } from './actions/add-auth-cookies.action'
+import { verifyReCAPTCHA } from './actions/verify-recaptcha.action'
 
 export default function Auth() {
   const router = useRouter()
@@ -29,15 +30,13 @@ export default function Auth() {
     ? useGoogleReCaptcha()
     : ({} as IGoogleReCaptchaConsumerProps)
 
-  const { status } = useSession({
-    required: false,
-  })
+  const { isAuthenticated } = useAuth()
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/board')
+    if (isAuthenticated) {
+      router.push('/board/517764140345851904')
     }
-  }, [status, router])
+  }, [isAuthenticated, router])
 
   async function googleAuthHandler() {
     if (previousStep !== 0) {

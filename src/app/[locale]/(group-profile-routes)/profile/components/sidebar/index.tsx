@@ -4,7 +4,6 @@ import { LogOut } from '@/components/logout'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useAuth } from '@/hooks/use-auth'
@@ -107,14 +106,13 @@ export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
               data-selected={item.href === pathname}
               className="group"
             >
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild ignorePrevent>
-                    <Link
-                      href={item.hasAccess ? item.href : '#'}
-                      aria-disabled={!item.hasAccess}
-                      className={cn(
-                        `
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild ignorePrevent>
+                  <Link
+                    href={item.hasAccess ? item.href : '#'}
+                    aria-disabled={!item.hasAccess}
+                    className={cn(
+                      `
                         inline-flex
                         items-center
                         justify-center
@@ -149,29 +147,28 @@ export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
                         group-data-[selected=true]:text-black
                         group-data-[selected=true]:border-green-300/20
                         group-data-[selected=true]:dark:text-emerald-400`,
-                        item.className,
-                      )}
-                    >
-                      {item.img && (
-                        <Image
-                          src={item.img}
-                          width={50}
-                          height={33.6}
-                          alt="Petutor"
-                        />
-                      )}
-                      {item.icon && (
-                        <span className="inline-flex items-center justify-center [&>svg]:h-4 [&>svg]:w-4 text-lg ">
-                          {item.icon}
-                        </span>
-                      )}
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <span>{item.label}</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                      item.className,
+                    )}
+                  >
+                    {item.img && (
+                      <Image
+                        src={item.img}
+                        width={50}
+                        height={33.6}
+                        alt="Petutor"
+                      />
+                    )}
+                    {item.icon && (
+                      <span className="inline-flex items-center justify-center [&>svg]:h-4 [&>svg]:w-4 text-lg ">
+                        {item.icon}
+                      </span>
+                    )}
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <span>{item.label}</span>
+                </TooltipContent>
+              </Tooltip>
             </li>
           ))}
 

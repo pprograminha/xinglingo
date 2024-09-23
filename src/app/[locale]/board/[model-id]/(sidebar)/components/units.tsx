@@ -23,7 +23,10 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
   const t = useTranslations()
   const pathname = usePathname()
 
-  const currentSection = (unit: Unit) => unit.sections.find((u) => u.current)
+  const currentSection = (unit: Unit) => unit.sections.find((s) => s.current)
+  const someLessonsCompleted = (unit: Unit) =>
+    unit.sections.some((s) => s.lessons.some((l) => l.completed))
+
   return (
     <div className="md:min-h-full md:h-full overflow-auto md:max-w-xl w-full rounded-xl mx-auto scrollbar-hide mt-4 md:mt-0">
       <div className="flex flex-col justify-center  gap-2 items-center ">
@@ -45,7 +48,7 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
                     })}
                   </p>
                   <h1 className={`${pixelatedFont()} text-3xl`}>
-                    {unit.title}
+                    {unit.title.root.data.text}
                   </h1>
                 </div>
                 <Button
@@ -54,7 +57,7 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
                     router.push(`${pathname}/${currentSection(unit)?.id}`)
                   }
                 >
-                  {t('Continue')}
+                  {someLessonsCompleted(unit) ? t('Continue') : t('Start')}
                 </Button>
               </div>
               {unit.sections.map((section, si) => (

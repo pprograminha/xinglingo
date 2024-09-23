@@ -1,6 +1,7 @@
 import { getWordsList } from '@/actions/conversations/get-words-list'
 import { createHistory } from '@/actions/models/create-history'
 import { getModels } from '@/actions/models/get-models'
+import { getProducts } from '@/actions/stripe/get-products'
 import { ButtonWithAccessChecker } from '@/components/button-with-access-checker'
 import { Offensive } from '@/components/offensive'
 import { Card } from '@/components/ui/card'
@@ -8,19 +9,17 @@ import { Progress } from '@/components/ui/progress'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { User } from '@/lib/db/drizzle/types'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { langs, Locale, localeImages } from '@/lib/intl/locales'
 import { retrieveActiveSubscription } from '@/lib/subscription'
+import { redirect } from '@/navigation'
 import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { History } from './components/history'
-import { getProducts } from '@/actions/stripe/get-products'
-import { redirect } from '@/navigation'
 
 type WelcomeProps = {
   user: User | null
@@ -66,34 +65,32 @@ export const Welcome = ({
                           >
                             {langs(t, user.profile.localeToLearn as Locale)}
                           </h1>
-                          <TooltipProvider>
-                            <Tooltip delayDuration={0}>
-                              <TooltipTrigger>
-                                <div className="mt-2 text-xs  whitespace-nowrap">
-                                  <span className="text-zinc-400">
-                                    {wordsToLearn}
-                                  </span>{' '}
-                                  /{' '}
-                                  <span className="text-zinc-400">
-                                    {words.length}
-                                  </span>
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  {t.rich(
-                                    'Your goal is to learn {words} words, {wordsRemaining} words remaining',
-                                    {
-                                      words: wordsToLearn,
-                                      wordsRemaining,
-                                      questionHelp: () => null,
-                                    },
-                                  )}
-                                  <br />
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Tooltip delayDuration={0}>
+                            <TooltipTrigger>
+                              <div className="mt-2 text-xs  whitespace-nowrap">
+                                <span className="text-zinc-400">
+                                  {wordsToLearn}
+                                </span>{' '}
+                                /{' '}
+                                <span className="text-zinc-400">
+                                  {words.length}
+                                </span>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                {t.rich(
+                                  'Your goal is to learn {words} words, {wordsRemaining} words remaining',
+                                  {
+                                    words: wordsToLearn,
+                                    wordsRemaining,
+                                    questionHelp: () => null,
+                                  },
+                                )}
+                                <br />
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                         <Offensive value={offensive} />
                       </div>

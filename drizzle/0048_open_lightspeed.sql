@@ -1,0 +1,1 @@
+ALTER TABLE "conversations" ADD COLUMN "role" "role" DEFAULT 'user' NOT NULL;
