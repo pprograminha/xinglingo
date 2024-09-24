@@ -1,8 +1,7 @@
 import { getSection } from '@/actions/units/get-section'
+import { AI } from '@/lib/chat/actions'
 import { type Metadata } from 'next'
 import { Section } from './components/section'
-import { AI } from '@/lib/chat/actions'
-import { Chat } from '../../../../../components/chat/chat'
 
 type SectionPageProps = {
   params: {
@@ -28,9 +27,8 @@ export async function generateMetadata({
 export default function SectionPage({ params }: SectionPageProps) {
   return (
     <>
-      {/* <Section params={params} /> */}
       <AI initialAIState={{ messages: [], chatId: 'currentLesson.id' }}>
-        <Chat initialMessages={[]} />
+        <Section params={params} />
       </AI>
     </>
   )

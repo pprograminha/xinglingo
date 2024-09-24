@@ -3,6 +3,7 @@ import { UIState } from '@/lib/chat/actions'
 import { Session } from '@/lib/types'
 import Link from 'next/link'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { TextToHTML } from '../text-to-html'
 
 export interface ChatList {
   messages: UIState
@@ -43,7 +44,7 @@ export function ChatList({ messages, session, isShared }: ChatList) {
 
       {messages.map((message, index) => (
         <div key={message.id}>
-          {message.display}
+          <TextToHTML text={message.display} />
           {index < messages.length - 1 && <Separator className="my-4" />}
         </div>
       ))}

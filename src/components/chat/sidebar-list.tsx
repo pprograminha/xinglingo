@@ -1,8 +1,6 @@
 import { clearChats, getChats } from '@/actions/chat'
 import { ClearHistory } from './clear-history'
 import { SidebarItems } from './sidebar-items'
-import { ThemeToggle } from './theme-toggle'
-import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
 interface SidebarListProps {
@@ -18,7 +16,7 @@ export async function SidebarList({ userId }: SidebarListProps) {
   const chats = await loadChats(userId)
 
   if (!chats || 'error' in chats) {
-    redirect('/')
+    // redirect('/')
   } else {
     return (
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -34,7 +32,6 @@ export async function SidebarList({ userId }: SidebarListProps) {
           )}
         </div>
         <div className="flex items-center justify-between p-4">
-          <ThemeToggle />
           <ClearHistory clearChats={clearChats} isEnabled={chats?.length > 0} />
         </div>
       </div>

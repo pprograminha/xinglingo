@@ -105,8 +105,8 @@ export async function clearChats() {
 
   //   await pipeline.exec()
 
-  revalidatePath('/')
-  return redirect('/')
+  // revalidatePath('/')
+  // return redirect('/')
 }
 
 export async function getSharedChat(id: string) {
@@ -162,7 +162,7 @@ export async function saveChat(chat: Chat) {
 }
 
 export async function refreshHistory(path: string) {
-  redirect(path)
+  // redirect(path)
 }
 
 export async function getMissingKeys() {

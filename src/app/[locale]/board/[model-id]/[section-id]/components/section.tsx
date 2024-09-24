@@ -1,15 +1,16 @@
 'use client'
+import { ChatList } from '@/components/chat/chat-list'
+import { ChatPanel } from '@/components/chat/chat-panel'
 import { Loading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/use-auth'
-import { useConversations } from '@/hooks/use-conversations'
+import { useScrollAnchor } from '@/hooks/use-scroll-anchor'
+import type { AI } from '@/lib/chat/actions'
 import { lingos } from '@/lib/storage/local'
 import { useRouter } from '@/navigation'
+import { useUIState } from 'ai/rsc'
 import { XIcon } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from 'sonner'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Unit } from '../../(sidebar)/page'
-import { Textarea, TextareaHandler } from '../components/textarea'
 
 type SectionProps = {
   params: {
@@ -19,20 +20,16 @@ type SectionProps = {
 }
 
 export function Section({ params }: SectionProps) {
-  const [isRendering, setIsRendering] = useState(true)
-  const [isReRendering, setIsReRendering] = useState(false)
   const router = useRouter()
-  const { user } = useAuth()
-  const {
-    // conversations,
-    // isFetching,
-    isCreating,
-    getConversations,
-    upsertConversation,
-  } = useConversations()
-  const textareaRef = useRef<TextareaHandler>(null)
-  const conversationsContainerRef = useRef<HTMLDivElement | null>(null)
+
+  const [isRendering, setIsRendering] = useState(true)
+  const [messages] = useUIState<typeof AI>()
+
   const sectionData = lingos.storage.get('unit:section')
+
+  const [input, setInput] = useState('')
+
+  const { messagesRef, scrollRef, scrollToBottom } = useScrollAnchor()
 
   const modelId = params['model-id']
   const sectionId = params['section-id']
@@ -64,13 +61,6 @@ export function Section({ params }: SectionProps) {
   const [currentLesson, setCurrentLesson] = useState(section?.lessons[0])
 
   useEffect(() => {
-    conversationsContainerRef.current?.scrollTo({
-      top: conversationsContainerRef.current.scrollHeight,
-      behavior: 'smooth',
-    })
-  }, [isReRendering])
-
-  useEffect(() => {
     if (
       !currentLesson ||
       (isRendering === false && !section) ||
@@ -81,13 +71,13 @@ export function Section({ params }: SectionProps) {
   }, [section, currentLesson, sectionId, isRendering, backHandler])
 
   useEffect(() => {
-    if (currentLesson)
-      getConversations({
-        lessonId: currentLesson.id,
-      })
-
+    // if (currentLesson)
+    //   getConversations({
+    //     lessonId: currentLesson.id,
+    //   })
+    scrollToBottom()
     setIsRendering(false)
-  }, [getConversations, currentLesson])
+  }, [scrollToBottom])
 
   const retrieveNextLesson = useCallback(
     (lesson: Unit['sections'][number]['lessons'][number]) => {
@@ -192,7 +182,7 @@ export function Section({ params }: SectionProps) {
         {progressComponent}
       </aside>
       <main className="flex flex-col flex-1 h-full md:w-auto w-full relative">
-        <section className="w-full flex justify-between p-4">
+        <section className="w-full flex justify-between">
           <Button
             variant="ghost"
             className="text-white border-white"
@@ -216,79 +206,24 @@ export function Section({ params }: SectionProps) {
             {currentLesson.completed ? 'Next' : 'Check'}
           </Button>
         </section>
-        <section
-          ref={conversationsContainerRef}
-          className="flex-1 flex flex-col justify-between h-full w-full p-4 overflow-auto"
-        >
-          <div
-            className="flex-1 pb-48"
-            style={{
-              paddingBottom: (textareaRef.current?.getHeight() ?? 0) + 60,
-            }}
-          >
-            <div className="mb-6">
-              {section.title.root.data.text}
-              <h2 className="text-2xl font-bold">
-                {currentLesson.title.root.data.text}
-              </h2>
-            </div>
-            <div className="flex flex-col gap-2">
-              {/* {isFetching && (
-                <Loader2Icon className="animate-spin w-6 mx-auto" />
-              )}
-              {conversations.map((conversation) => (
-                <Conversation
-                  key={conversation.id}
-                  conversation={conversation}
-                  lessonId={currentLesson.id}
-                />
-              ))} */}
-            </div>
-            {/* <AI initialAIState={{ messages: [], chatId: currentLesson.id }}>
-              <Chat initialMessages={[]} />
-            </AI> */}
+        <section className="flex flex-col justify-between h-full w-full p-4 overflow-auto">
+          <div className="mb-6">
+            {section.title.root.data.text}
+            <h2 className="text-2xl font-bold">
+              {currentLesson.title.root.data.text}
+            </h2>
           </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center absolute bottom-4 left-4 right-4">
-            <Textarea
-              ref={textareaRef}
-              isLoading={isCreating}
-              onTyping={() => setIsReRendering(!isReRendering)}
-              onSend={async (text) => {
-                if (user) {
-                  const [err] = await upsertConversation({
-                    type: 'create',
-                    data: {
-                      authorId: user.id,
-                      recipientId: user.id,
-                      lessonId: currentLesson.id,
-                      role: 'user',
-                      text,
-                    },
-                  })
-
-                  if (err)
-                    toast(err.message, {
-                      className: '!text-red-400',
-                    })
-                }
-              }}
-            />
-
-            <div className="w-full mt-md">
-              <div className="grid grid-cols-1 gap-2 md:auto-rows-fr md:grid-cols-2">
-                <div style={{ opacity: 1, willChange: 'auto' }}>
-                  <div className="group col-span-1 flex h-full w-full cursor-pointer items-center gap-x-2 rounded-lg border p-xs border-zinc-800 ring-borderMain/50 divide-borderMain/50 dark:divide-borderMainDark/50  dark:ring-borderMainDark/50 dark:border-borderMainDark/50 transition duration-300 bg-background dark:bg-backgroundDark md:hover:bg-offset md:dark:hover:bg-offsetDark">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md p-xs transition-all duration-200 group-hover:bg-transparent dark:bg-offset border-borderMain/50 ring-borderMain/50 divide-borderMain/50 dark:divide-borderMainDark/50  dark:ring-borderMainDark/50 dark:border-borderMainDark/50 bg-offset dark:bg-offsetDark">
-                      <div className="default font-sans text-base">🍝</div>
-                    </div>
-                    <div className="line-clamp-2 default font-sans text-sm font-medium">
-                      Top cookbooks in 2024
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div className="group w-full overflow-auto px-0 mx-0" ref={scrollRef}>
+            <div className={'pb-[300px] pt-4 md:pt-10'} ref={messagesRef}>
+              <ChatList messages={messages} isShared={false} />
             </div>
+            <ChatPanel
+              id={'id'}
+              input={input}
+              setInput={setInput}
+              scrollToBottom={scrollToBottom}
+            />
           </div>
         </section>
       </main>

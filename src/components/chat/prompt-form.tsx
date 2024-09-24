@@ -6,8 +6,6 @@ import Textarea from 'react-textarea-autosize'
 
 import { useActions, useUIState } from 'ai/rsc'
 
-import { UserMessage } from '../stocks/message'
-import { type AI } from '@/lib/chat/actions'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -15,9 +13,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useEnterSubmit } from '@/hooks/use-enter-submit'
+import { type AI } from '@/lib/chat/actions'
+import { ArrowLeftToLineIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
-import { useRouter } from 'next/navigation'
-import { ArrowLeftToLineIcon, PlusIcon } from 'lucide-react'
+import { UserMessage } from '../stocks/message'
 
 export function PromptForm({
   input,
@@ -26,7 +25,6 @@ export function PromptForm({
   input: string
   setInput: (value: string) => void
 }) {
-  const router = useRouter()
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
@@ -67,23 +65,7 @@ export function PromptForm({
         setMessages((currentMessages) => [...currentMessages, responseMessage])
       }}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
-              onClick={() => {
-                router.push('/new')
-              }}
-            >
-              <PlusIcon />
-              <span className="sr-only">New Chat</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>New Chat</TooltipContent>
-        </Tooltip>
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border bg-zinc-800 border-zinc-700 sm:!pl-4 sm:px-12">
         <Textarea
           ref={inputRef}
           tabIndex={0}

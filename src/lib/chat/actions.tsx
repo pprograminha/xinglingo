@@ -516,7 +516,6 @@ export const AI = createAI<AIState, UIState>({
         const uiState = getUIStateFromAIState(aiState)
         return uiState
       }
-    } else {
     }
   },
   onSetAIState: async ({ state }) => {

@@ -15,7 +15,7 @@ type TextareaProps = {
   onSend: (text: string) => void
   onTyping: (text: string) => void
   isLoading: boolean
-} & HtmlHTMLAttributes<HTMLDivElement>
+} & HtmlHTMLAttributes<HTMLFormElement>
 
 export type TextareaHandler = {
   getHeight: () => number | undefined
@@ -24,11 +24,11 @@ export type TextareaHandler = {
 const TextareaRef: React.ForwardRefRenderFunction<
   TextareaHandler,
   TextareaProps
-> = ({ onSend, onTyping, isLoading, className, ...props }, ref) => {
+> = ({ onSend, onTyping, isLoading, className, onSubmit, ...props }, ref) => {
   const [focused, setFocused] = useState(false)
   const [text, setText] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const textareaContainerRef = useRef<HTMLDivElement | null>(null)
+  const textareaContainerRef = useRef<HTMLFormElement | null>(null)
 
   const { getHeight } = useSize(textareaContainerRef)
 
@@ -44,13 +44,20 @@ const TextareaRef: React.ForwardRefRenderFunction<
   }))
 
   return (
-    <div
+    <form
       ref={textareaContainerRef}
       data-focused={focused}
       className={cn(
         'w-full relative bg-zinc-800 dark:border-zinc-700/60 ring-2 ring-transparent data-[focused=true]:ring-zinc-500 rounded-md border p-2 flex flex-col gap-4',
         className,
       )}
+      onSubmit={(e) => {
+        e.preventDefault()
+        setText('')
+        onSend(text)
+
+        onSubmit?.(e)
+      }}
       {...props}
     >
       <TextareaPrimitive
@@ -75,12 +82,9 @@ const TextareaRef: React.ForwardRefRenderFunction<
       <div className="flex gap-4 justify-between items-end">
         <span className="text-zinc-500 text-xs">{text.length} / 1120</span>
         <Button
+          type="submit"
           size="icon"
           disabled={!text || text.length > 1120 || isLoading}
-          onClick={() => {
-            setText('')
-            onSend(text)
-          }}
         >
           {isLoading ? (
             <Loader2Icon className="w-4 animate-spin" />
@@ -89,7 +93,7 @@ const TextareaRef: React.ForwardRefRenderFunction<
           )}
         </Button>
       </div>
-    </div>
+    </form>
   )
 }
 
