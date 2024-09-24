@@ -15,7 +15,6 @@ import {
   PronunciationAssessment,
   Word,
 } from '@/lib/db/drizzle/types'
-import * as Ably from 'ably/promises'
 import { eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { z } from 'zod'
@@ -285,19 +284,6 @@ export async function POST(req: Request) {
           throw new Error('PopularPronunciationAssessmentError')
         }
       }
-    }
-
-    if (conversation) {
-      try {
-        const client = new Ably.Rest(env.ABLY_API_KEY)
-
-        const channel = client.channels.get('status-updates')
-
-        await channel.publish(
-          'update-from-server',
-          await getConversation(conversation.id),
-        )
-      } catch {}
     }
 
     return Response.json({

@@ -2,17 +2,11 @@
 'use client'
 
 import { useChannels } from '@/hooks/use-channels'
-import * as Ably from 'ably'
-import { useChannel } from 'ably/react'
 import { useEffect, useRef } from 'react'
 import { Conversation } from './conversation'
 
 export function Conversations() {
-  const { currentChannelIndex, channels, upsertConversation } = useChannels()
-
-  useChannel('status-updates', (conversation: Ably.Types.Message) => {
-    upsertConversation(conversation.data)
-  })
+  const { currentChannelIndex, channels } = useChannels()
 
   const conversationsContainerRef = useRef<HTMLDivElement | null>(null)
 

@@ -13,8 +13,6 @@ import { useChannels } from '@/hooks/use-channels'
 import { usePronunciation } from '@/hooks/use-pronunciation'
 import { Conversation } from '@/lib/db/drizzle/types'
 import { cn } from '@/lib/utils'
-import * as Ably from 'ably'
-import { AblyProvider, useChannel } from 'ably/react'
 import { useTranslations } from 'next-intl'
 import { HTMLAttributes, useState } from 'react'
 import { PronunciationAssessmentDash } from '../pronunciation-assessment/pronunciation-assesment-dash'
@@ -25,15 +23,9 @@ import { PhraseGenerator } from './phrase-generator'
 type ChatContainerProps = HTMLAttributes<HTMLDivElement>
 
 export default function ChatContainer(props: ChatContainerProps) {
-  const client = new Ably.Realtime.Promise({
-    authUrl: '/api/ably/token',
-    authMethod: 'POST',
-  })
 
   return (
-    <AblyProvider client={client}>
       <Chat {...props} />
-    </AblyProvider>
   )
 }
 
@@ -46,14 +38,10 @@ const Chat = ({ className, ...props }: ChatProps) => {
   const t = useTranslations()
   const { uid } = useAuth()
 
-  const { channel } = useChannel('status-updates')
 
   const sendMessageHandler = (conversation: Conversation) => {
     upsertConversation(conversation as Parameters<typeof upsertConversation>[0])
 
-    if (channel === null) return
-
-    channel.publish('update-from-client', conversation)
   }
 
   return (
