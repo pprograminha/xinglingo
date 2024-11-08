@@ -323,5 +323,8 @@
     "Start": "Commencer",
     "You are learning {lang}": "Vous apprenez {lang}",
     "Do you want to learn another language? Click here": "Voulez-vous apprendre une autre langue? <link>Cliquez ici</link>",
-    "Your progress": "Votre progression"
+    "Your progress": "Votre progression",
+    "Copied successfully": "Copié avec succès",
+    "An error occurred while generating speech": "Une erreur s'est produite lors de la génération de la parole",
+    "An error occurred while accessing session storage": "Une erreur s'est produite lors de l'accès au stockage de session"
 }

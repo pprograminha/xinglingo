@@ -2,7 +2,7 @@
 
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useScrollAnchor } from '@/hooks/use-scroll-anchor'
-import { Message, Session } from '@/lib/types'
+import { Message } from '@/lib/types'
 import { useAIState, useUIState } from 'ai/rsc'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -13,10 +13,9 @@ import { EmptyScreen } from './empty-screen'
 export type ChatProps = {
   initialMessages?: Message[]
   id?: string
-  session?: Session
 }
 
-export function Chat({ id, session }: ChatProps) {
+export function Chat({ id }: ChatProps) {
   const router = useRouter()
   const [input, setInput] = useState('')
   const [messages] = useUIState()
@@ -44,15 +43,10 @@ export function Chat({ id, session }: ChatProps) {
       ref={scrollRef}
     >
       <div className="pb-[200px] pt-4 md:pt-10" ref={messagesRef}>
-        {messages.length ? (
-          <ChatList messages={messages} isShared={false} session={session} />
-        ) : (
-          <EmptyScreen />
-        )}
+        {messages.length ? <ChatList messages={messages} /> : <EmptyScreen />}
         <div className="w-full h-px" ref={visibilityRef} />
       </div>
       <ChatPanel
-        id={id}
         input={input}
         setInput={setInput}
         scrollToBottom={scrollToBottom}

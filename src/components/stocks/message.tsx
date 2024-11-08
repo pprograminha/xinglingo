@@ -1,25 +1,21 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { spinner } from './spinner'
-import { CodeBlock } from '../ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/chat/markdown'
+import { useStreamableText } from '@/hooks/use-streamable-text'
+import { cn } from '@/lib/utils'
+import { StreamableValue } from 'ai/rsc'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
-import { StreamableValue } from 'ai/rsc'
-import { useStreamableText } from '@/hooks/use-streamable-text'
-import { UserIcon } from 'lucide-react'
-import { OpenAIIcon } from '../icons/openai'
-
-// Different types of message bubbles.
+import { CodeBlock } from '../ui/codeblock'
+import { spinner } from './spinner'
+import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 
 export function UserMessage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="group relative flex items-start md:-ml-12">
-      <div className="flex size-[25px] shrink-0 select-none items-center justify-center rounded-md border bg-background shadow-sm">
-        <UserIcon />
-      </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden pl-2">
+    <div className="group relative flex items-start">
+      <div
+        className={`flex-1 space-y-2 overflow-hidden text-3xl ${pixelatedFont()}`}
+      >
         {children}
       </div>
     </div>
@@ -36,11 +32,8 @@ export function BotMessage({
   const text = useStreamableText(content)
 
   return (
-    <div className={cn('group relative flex items-start md:-ml-12', className)}>
-      <div className="flex size-[24px] shrink-0 select-none items-center justify-center rounded-md border bg-primary text-primary-foreground shadow-sm">
-        <OpenAIIcon />
-      </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
+    <div className={cn('group relative flex items-start', className)}>
+      <div className="flex-1 space-y-2 overflow-hidden">
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
           remarkPlugins={[remarkGfm, remarkMath]}
@@ -79,24 +72,10 @@ export function BotMessage({
   )
 }
 
-export function BotCard({
-  children,
-  showAvatar = true,
-}: {
-  children: React.ReactNode
-  showAvatar?: boolean
-}) {
+export function BotCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="group relative flex items-start md:-ml-12">
-      <div
-        className={cn(
-          'flex size-[24px] shrink-0 select-none items-center justify-center rounded-md border bg-primary text-primary-foreground shadow-sm',
-          !showAvatar && 'invisible',
-        )}
-      >
-        <OpenAIIcon />
-      </div>
-      <div className="ml-4 flex-1 pl-2">{children}</div>
+    <div className="group relative flex w-full items-start">
+      <div className="flex-1 ">{children}</div>
     </div>
   )
 }
@@ -115,11 +94,8 @@ export function SystemMessage({ children }: { children: React.ReactNode }) {
 
 export function SpinnerMessage() {
   return (
-    <div className="group relative flex items-start md:-ml-12">
-      <div className="flex size-[24px] shrink-0 select-none items-center justify-center rounded-md border bg-primary text-primary-foreground shadow-sm">
-        <OpenAIIcon />
-      </div>
-      <div className="ml-4 h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
+    <div className="group relative flex items-start ">
+      <div className="h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
         {spinner}
       </div>
     </div>

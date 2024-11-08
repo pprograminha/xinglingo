@@ -6,8 +6,8 @@ import { usePathname, useRouter } from '@/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Unit } from '../page'
-import { UnitForm } from './unit-form'
 import { Section } from './section'
+import { UnitForm } from './unit-form'
 
 type UnitsProps = {
   units: Unit[]
@@ -24,7 +24,10 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
   const pathname = usePathname()
 
   const currentSection = (unit: Unit) => unit.sections.find((s) => s.current)
-  const someLessonsCompleted = (unit: Unit) =>
+  const currentLesson = (section: Unit['sections'][number]) =>
+    section.lessons.find((l) => l.current)
+
+  const hasSomeLessonCompleted = (unit: Unit) =>
     unit.sections.some((s) => s.lessons.some((l) => l.completed))
 
   return (
@@ -57,13 +60,18 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
                     router.push(`${pathname}/${currentSection(unit)?.id}`)
                   }
                 >
-                  {someLessonsCompleted(unit) ? t('Continue') : t('Start')}
+                  {hasSomeLessonCompleted(unit) ? t('Continue') : t('Start')}
                 </Button>
               </div>
               {unit.sections.map((section, si) => (
                 <Section
                   t={t}
-                  onRedirect={() => router.push(`${pathname}/${section.id}`)}
+                  onRedirect={() =>
+                    currentLesson(section) &&
+                    router.push(
+                      `${pathname}/${section.id}/${currentLesson(section)!.id}`,
+                    )
+                  }
                   key={section.id}
                   onUnits={setUnits}
                   section={section}

@@ -4,7 +4,7 @@ import { cache } from 'react'
 import Stripe from 'stripe'
 
 type CreateCouponData = Partial<{
-  percent_off: number
+  percentOff: number
   code: string
   duration: Stripe.CouponCreateParams.Duration
 }>

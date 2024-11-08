@@ -323,5 +323,8 @@
     "You are learning {lang}": "Estás aprendiendo {lang}",
     "Do you want to learn another language? Click here": "¿Quieres aprender otro idioma? Haz <link>clic aquí</link>",
     "Your progress": "Tu progreso",
-    "Section {count}, Unit {unitCount}": "Sección {count}, Unidad {unitCount}"
+    "Section {count}, Unit {unitCount}": "Sección {count}, Unidad {unitCount}",
+    "Copied successfully": "Copiado exitosamente",
+    "An error occurred while generating speech": "Se produjo un error al generar el habla",
+    "An error occurred while accessing session storage": "Se produjo un error al acceder al almacenamiento de sesión"
 }

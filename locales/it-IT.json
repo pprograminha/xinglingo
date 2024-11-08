@@ -323,5 +323,8 @@
     "Start": "Inizia",
     "You are learning {lang}": "Stai imparando {lang}",
     "Do you want to learn another language? Click here": "Vuoi imparare un'altra lingua? <link>Clicca qui</link>",
-    "Your progress": "Il tuo progresso"
+    "Your progress": "Il tuo progresso",
+    "Copied successfully": "Copiato con successo",
+    "An error occurred while generating speech": "Si è verificato un errore durante la generazione del discorso",
+    "An error occurred while accessing session storage": "Si è verificato un errore durante l'accesso all'archiviazione della sessione"
 }

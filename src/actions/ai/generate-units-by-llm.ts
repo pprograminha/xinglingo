@@ -63,12 +63,12 @@ export async function generateUnitsByLLM<T extends GroupType = 'unit'>(
   const prompt = `
     ${crypto.randomUUID()}
 
-    Gere um JSON válido no formato do schema abaixo:
+    Generate a valid JSON in the format of the schema below:
     schema: ${JSON.stringify(zodToJsonSchema(schema))}
 
     ${$prompt}
 
-    Retorne apenas o JSON, sem nenhum texto adicional.
+    Return only the JSON, without any additional text.
   `
 
   const response = await openai.chat.completions.create({

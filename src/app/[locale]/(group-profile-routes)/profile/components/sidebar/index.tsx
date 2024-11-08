@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { HtmlHTMLAttributes, useEffect, useState } from 'react'
+import { HtmlHTMLAttributes, useEffect, useMemo, useState } from 'react'
 
 type SideBarProps = HtmlHTMLAttributes<HTMLUListElement> & {
   noModels?: boolean
@@ -41,49 +41,54 @@ export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
     Awaited<ReturnType<typeof getModels>>['histories']
   >([])
 
-  const items: List[] = [
-    {
-      hasAccess: true,
-      href: '/dashboard',
-      icon: <LayoutDashboardIcon />,
-      label: t('Dashboard'),
-      className: undefined,
-    },
-    {
-      hasAccess: true,
-      href: '/profile',
-      icon: <UserIcon />,
-      label: t('Profile'),
-      className: undefined,
-    },
-    {
-      hasAccess: true,
-      href: '/subscriptions',
-      icon: <WalletIcon />,
-      label: t('Plans'),
-      className: undefined,
-    },
-    {
-      hasAccess: Boolean(retrieveActiveSubscription(user)),
-      href: '/languages',
-      icon: <LanguagesIcon />,
-      label: retrieveActiveSubscription(user)
-        ? t('Languages')
-        : t('Access not permitted'),
-      className: 'md:mb-5',
-    },
+  const items: List[] = useMemo(
+    () => [
+      {
+        hasAccess: true,
+        href: '/dashboard',
+        icon: <LayoutDashboardIcon />,
+        label: t('Dashboard'),
+        className: undefined,
+      },
+      {
+        hasAccess: true,
+        href: '/profile',
+        icon: <UserIcon />,
+        label: t('Profile'),
+        className: undefined,
+      },
+      {
+        hasAccess: true,
+        href: '/subscriptions',
+        icon: <WalletIcon />,
+        label: t('Plans'),
+        className: undefined,
+      },
+      {
+        hasAccess: Boolean(retrieveActiveSubscription(user)),
+        href: '/languages',
+        icon: <LanguagesIcon />,
+        label: retrieveActiveSubscription(user)
+          ? t('Languages')
+          : t('Access not permitted'),
+        className: 'md:mb-5',
+      },
 
-    ...histories.map((h) => ({
-      hasAccess: Boolean(retrieveActiveSubscription(user)),
-      href: `/board/${h.id}`,
-      icon: undefined,
-      img: `/assets/imgs/${h.image}`,
-      className: 'dark:aria-disabled:!border-red-500',
-      label: retrieveActiveSubscription(user)
-        ? h.name!
-        : t('Access not permitted'),
-    })),
-  ]
+      ...(user
+        ? histories.map((h) => ({
+            hasAccess: Boolean(retrieveActiveSubscription(user)),
+            href: `/board/${h.id}`,
+            icon: undefined,
+            img: `/assets/imgs/${h.image}`,
+            className: 'dark:aria-disabled:!border-red-500',
+            label: retrieveActiveSubscription(user)
+              ? h.name!
+              : t('Access not permitted'),
+          }))
+        : []),
+    ],
+    [user, histories, t],
+  )
 
   useEffect(() => {
     if (!noModels)

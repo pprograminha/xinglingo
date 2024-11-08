@@ -10,7 +10,7 @@ import { useRouter } from '@/navigation'
 import { useUIState } from 'ai/rsc'
 import { XIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Unit } from '../../(sidebar)/page'
+import { Unit } from '../../../(sidebar)/page'
 
 type SectionProps = {
   params: {
@@ -69,15 +69,13 @@ export function Section({ params }: SectionProps) {
       backHandler()
     }
   }, [section, currentLesson, sectionId, isRendering, backHandler])
+  useEffect(() => {
+    setIsRendering(false)
+  }, [])
 
   useEffect(() => {
-    // if (currentLesson)
-    //   getConversations({
-    //     lessonId: currentLesson.id,
-    //   })
     scrollToBottom()
-    setIsRendering(false)
-  }, [scrollToBottom])
+  }, [scrollToBottom, messages])
 
   const retrieveNextLesson = useCallback(
     (lesson: Unit['sections'][number]['lessons'][number]) => {
@@ -168,7 +166,7 @@ export function Section({ params }: SectionProps) {
   const nextLesson = retrieveNextLesson(currentLesson)
 
   return (
-    <div className="min-h-screen h-screen bg-[url('/assets/svgs/radiant-gradient.svg')]  bg-no-repeat bg-cover flex md:flex-row flex-col items-center justify-between">
+    <div className="min-h-screen overflow-hidden h-screen bg-[url('/assets/svgs/radiant-gradient.svg')]  bg-no-repeat bg-cover flex md:flex-row flex-col items-center justify-between">
       <aside className="flex flex-row md:flex-col gap-4 items-center justify-center p-4 md:h-full md:w-auto w-full">
         <Button
           variant="secondary"
@@ -182,7 +180,7 @@ export function Section({ params }: SectionProps) {
         {progressComponent}
       </aside>
       <main className="flex flex-col flex-1 h-full md:w-auto w-full relative">
-        <section className="w-full flex justify-between">
+        <section className="w-full flex p-4 justify-between">
           <Button
             variant="ghost"
             className="text-white border-white"
@@ -206,8 +204,8 @@ export function Section({ params }: SectionProps) {
             {currentLesson.completed ? 'Next' : 'Check'}
           </Button>
         </section>
-        <section className="flex flex-col justify-between h-full w-full p-4 overflow-auto">
-          <div className="mb-6">
+        <section className="flex flex-col justify-between h-full w-full overflow-auto">
+          <div className="mb-6 p-4">
             {section.title.root.data.text}
             <h2 className="text-2xl font-bold">
               {currentLesson.title.root.data.text}
@@ -216,10 +214,9 @@ export function Section({ params }: SectionProps) {
 
           <div className="group w-full overflow-auto px-0 mx-0" ref={scrollRef}>
             <div className={'pb-[300px] pt-4 md:pt-10'} ref={messagesRef}>
-              <ChatList messages={messages} isShared={false} />
+              <ChatList messages={messages} />
             </div>
             <ChatPanel
-              id={'id'}
               input={input}
               setInput={setInput}
               scrollToBottom={scrollToBottom}

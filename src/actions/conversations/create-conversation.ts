@@ -3,8 +3,8 @@
 import { Conversations } from '@/hooks/use-conversations'
 import { db } from '@/lib/db/drizzle/query'
 import { conversations, users } from '@/lib/db/drizzle/schema'
+import { snowflakeId } from '@/lib/snowflake'
 import { InferInsertModel, eq } from 'drizzle-orm'
-import crypto from 'node:crypto'
 export async function createConversation({
   text,
   recipientId,
@@ -18,7 +18,7 @@ export async function createConversation({
     .insert(conversations)
     .values([
       {
-        id: crypto.randomUUID(),
+        id: snowflakeId(),
         recipientId,
         role,
         lessonId,

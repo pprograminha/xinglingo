@@ -351,6 +351,34 @@
       "when": 1726949032840,
       "tag": "0049_sharp_darkstar",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1728168955530,
+      "tag": "0050_cute_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1728170065437,
+      "tag": "0051_big_fixer",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1728170163676,
+      "tag": "0052_omniscient_shotgun",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1728171944215,
+      "tag": "0053_fantastic_sharon_carter",
+      "breakpoints": true
     }
   ]
 }

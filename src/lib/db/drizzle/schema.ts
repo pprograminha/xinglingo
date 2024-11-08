@@ -8,7 +8,6 @@ import {
   jsonb,
   pgEnum,
   pgTable,
-  primaryKey,
   text,
   timestamp,
   uuid,
@@ -130,19 +129,19 @@ export const couponsDurationEnum = pgEnum('duration', [
 
 export const coupons = pgTable('coupons', {
   id: text('id').primaryKey(),
-  amount_off: integer('amount_off'),
+  amountOff: integer('amountOff'),
   created: integer('created').notNull(),
   currency: text('currency'),
   deleted: boolean('deleted').notNull().default(false),
   duration: couponsDurationEnum('duration').notNull(),
-  duration_in_months: integer('duration_in_months'),
+  durationInMonths: integer('durationInMonths'),
   livemode: boolean('livemode').notNull(),
-  max_redemptions: integer('max_redemptions'),
+  maxRedemptions: integer('maxRedemptions'),
   metadata: jsonb('metadata'),
   name: text('name'),
-  percent_off: integer('percent_off'),
-  redeem_by: integer('redeem_by'),
-  times_redeemed: integer('times_redeemed').notNull(),
+  percentOff: integer('percentOff'),
+  redeemBy: integer('redeemBy'),
+  timesRedeemed: integer('timesRedeemed').notNull(),
   valid: boolean('valid').notNull(),
 })
 export const promotionCodes = pgTable('promotionCodes', {
@@ -151,10 +150,10 @@ export const promotionCodes = pgTable('promotionCodes', {
   coupon: text('coupon'),
   created: integer('created').notNull(),
   livemode: boolean('livemode').notNull(),
-  max_redemptions: integer('max_redemptions'),
+  maxRedemptions: integer('maxRedemptions'),
   metadata: jsonb('metadata'),
-  expires_at: integer('percent_off'),
-  times_redeemed: integer('times_redeemed').notNull(),
+  expiresAt: integer('expiresAt'),
+  timesRedeemed: integer('timesRedeemed').notNull(),
   active: boolean('active'),
 })
 
@@ -187,14 +186,21 @@ export const usersAvailability = pgTable('usersAvailability', {
 })
 
 export const conversations = pgTable('conversations', {
-  id: uuid('id').primaryKey(),
-  text: text('text').notNull(),
+  id: text('id').primaryKey(),
+  text: text('text'),
+  content: jsonb('content').array(), // .$type<{}>(),
   authorId: uuid('authorId').references(() => users.id, {
     onDelete: 'cascade',
   }),
   lessonId: text('lessonId').references(() => lessons.id, {
     onDelete: 'set null',
   }),
+  parentConversationId: text('parentConversationId').references(
+    (): AnyPgColumn => conversations.id,
+    {
+      onDelete: 'cascade',
+    },
+  ),
   recipientId: uuid('recipientId')
     .references(() => users.id, {
       onDelete: 'cascade',
@@ -209,9 +215,6 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
   id: uuid('id').primaryKey(),
 
   text: text('text'),
-  conversationId: uuid('conversationId').references(() => conversations.id, {
-    onDelete: 'set null',
-  }),
   creatorId: uuid('creatorId').references(() => users.id, {
     onDelete: 'cascade',
   }),
@@ -397,33 +400,14 @@ export const histories = pgTable('histories', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
-export const speechClientEnum = pgEnum('client', ['cloudflare-s3'])
-
-export const speechsToConversations = pgTable(
-  'speechsToConversations',
-  {
-    speechId: uuid('speechId')
-      .references(() => speechs.id, {
-        onDelete: 'cascade',
-      })
-      .notNull(),
-    conversationId: uuid('conversationId')
-      .references(() => conversations.id, {
-        onDelete: 'cascade',
-      })
-      .notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.speechId, t.conversationId] }),
-  }),
-)
+export const speechClientEnum = pgEnum('client', ['cloudflare_s3'])
 
 export const speechs = pgTable('speechs', {
   id: uuid('id').primaryKey(),
   speech: text('speech').notNull(),
   voice: text('voice').notNull(),
   speed: doublePrecision('speed').notNull().default(1),
-  client: speechClientEnum('client').default('cloudflare-s3').notNull(),
+  client: speechClientEnum('client').default('cloudflare_s3').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -569,19 +553,19 @@ export const modelsRelations = relations(models, ({ many }) => ({
   units: many(units),
 }))
 
-export const speechsToConversationsRelations = relations(
-  speechsToConversations,
-  ({ one }) => ({
-    speechs: one(speechs, {
-      fields: [speechsToConversations.speechId],
-      references: [speechs.id],
-    }),
-    conversations: one(conversations, {
-      fields: [speechsToConversations.conversationId],
-      references: [conversations.id],
-    }),
-  }),
-)
+// export const speechsToConversationsRelations = relations(
+//   speechsToConversations,
+//   ({ one }) => ({
+//     speechs: one(speechs, {
+//       fields: [speechsToConversations.speechId],
+//       references: [speechs.id],
+//     }),
+//     conversations: one(conversations, {
+//       fields: [speechsToConversations.conversationId],
+//       references: [conversations.id],
+//     }),
+//   }),
+// )
 
 export const wordsRelations = relations(words, ({ many, one }) => ({
   pronunciationAssessment: one(pronunciationsAssessment, {
@@ -632,29 +616,21 @@ export const customersRelations = relations(customers, ({ one }) => ({
   }),
 }))
 
-export const speechsRelations = relations(speechs, ({ many }) => ({
-  speechsToConversations: many(speechsToConversations),
-}))
-
-export const conversationsRelations = relations(
-  conversations,
-  ({ one, many }) => ({
-    pronunciationAssessment: one(pronunciationsAssessment),
-    speechsToConversations: many(speechsToConversations),
-    author: one(users, {
-      fields: [conversations.authorId],
-      references: [users.id],
-    }),
-    lesson: one(lessons, {
-      fields: [conversations.lessonId],
-      references: [lessons.id],
-    }),
-    recipient: one(users, {
-      fields: [conversations.recipientId],
-      references: [users.id],
-    }),
+export const conversationsRelations = relations(conversations, ({ one }) => ({
+  pronunciationAssessment: one(pronunciationsAssessment),
+  author: one(users, {
+    fields: [conversations.authorId],
+    references: [users.id],
   }),
-)
+  lesson: one(lessons, {
+    fields: [conversations.lessonId],
+    references: [lessons.id],
+  }),
+  recipient: one(users, {
+    fields: [conversations.recipientId],
+    references: [users.id],
+  }),
+}))
 
 export const pronunciationsAssessmentRelations = relations(
   pronunciationsAssessment,
@@ -662,10 +638,6 @@ export const pronunciationsAssessmentRelations = relations(
     user: one(users, {
       fields: [pronunciationsAssessment.creatorId],
       references: [users.id],
-    }),
-    conversation: one(conversations, {
-      fields: [pronunciationsAssessment.conversationId],
-      references: [conversations.id],
     }),
     words: many(words),
   }),

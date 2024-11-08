@@ -1,35 +1,10 @@
-import { getSection } from '@/actions/units/get-section'
-import { AI } from '@/lib/chat/actions'
-import { type Metadata } from 'next'
-import { Section } from './components/section'
+import { getModels } from '@/actions/models/get-models'
+import { getAuth } from '@/lib/auth/get-auth'
+import { redirect } from '@/navigation'
 
-type SectionPageProps = {
-  params: {
-    'model-id': string
-    'section-id': string
-  }
-}
+export default async function SectionPage() {
+  const { user } = await getAuth()
+  const { histories } = await getModels(user)
 
-export async function generateMetadata({
-  params,
-}: SectionPageProps): Promise<Metadata> {
-  const section = await getSection({
-    sectionId: params['section-id'],
-  })
-
-  return section
-    ? {
-        title: section.title.root.data.text,
-      }
-    : {}
-}
-
-export default function SectionPage({ params }: SectionPageProps) {
-  return (
-    <>
-      <AI initialAIState={{ messages: [], chatId: 'currentLesson.id' }}>
-        <Section params={params} />
-      </AI>
-    </>
-  )
+  return redirect(`/board/${histories[0].id}`)
 }

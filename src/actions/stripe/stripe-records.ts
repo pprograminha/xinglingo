@@ -55,18 +55,18 @@ const upsertCouponRecord = async (coupon: Stripe.Coupon) => {
   try {
     const couponData: Coupon = {
       id: coupon.id,
-      amount_off: coupon.amount_off,
+      amountOff: coupon.amount_off,
       created: coupon.created,
       currency: coupon.currency,
       deleted: coupon.deleted || false,
       duration: coupon.duration,
-      duration_in_months: coupon.duration_in_months,
+      durationInMonths: coupon.duration_in_months,
       livemode: coupon.livemode,
-      max_redemptions: coupon.max_redemptions,
+      maxRedemptions: coupon.max_redemptions,
       name: coupon.name,
-      percent_off: coupon.percent_off,
-      redeem_by: coupon.redeem_by,
-      times_redeemed: coupon.times_redeemed,
+      percentOff: coupon.percent_off,
+      redeemBy: coupon.redeem_by,
+      timesRedeemed: coupon.times_redeemed,
       valid: coupon.valid,
       metadata: coupon.metadata,
     }
@@ -95,13 +95,13 @@ const upsertPromotionCodeRecord = async (
       id: promotionCode.id,
       created: promotionCode.created,
       livemode: promotionCode.livemode,
-      max_redemptions: promotionCode.max_redemptions,
-      times_redeemed: promotionCode.times_redeemed,
+      maxRedemptions: promotionCode.max_redemptions,
+      timesRedeemed: promotionCode.times_redeemed,
       metadata: promotionCode.metadata,
       active: promotionCode.active,
       code: promotionCode.code,
       coupon: promotionCode.coupon.id,
-      expires_at: promotionCode.expires_at,
+      expiresAt: promotionCode.expires_at,
     }
 
     const foundPromotionCode = await db.query.promotionCodes.findFirst({

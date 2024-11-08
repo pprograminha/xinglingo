@@ -33,8 +33,6 @@ export const getConversations = async (
 
   const { lessonId } = params || {}
 
-  console.log(params)
-
   const conversationsData = await db.query.conversations.findMany({
     where: (conversations, { eq, and }) =>
       and(

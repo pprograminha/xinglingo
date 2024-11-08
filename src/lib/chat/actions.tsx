@@ -21,7 +21,7 @@ import {
   SystemMessage,
 } from '@/components/stocks'
 
-import { saveChat } from '@/actions/chat'
+import { ModeTranslator } from '@/components/modes/mode-translator'
 import { Events } from '@/components/stocks/events'
 import { EventsSkeleton } from '@/components/stocks/events-skeleton'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
@@ -29,26 +29,21 @@ import { StockSkeleton } from '@/components/stocks/stock-skeleton'
 import { Stocks } from '@/components/stocks/stocks'
 import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
 import { Chat, Message } from '@/lib/types'
-import {
-  formatNumber,
-  nanoid,
-  runAsyncFnWithoutBlocking,
-  sleep,
-} from '@/lib/utils'
+import { nanoid, runAsyncFnWithoutBlocking, sleep } from '@/lib/utils'
+import { getTranslations } from 'next-intl/server'
 import { z } from 'zod'
 import { getAuth } from '../auth/get-auth'
+import { langs, Locale, locales } from '../intl/locales'
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
+async function searchForWordOrPhraseInDictionary(word: number) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
 
-  const purchasing = createStreamableUI(
+  const searching = createStreamableUI(
     <div className="inline-flex items-start gap-1 md:items-center">
       {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
+      <p className="mb-2">searching {word}...</p>
     </div>,
   )
 
@@ -57,32 +52,22 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
   runAsyncFnWithoutBlocking(async () => {
     await sleep(1000)
 
-    purchasing.update(
+    searching.update(
       <div className="inline-flex items-start gap-1 md:items-center">
         {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
+        <p className="mb-2">Searching {word}... working on it...</p>
       </div>,
     )
 
     await sleep(1000)
 
-    purchasing.done(
+    searching.done(
       <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
-        </p>
+        <p className="mb-2">Searched {word}.</p>
       </div>,
     )
 
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
-      </SystemMessage>,
-    )
+    systemMessage.done(<SystemMessage>Searched {word}.</SystemMessage>)
 
     aiState.done({
       ...aiState.get(),
@@ -91,16 +76,14 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
         {
           id: nanoid(),
           role: 'system',
-          content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-            amount * price
-          }]`,
+          content: `[Searched.]`,
         },
       ],
     })
   })
 
   return {
-    purchasingUI: purchasing.value,
+    searchingUI: searching.value,
     newMessage: {
       id: nanoid(),
       display: systemMessage.value,
@@ -112,6 +95,10 @@ async function submitUserMessage(content: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
+
+  const { user } = await getAuth(true)
+
+  const t = await getTranslations()
 
   aiState.update({
     ...aiState.get(),
@@ -132,18 +119,13 @@ async function submitUserMessage(content: string) {
     model: openai('gpt-3.5-turbo') as Parameters<typeof streamUI>[0]['model'],
     initial: <SpinnerMessage />,
     system: `\
-    You are a stock trading conversation bot and you can help users buy stocks, step by step.
-    You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
+    You should communicate with the user in ${langs(t, (user?.locale as Locale) ?? 'en')}, as that is their native language.
+    You are a teacher who will teach the user how to learn ${langs(t, (user?.profile?.localeToLearn as Locale) ?? 'en')}, step by step.
     
-    Messages inside [] means that it's a UI element or a user event. For example:
-    - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-    - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
-    
-    If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-    If the user just wants the price, call \`show_stock_price\` to show the price.
+    If the user requests searching a word or phrase or more than one phrase or word, call \`search_for_word_in_dictionary_ui\` to show the dictionary word UI.
     If you want to show trending stocks, call \`list_stocks\`.
     If you want to show events, call \`get_events\`.
-    If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
+    If the user wants complete another impossible task, respond that you were not made for that task.
     
     Besides that, you can also chat with users and do some calculations if needed.`,
     messages: [
@@ -301,118 +283,74 @@ async function submitUserMessage(content: string) {
           )
         },
       },
-      showStockPurchase: {
+      searchForWordOrPhraseInDictionary: {
         description:
-          'Show price and the UI to purchase a stock or currency. Use this if the user wants to purchase a stock or currency.',
+          'Show dictionary word or phrase and the UI. Use this if the user wants to explain a word or phrase.',
         parameters: z.object({
-          symbol: z
+          wordOrPhrase: z.string().describe('The word or phrase.'),
+          translatedWordOrPhrase: z
             .string()
             .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.',
+              `Translate "wordOrPhrase" to ${langs(t, (user?.profile?.localeToLearn as Locale | undefined) || 'en')}`,
             ),
-          price: z.number().describe('The price of the stock.'),
-          numberOfShares: z
-            .number()
-            .optional()
-            .describe(
-              'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.',
-            ),
+
+          sourceLocale: z.enum(locales).describe('The source language locale'),
+          targetLocale: z
+            .enum(locales)
+            .describe('The target language locale for translation'),
         }),
-        generate: async function* ({ symbol, price, numberOfShares = 100 }) {
+        generate: async function* ({
+          wordOrPhrase,
+          translatedWordOrPhrase,
+          sourceLocale,
+          targetLocale,
+        }) {
           const toolCallId = nanoid()
 
-          if (numberOfShares <= 0 || numberOfShares > 1000) {
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockPurchase',
-                      toolCallId,
-                      args: { symbol, price, numberOfShares },
+          aiState.done({
+            ...aiState.get(),
+            messages: [
+              ...aiState.get().messages,
+              {
+                id: nanoid(),
+                role: 'assistant',
+                content: [
+                  {
+                    type: 'tool-call',
+                    toolName: 'searchForWordOrPhraseInDictionary',
+                    toolCallId,
+                    args: { wordOrPhrase, translatedWordOrPhrase },
+                  },
+                ],
+              },
+              {
+                id: nanoid(),
+                role: 'tool',
+                content: [
+                  {
+                    type: 'tool-result',
+                    toolName: 'searchForWordOrPhraseInDictionary',
+                    toolCallId,
+                    result: {
+                      wordOrPhrase,
+                      translatedWordOrPhrase,
                     },
-                  ],
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockPurchase',
-                      toolCallId,
-                      result: {
-                        symbol,
-                        price,
-                        numberOfShares,
-                        status: 'expired',
-                      },
-                    },
-                  ],
-                },
-                {
-                  id: nanoid(),
-                  role: 'system',
-                  content: `[User has selected an invalid amount]`,
-                },
-              ],
-            })
+                  },
+                ],
+              },
+            ],
+          })
 
-            return <BotMessage content={'Invalid amount'} />
-          } else {
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockPurchase',
-                      toolCallId,
-                      args: { symbol, price, numberOfShares },
-                    },
-                  ],
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockPurchase',
-                      toolCallId,
-                      result: {
-                        symbol,
-                        price,
-                        numberOfShares,
-                      },
-                    },
-                  ],
-                },
-              ],
-            })
-
-            return (
-              <BotCard>
-                <Purchase
-                  props={{
-                    numberOfShares,
-                    symbol,
-                    price: +price,
-                    status: 'requires_action',
-                  }}
-                />
-              </BotCard>
-            )
-          }
+          return (
+            <BotCard>
+              <ModeTranslator
+                sourceText={wordOrPhrase}
+                translatedText={translatedWordOrPhrase}
+                sourceLocale={sourceLocale}
+                targetLocale={targetLocale}
+              />
+            </BotCard>
+          )
         },
       },
       getEvents: {
@@ -500,7 +438,7 @@ export type UIState = {
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
-    confirmPurchase,
+    searchForWordOrPhraseInDictionary,
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
@@ -516,33 +454,6 @@ export const AI = createAI<AIState, UIState>({
         const uiState = getUIStateFromAIState(aiState)
         return uiState
       }
-    }
-  },
-  onSetAIState: async ({ state }) => {
-    'use server'
-
-    const session = await getAuth()
-
-    if (session && session.user) {
-      const { chatId, messages } = state
-
-      const createdAt = new Date()
-      const userId = session.user.id as string
-      const path = `/chat/${chatId}`
-
-      const firstMessageContent = messages[0].content as string
-      const title = firstMessageContent.substring(0, 100)
-
-      const chat: Chat = {
-        id: chatId,
-        title,
-        userId,
-        createdAt,
-        messages,
-        path,
-      }
-
-      await saveChat(chat)
     }
   },
 })
@@ -566,7 +477,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
                 {/* @ts-expect-error */}
                 <Stock props={tool.result} />
               </BotCard>
-            ) : tool.toolName === 'showStockPurchase' ? (
+            ) : tool.toolName === 'searchForWordOrPhraseInDictionary' ? (
               <BotCard>
                 {/* @ts-expect-error */}
                 <Purchase props={tool.result} />

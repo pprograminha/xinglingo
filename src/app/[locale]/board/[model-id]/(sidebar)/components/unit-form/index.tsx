@@ -105,9 +105,7 @@ export const UnitForm = ({
 
     setValue('units', units)
   }, [defaultUnits, setValue])
-  console.log(form.getValues('units'))
   const upsertUnitHandler = async (values: z.infer<typeof unitFormSchema>) => {
-    console.log(values)
     const ignoreAction = (
       units: typeof values.units,
       actionsToIgnore: (typeof values.units)[number]['_action'][],
@@ -152,7 +150,6 @@ export const UnitForm = ({
 
     toast('Atualizando...')
     try {
-      console.log(unitsToSend)
       if (unitsToSend.length > 0) await upsertUnits(unitsToSend)
 
       toast('Unidades atualizadas com sucesso!')

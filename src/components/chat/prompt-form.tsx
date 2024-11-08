@@ -17,12 +17,16 @@ import { type AI } from '@/lib/chat/actions'
 import { ArrowLeftToLineIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 import { UserMessage } from '../stocks/message'
+import { ButtonScrollToBottom } from './button-scroll-to-bottom'
 
 export function PromptForm({
   input,
   setInput,
+  scrollToBottom,
 }: {
   input: string
+
+  scrollToBottom: () => void
   setInput: (value: string) => void
 }) {
   const { formRef, onKeyDown } = useEnterSubmit()
@@ -65,7 +69,7 @@ export function PromptForm({
         setMessages((currentMessages) => [...currentMessages, responseMessage])
       }}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border bg-zinc-800 border-zinc-700 sm:!pl-4 sm:px-12">
+      <div className="relative flex items-center justify-between max-h-60 w-full grow overflow-hidden bg-background rounded-lg  sm:rounded-md border bg-zinc-800 border-zinc-700 px-4">
         <Textarea
           ref={inputRef}
           tabIndex={0}
@@ -81,7 +85,8 @@ export function PromptForm({
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <div className="absolute right-0 top-[13px] sm:right-4">
+
+        <div className="gap-2 flex top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button type="submit" size="icon" disabled={input === ''}>
@@ -91,6 +96,12 @@ export function PromptForm({
             </TooltipTrigger>
             <TooltipContent>Send message</TooltipContent>
           </Tooltip>
+          <ButtonScrollToBottom
+            variant="default"
+            scrollToBottom={scrollToBottom}
+            type="button"
+            size="icon"
+          />
         </div>
       </div>
     </form>

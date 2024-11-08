@@ -28,7 +28,7 @@ import { format } from 'date-fns'
 import { Loader2, Mic, MicOff, Sparkles, Trash2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import { SpeechGenerator } from './speech-generator'
+import { SpeechGenerator } from '../../../../components/modes/speech-generator'
 
 type Conversations = (TypeConversation & {
   pronunciationAssessment:
@@ -58,15 +58,7 @@ export function Conversation({ conversation, lessonId }: ConversationProps) {
     startRecording,
   } = useRecordConversation()
   const userId = uid()
-  const {
-    append,
-    isLoading: openaiIsLoading,
-    input,
-    messages,
-  } = useChat({
-    onResponse(response) {
-      console.log(response)
-    },
+  const { append, isLoading: openaiIsLoading } = useChat({
     generateId: () => conversation.id,
 
     onFinish(message) {
@@ -91,9 +83,6 @@ export function Conversation({ conversation, lessonId }: ConversationProps) {
       max_length: 400,
     },
   })
-
-  console.log(input)
-  console.log(messages)
 
   const isMd = useBreakpoint('md')
   const [isOpen, setIsOpen] = useState(false)

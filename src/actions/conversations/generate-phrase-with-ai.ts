@@ -12,10 +12,10 @@ export async function generatePhraseWithAi(): Promise<string | null> {
       const prompt = `
         ${crypto.randomUUID()}
 
-        Você gerará somente uma frase em inglês.
-        As vezes gere a frase como se fosse uma expressão.
+        You will generate only one sentence in English.
+        Sometimes generate the sentence as if it were an expression.
 
-        Respeite o contexto da conversa e a gramática.
+        Respect the context of the conversation and the grammar.
       `
       // const assistant = await openai.beta.assistants.create({
       //   name: 'weather assistant',

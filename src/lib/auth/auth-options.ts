@@ -58,6 +58,6 @@ export const authOptions: NextAuthOptions = {
     error: '/auth',
     signIn: '/auth',
     signOut: '/auth',
-    newUser: '/board',
+    newUser: '/auth',
   },
 }
