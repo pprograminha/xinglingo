@@ -1,6 +1,6 @@
 import { env } from '@/env'
 import { openai } from '@/lib/ai/openai'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
+// import { OpenAIStream, streamText } from 'ai'
 
 export const runtime = 'edge'
 
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   // await withSubscription()
   const { messages } = await req.json()
 
-  const response = await openai.chat.completions.create({
+  await openai.chat.completions.create({
     model: env.OPENAI_MODEL,
     stream: true,
     messages: [
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     ],
   })
   // const text = await streamText(response)
-  const stream = OpenAIStream(response)
+  // const stream = OpenAIStream(response)
 
-  return new StreamingTextResponse(stream)
+  // return new StreamTextResult(stream)
 }

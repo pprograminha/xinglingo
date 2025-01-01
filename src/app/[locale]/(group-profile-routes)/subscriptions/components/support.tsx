@@ -8,7 +8,7 @@ export const Support = () => {
 
   return (
     <div className="mt-6">
-      <h1 className={`${pixelatedFont()} text-2xl text-zinc-400`}>
+      <h1 className={`${pixelatedFont.className} text-2xl text-zinc-400`}>
         {t('Hey! Noticed any issues with your subscription?')}
       </h1>
       <p className="text-xs">

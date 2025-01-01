@@ -37,7 +37,7 @@ export function ModeTranslatorGroup({
         {words.map((word) => (
           <div
             key={word}
-            className={`px-1.5 cursor-pointer bg-zinc-700/80 hover:bg-zinc-700 rounded-md text-lg tracking-wider ${pixelatedFont()}`}
+            className={`px-1.5 cursor-pointer bg-zinc-700/80 hover:bg-zinc-700 rounded-md text-lg tracking-wider ${pixelatedFont.className}`}
           >
             {word}
           </div>

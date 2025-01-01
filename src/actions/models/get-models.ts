@@ -5,7 +5,7 @@ import { histories } from '@/lib/db/drizzle/schema'
 import { User, Model as TableModel } from '@/lib/db/drizzle/types'
 import { desc } from 'drizzle-orm'
 
-type Model = TableModel & {
+export type Model = TableModel & {
   imageUrl: string
 }
 export const getModels = async (user: User | null) => {

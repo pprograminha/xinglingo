@@ -14,6 +14,7 @@ import {
 import { getAuth } from '@/lib/auth/get-auth'
 import { openSansFont } from '@/lib/font/google/open-sans-font'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { getCurrentLocale } from '@/lib/intl/get-current-locale'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { redirect } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
@@ -55,7 +56,7 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
     <Card className="bg-gradient-to-tr w-full  dark:from-zinc-920 dark:to-zinc-900">
       <div className="h-full md:bg-none bg-[url('/assets/svgs/layered-steps.svg')] w-full bg-repeat-y rounded-xl relative">
         <CardHeader className="mb-2">
-          <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
+          <CardTitle className={`text-2xl font-medium ${pixelatedFont.className}`}>
             {t('Our AI Petutors')}
           </CardTitle>
           <CardDescription>
@@ -76,7 +77,10 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
                     userId: user.id,
                   })
 
-                  redirect(`/board/${model.id}`)
+                  redirect({
+                    href: `/board/${model.id}`,
+                    locale: await getCurrentLocale(),
+                  })
                 }
               }}
               data-recommended={
@@ -93,7 +97,7 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
                   ?.recommended && (
                   <Badge
                     variant="recommended"
-                    className={`absolute top-0 right-0 -translate-y-1/2 translate-x-2 ${openSansFont()} tracking-wider`}
+                    className={`absolute top-0 right-0 -translate-y-1/2 translate-x-2 ${openSansFont.className} tracking-wider`}
                   >
                     {t('Recommended')}
                   </Badge>
@@ -106,7 +110,7 @@ export const Petutors = ({ t, modelsData, user, products }: PetutorsProps) => {
                     ]?.messages.map((message, i) => (
                       <p
                         key={message}
-                        className={`text-lg whitespace-pre-wrap group-data-[recommended=true]:group-hover:animate-float group-data-[recommended=true]:group-hover:delay-700  ${pixelatedFont()}`}
+                        className={`text-lg whitespace-pre-wrap group-data-[recommended=true]:group-hover:animate-float group-data-[recommended=true]:group-hover:delay-700  ${pixelatedFont.className}`}
                       >
                         {i > 0 ? (
                           <Typing

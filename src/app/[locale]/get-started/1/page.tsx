@@ -14,7 +14,7 @@ export default async function StartStep() {
         <div className="relative lg:w-6/12 lg:py-24 xl:py-32">
           <div>
             <h1
-              className={`${pixelatedFont()} font-bold text-4xl dark:text-yellow-50 md:text-6xl lg:w-10/12`}
+              className={`${pixelatedFont.className} font-bold text-4xl dark:text-yellow-50 md:text-6xl lg:w-10/12`}
             >
               {t('Find the right AI petutor for you')}
             </h1>

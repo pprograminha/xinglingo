@@ -34,7 +34,9 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
       <div className="h-full flex flex-col justify-between  w-full bg-repeat-y rounded-xl ">
         <div>
           <CardHeader className="space-y-0 pb-2">
-            <CardTitle className={`text-2xl font-medium ${pixelatedFont()}`}>
+            <CardTitle
+              className={`text-2xl font-medium ${pixelatedFont.className}`}
+            >
               {t.rich(
                 'Your goal is to learn {words} words, {wordsRemaining} words remaining',
                 {
@@ -46,7 +48,7 @@ export const Goal = ({ wordsListData, t }: GoalProps) => {
                         <CircleHelpIcon className="w-full h-full block -mb-0.5 text-zinc-400" />{' '}
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className={`${interSansFont()}`}>
+                        <p className={`${interSansFont.className}`}>
                           {t(
                             'For fluency, you may need to learn from 5000 to 10000 words',
                             {

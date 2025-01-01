@@ -1,19 +1,21 @@
 import { getSection } from '@/actions/units/get-section'
 import { AI } from '@/lib/chat/actions'
-import { nanoid } from 'nanoid'
 import { type Metadata } from 'next'
-import { Section } from './components/section'
+import { Lesson } from './components/lesson'
 
 type SectionPageProps = {
-  params: {
+  params: Promise<{
     'model-id': string
     'section-id': string
-  }
+    'lesson-id': string
+  }>
 }
 
 export async function generateMetadata({
-  params,
+  params: paramsPromise,
 }: SectionPageProps): Promise<Metadata> {
+  const params = await paramsPromise
+
   const section = await getSection({
     sectionId: params['section-id'],
   })
@@ -25,7 +27,10 @@ export async function generateMetadata({
     : {}
 }
 
-export default async function LessonPage({ params }: SectionPageProps) {
+export default async function LessonPage({
+  params: paramsPromise,
+}: SectionPageProps) {
+  const params = await paramsPromise
   // const conversations = await getConversations()
   return (
     <>
@@ -40,10 +45,10 @@ export default async function LessonPage({ params }: SectionPageProps) {
           //       role: c.role as 'system',
           //     }) satisfies Message,
           // ),
-          chatId: nanoid(),
+          chatId: params['lesson-id'],
         }}
       >
-        <Section params={params} />
+        <Lesson params={params} />
       </AI>
     </>
   )

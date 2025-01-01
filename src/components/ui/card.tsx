@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { openSansFont } from '@/lib/font/google/open-sans-font'
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -10,6 +11,7 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       'rounded-xl border border-zinc-200 bg-white text-zinc-950 shadow dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50',
+      openSansFont.className,
       className,
     )}
     {...props}

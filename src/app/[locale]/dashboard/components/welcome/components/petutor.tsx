@@ -3,6 +3,7 @@ import { getModels } from '@/actions/models/get-models'
 import { getProducts } from '@/actions/stripe/get-products'
 import { ButtonWithAccessChecker } from '@/components/button-with-access-checker'
 import { User } from '@/lib/db/drizzle/types'
+import { getCurrentLocale } from '@/lib/intl/get-current-locale'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { redirect } from '@/navigation'
 import { ChevronRightIcon } from 'lucide-react'
@@ -39,7 +40,10 @@ export const Petutor = ({
             modelId: history.id,
           })
 
-          redirect(`/board/${history.id}`)
+          redirect({
+            href: `/board/${history.id}`,
+            locale: await getCurrentLocale(),
+          })
         }
       }}
       style={{

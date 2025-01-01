@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { it, ptBR, enUS, es, fr, Locale as DateLocale } from 'date-fns/locale'
+import { useTranslations } from 'next-intl'
 
 export const locales = ['en', 'es', 'pt', 'it-IT', 'fr'] as const
 
@@ -46,7 +47,7 @@ type LangsResponse<T extends Locale | undefined> = T extends undefined
   : string
 
 export const langs = <T extends Locale | undefined = undefined>(
-  t: Awaited<ReturnType<typeof getTranslations>>,
+  t: Awaited<ReturnType<typeof getTranslations | typeof useTranslations>>,
   locale?: T,
 ): LangsResponse<T> => {
   const langs = {

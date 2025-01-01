@@ -169,7 +169,7 @@ export default async function Home() {
               <div className="grid max-w-[800px] gap-4 sm:gap-6 md:gap-8">
                 <div className="gap-2 text-yellow-300 max-w-[550px] items-center inline-flex  rounded-md">
                   <CircleAlertIcon className="hidden md:block" />
-                  <h1 className={`${pixelatedFont()} text-4xl `}>
+                  <h1 className={`${pixelatedFont.className} text-4xl `}>
                     {t('{days} days free trial', {
                       days: env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS,
                     })}
@@ -177,7 +177,7 @@ export default async function Home() {
                   </h1>
                 </div>
                 <h1
-                  className={`${pixelatedFont()} tracking-wide whitespace-normal text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl`}
+                  className={`${pixelatedFont.className} tracking-wide whitespace-normal text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl`}
                 >
                   {t(
                     'Simplify your studies of a new language using artificial intelligence',
@@ -214,7 +214,7 @@ export default async function Home() {
               <div className="bg-zinc-800 p-4 rounded-xl flex flex-wrap justify-between gap-4 items-center md:pr-20">
                 <div>
                   <h1
-                    className={`${pixelatedFont()} text-xl text-pink-400 mb-2`}
+                    className={`${pixelatedFont.className} text-xl text-pink-400 mb-2`}
                   >
                     {t('Discount of {discount} until {date}', {
                       discount: `${env.NEXT_PUBLIC_DISCOUNT}%`,
@@ -222,7 +222,9 @@ export default async function Home() {
                     })}
                   </h1>
                   <div className="inline-flex flex-col gap-1 ">
-                    <h2 className={`${pixelatedFont()} text-zinc-400 text-2xl`}>
+                    <h2
+                      className={`${pixelatedFont.className} text-zinc-400 text-2xl`}
+                    >
                       {t('Only')}
                     </h2>
                     <Timer expireAt={expireAt} />
@@ -242,14 +244,14 @@ export default async function Home() {
                 </div>
                 <Badge
                   variant="discount"
-                  className={`${pixelatedFont()} border-0 text-md font-thin absolute -right-2 -top-2`}
+                  className={`${pixelatedFont.className} border-0 text-md font-thin absolute -right-2 -top-2`}
                 >
                   {t('Take advantage already!')}
                 </Badge>
               </div>
             </section>
             <section className="pb-12 grid gap-2">
-              <h1 className={`${pixelatedFont()} text-3xl pb-1`}>
+              <h1 className={`${pixelatedFont.className} text-3xl pb-1`}>
                 {t('What do you want to learn?')}
               </h1>
               <div className="flex flex-wrap gap-2">
@@ -263,7 +265,9 @@ export default async function Home() {
                       <CardContent className="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center">
                         <langData.icon className="w-12 h-12 shrink-0" />
                         <div>
-                          <h1 className={`${pixelatedFont()} text-3xl pb-1`}>
+                          <h1
+                            className={`${pixelatedFont.className} text-3xl pb-1`}
+                          >
                             {langData.title}
                           </h1>
                           <p className="text-xs dark:text-zinc-500 pb-2">
@@ -284,11 +288,13 @@ export default async function Home() {
             </section>
             <section className="pb-12 md:pb-24">
               <h1
-                className={`${pixelatedFont()} tracking-wide whitespace-normal text-3xl `}
+                className={`${pixelatedFont.className} tracking-wide whitespace-normal text-3xl `}
               >
                 {t('You can choose your own Petutor!')}
               </h1>
-              <p className={`${pixelatedFont()} text-lg tracking-wide mb-4`}>
+              <p
+                className={`${pixelatedFont.className} text-lg tracking-wide mb-4`}
+              >
                 {t(
                   'With the Petutors, you can train your pronunciation, train your hearing and writing skills in a foreign language!',
                 )}
@@ -298,11 +304,11 @@ export default async function Home() {
                   <div className="bg-[url('/assets/svgs/bg.svg')] w-full h-full">
                     <Link href="/get-started/1" className="w-full h-full">
                       <div className="p-4">
-                        <p className={`text-lg ${pixelatedFont()} `}>
+                        <p className={`text-lg ${pixelatedFont.className} `}>
                           - {t("Hello, I'm Ioua")}
                         </p>
                         <p
-                          className={`min-h-[56px] text-lg ${pixelatedFont()} `}
+                          className={`min-h-[56px] text-lg ${pixelatedFont.className} `}
                         >
                           <Typing
                             text={`- ${t('With me, you can say whatever you want')}`}
@@ -324,11 +330,11 @@ export default async function Home() {
                   <div className="bg-[url('/assets/svgs/bg.svg')] w-full h-full">
                     <Link href="/get-started/1" className="w-full h-full">
                       <div className="p-4">
-                        <p className={`text-lg ${pixelatedFont()} `}>
+                        <p className={`text-lg ${pixelatedFont.className} `}>
                           - {t("Hello, I'm Luna")}
                         </p>
                         <p
-                          className={`min-h-[56px] text-lg ${pixelatedFont()} `}
+                          className={`min-h-[56px] text-lg ${pixelatedFont.className} `}
                         >
                           <Typing
                             text={`- ${t('Do you want to learn how to communicate in an interview?')}`}
@@ -350,11 +356,11 @@ export default async function Home() {
                   <div className="bg-[url('/assets/svgs/bg.svg')] w-full h-full">
                     <Link href="/get-started/1" className="w-full h-full">
                       <div className="p-4">
-                        <p className={`text-lg ${pixelatedFont()} `}>
+                        <p className={`text-lg ${pixelatedFont.className} `}>
                           - {t("Hello, I'm Ukki")}
                         </p>
                         <p
-                          className={`min-h-[56px] text-lg ${pixelatedFont()} `}
+                          className={`min-h-[56px] text-lg ${pixelatedFont.className} `}
                         >
                           <Typing
                             text={`- ${t('Do you want to learn how to communicate in a restaurant?')}`}

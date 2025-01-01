@@ -165,7 +165,7 @@ const UserProfile = async () => {
                   {activeSubscription ? t('Active') : t('Disabled')}
                 </Badge>
                 <div className="z-20 relative h-full flex flex-col justify-between  p-4 pt-8">
-                  <h1 className={`${pixelatedFont()} text-3xl`}>
+                  <h1 className={`${pixelatedFont.className} text-3xl`}>
                     {activeSubscription
                       ? t('You have an active plan')
                       : t("We noticed that you still don't have a plan")}
@@ -223,7 +223,7 @@ const UserProfile = async () => {
 
                       <div>
                         <h1
-                          className={`text-xl md:text-2xl ${pixelatedFont()} whitespace-nowrap`}
+                          className={`text-xl md:text-2xl ${pixelatedFont.className} whitespace-nowrap`}
                         >
                           {langs(t, user.profile.localeToLearn as Locale)}
                         </h1>
@@ -264,7 +264,7 @@ const UserProfile = async () => {
                     </div>
                   </div>
                   <div>
-                    <h1 className={`${pixelatedFont()} text-xl`}>
+                    <h1 className={`${pixelatedFont.className} text-xl`}>
                       {t('Learn other languages')}
                     </h1>
 
@@ -298,7 +298,7 @@ const UserProfile = async () => {
             </div>
             <div className="bg-gradient-to-tr col-span-3 md:col-span-1 rounded-xl from-zinc-800 to-zinc-800/10 ">
               <div className="bg-[url('/assets/svgs/bg-700.svg')] flex flex-col h-full w-full relative p-4">
-                <h1 className={`${pixelatedFont()} text-2xl`}>
+                <h1 className={`${pixelatedFont.className} text-2xl`}>
                   {t('Set a new system language')}
                 </h1>
                 <div className="flex flex-wrap gap-4 h-full items-start justify-between">
@@ -329,12 +329,12 @@ const UserProfile = async () => {
               <div className="z-20 relative p-4">
                 <div className="flex gap-4 flex-wrap-reverse items-center justify-between">
                   <div>
-                    <h1 className={`${pixelatedFont()} text-2xl`}>
+                    <h1 className={`${pixelatedFont.className} text-2xl`}>
                       {t('Words that you had contact with')}
                     </h1>
 
                     <h2
-                      className={`${pixelatedFont()} tracking-wider text-md md:text-lg text-zinc-500`}
+                      className={`${pixelatedFont.className} tracking-wider text-md md:text-lg text-zinc-500`}
                     >
                       {t('Your average score is {points} points', {
                         points: averageScore,
@@ -374,10 +374,12 @@ const UserProfile = async () => {
               </div>
             ) : (
               <div className="z-20 relative h-full text-center p-4">
-                <h1 className={`${pixelatedFont()} text-2xl text-red-500`}>
+                <h1
+                  className={`${pixelatedFont.className} text-2xl text-red-500`}
+                >
                   {t('No content')}
                 </h1>
-                <h2 className={`${pixelatedFont()} text-xl`}>
+                <h2 className={`${pixelatedFont.className} text-xl`}>
                   {t('Pronounce any word and it will appear here')}
                 </h2>
                 {modelsData.histories[0] && modelsData.histories[0].id && (

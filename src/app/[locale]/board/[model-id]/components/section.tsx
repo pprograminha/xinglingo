@@ -8,7 +8,7 @@ import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { BookOpenIcon, PuzzleIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { CSSProperties, useState } from 'react'
-import { Unit } from '../page'
+import { Unit } from '../(sidebar)/page'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { lingos } from '@/lib/storage/local'
@@ -89,7 +89,7 @@ export const Section = ({
       {section.current && (
         <div className="border-2 relative overflow-visible inline-block rounded-md dark:bg-zinc-700 border-zinc-600 px-4 animate-bounce">
           <p
-            className={`uppercase font-bold text-xl text-violet-500 tracking-wider  ${pixelatedFont()}`}
+            className={`uppercase font-bold text-xl text-violet-500 tracking-wider  ${pixelatedFont.className}`}
           >
             {t('Start')}
           </p>
@@ -117,7 +117,7 @@ export const Section = ({
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4
-                className={`text-2xl tracking-wide leading-none mb-3 ${pixelatedFont()}`}
+                className={`text-2xl tracking-wide leading-none mb-3 ${pixelatedFont.className}`}
               >
                 {section.title.root.data.text}
               </h4>

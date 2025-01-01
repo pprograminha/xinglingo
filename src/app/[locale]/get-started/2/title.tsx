@@ -9,7 +9,7 @@ export const Title = () => {
   const { steps } = useSteps()
   return (
     <h1
-      className={`${pixelatedFont()} text-5xl font-bold text-center text-green-200 text-shadow-md shadow-green-400`}
+      className={`${pixelatedFont.className} text-5xl font-bold text-center text-green-200 text-shadow-md shadow-green-400`}
     >
       {t("What's your language level?", {
         lang: langs(t, steps[1] as Locale),

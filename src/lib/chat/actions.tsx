@@ -90,8 +90,11 @@ async function searchForWordOrPhraseInDictionary(word: number) {
     },
   }
 }
-
-async function submitUserMessage(content: string) {
+export type UIState = {
+  id: string
+  display: React.ReactNode
+}[]
+async function submitUserMessage(content: string): Promise<UIState[number]> {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -430,16 +433,12 @@ export type AIState = {
   messages: Message[]
 }
 
-export type UIState = {
-  id: string
-  display: React.ReactNode
-}[]
-
+const actions = {
+  submitUserMessage,
+  searchForWordOrPhraseInDictionary,
+}
 export const AI = createAI<AIState, UIState>({
-  actions: {
-    submitUserMessage,
-    searchForWordOrPhraseInDictionary,
-  },
+  actions,
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
   onGetUIState: async () => {
@@ -458,7 +457,9 @@ export const AI = createAI<AIState, UIState>({
   },
 })
 
-export const getUIStateFromAIState = (aiState: Chat) => {
+export type Actions = typeof actions
+
+export const getUIStateFromAIState = (aiState: Chat): UIState => {
   return aiState.messages
     .filter((message) => message.role !== 'system')
     .map((message, index) => ({

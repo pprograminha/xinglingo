@@ -70,7 +70,7 @@ export const Timer = ({
     return (
       <Badge
         variant="discount"
-        className={cn(`${pixelatedFont()} text-md font-thin`, className)}
+        className={cn(`${pixelatedFont.className} text-md font-thin`, className)}
         {...props}
       >
         {0}d 00h 00m 00s
@@ -80,7 +80,7 @@ export const Timer = ({
   return (
     <Badge
       variant="discount"
-      className={cn(`${pixelatedFont()} text-md font-thin`, className)}
+      className={cn(`${pixelatedFont.className} text-md font-thin`, className)}
       {...props}
     >
       {time.days} {t('days')} {time.hours}h {time.minutes}m {time.seconds}s

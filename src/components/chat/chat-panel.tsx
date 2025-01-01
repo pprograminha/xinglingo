@@ -1,93 +1,157 @@
-import type { AI } from '@/lib/chat/actions'
+'use client'
+
+import * as React from 'react'
+
 import { useActions, useUIState } from 'ai/rsc'
+
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { useEnterSubmit } from '@/hooks/use-enter-submit'
+import { type AI } from '@/lib/chat/actions'
+import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { SendIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
+import { useTranslations } from 'next-intl'
 import { UserMessage } from '../stocks/message'
-import { PromptForm } from './prompt-form'
+import { ButtonScrollToBottom } from './button-scroll-to-bottom'
+import { Textarea } from '../ui/textarea'
 
 export interface ChatPanelProps {
   input: string
   setInput: (value: string) => void
   scrollToBottom: () => void
+  isAtBottom: boolean
 }
 
-export function ChatPanel({ input, setInput, scrollToBottom }: ChatPanelProps) {
-  const [, setMessages] = useUIState<typeof AI>()
+export function ChatPanel({
+  input,
+  isAtBottom,
+  setInput,
+  scrollToBottom,
+}: ChatPanelProps) {
+  const { formRef, onKeyDown } = useEnterSubmit()
+  const t = useTranslations()
+  const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
+  const [messages, setMessages] = useUIState<typeof AI>()
 
-  const exampleMessages = [
-    {
-      heading: 'What are the',
-      subheading: 'trending memecoins today?',
-      message: `What are the trending memecoins today?`,
-    },
-    {
-      heading: 'What is the price of',
-      subheading: '$DOGE right now?',
-      message: 'What is the price of $DOGE right now?',
-    },
-    {
-      heading: 'I would like to buy',
-      subheading: '42 $DOGE',
-      message: `I would like to buy 42 $DOGE`,
-    },
-    {
-      heading: 'What are some',
-      subheading: `recent events about $DOGE?`,
-      message: `What are some recent events about $DOGE?`,
-    },
-  ]
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   return (
-    <div className="fixed px-4 right-0 md:left-9 bottom-0 w-full ">
-      <div className="mx-auto sm:max-w-2xl sm:px-4">
-        <div className="space-y-4 bg-background py-2 shadow-lg sm:rounded-t-xl  md:py-4">
-          <PromptForm
-            scrollToBottom={scrollToBottom}
-            input={input}
-            setInput={setInput}
-          />
-          <div className="mb-4 grid grid-cols-2 gap-2 sm:px-0">
-            {exampleMessages.map((example) => (
+    <div
+      data-has-messages={messages.length > 0}
+      className="mx-auto mt-auto md:data-[has-messages=false]:my-auto p-2 sm:max-w-2xl  w-full group
+      
+      "
+    >
+      <form
+        ref={formRef}
+        onSubmit={async (e) => {
+          e.preventDefault()
+
+          // Blur focus on mobile
+          if (window.innerWidth < 600) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ;(e.target as any).message?.blur()
+          }
+
+          const value = input.trim()
+          setInput('')
+          if (!value) return
+
+          // Optimistically add user message UI
+          setMessages((currentMessages) => [
+            ...currentMessages,
+            {
+              id: nanoid(),
+              display: <UserMessage>{value}</UserMessage>,
+            },
+          ])
+
+          // Submit and get response message
+          const responseMessage = await submitUserMessage(value)
+          setMessages((currentMessages) => [
+            ...currentMessages,
+            responseMessage,
+          ])
+        }}
+      >
+        <h1
+          className={`${pixelatedFont.className} mx-auto text-4xl text-center mb-4 hidden md:group-data-[has-messages=false]:inline-block`}
+        >
+          O que você quer saber?
+        </h1>
+        <div className="w-full flex flex-col items-center gap-2">
+          <div className="w-full flex  gap-2 items-center">
+            <div className="w-full relative">
               <div
-                className="w-full max-h-20 whitespace-nowrap text-ellipsis overflow-hidden"
-                key={example.heading}
-                onClick={async () => {
-                  setMessages((currentMessages) => [
-                    ...currentMessages,
-                    {
-                      id: nanoid(),
-                      display: <UserMessage>{example.message}</UserMessage>,
-                    },
-                  ])
-
-                  const responseMessage = await submitUserMessage(
-                    example.message,
-                  )
-
-                  setMessages((currentMessages) => [
-                    ...currentMessages,
-                    responseMessage,
-                  ])
-                }}
+                className={`flex items-center justify-between max-h-20 md:max-h-60 w-full pr-14 grow overflow-y-auto bg-background rounded-3xl border border-dashed bg-zinc-800 border-zinc-700 px-4
+                shadow-[inset_0_0px_100px_rgba(0,0,0,0.2)]
+                md:group-data-[has-messages=false]:rounded-md
+                md:group-data-[has-messages=false]:h-28
+                `}
               >
-                <div className="group col-span-1 flex p-2 h-full w-full cursor-pointer items-center gap-x-2 rounded-lg border p-xs border-zinc-800 dark:hover:border-zinc-700/70 transition duration-300 bg-background dark:bg-zinc-800 dark:hover:bg-zinc-800">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md p-xs transition-all duration-200 group-hover:bg-transparent dark:bg-offset border-borderMain/50 bg-offset dark:bg-offsetDark">
-                    <div className="default font-sans text-base">🍝</div>
-                  </div>
-                  <div>
-                    <div className="line-clamp-2 default font-sans text-sm font-medium">
-                      {example.heading}
-                    </div>
-                    <div className="text-sm text-zinc-600">
-                      {example.subheading}
-                    </div>
-                  </div>
+                <Textarea
+                  ref={inputRef}
+                  tabIndex={0}
+                  onKeyDown={onKeyDown}
+                  placeholder={t('Ask anything') + '...'}
+                  className={`placeholder:text-xs !ring-0 w-full resize-none bg-transparent placeholder:overflow-hidden placeholder:whitespace-nowrap overflow-hidden min-h-full py-4 border-0 !outline-none sm:text-sm
+                  
+                 
+                  `}
+                  autoFocus
+                  spellCheck={false}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  name="message"
+                  rows={1}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+
+                <div className="gap-2 flex top-2 absolute right-4  ">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="submit"
+                        size="icon"
+                        className="rounded-full dark:hover:bg-zinc-700"
+                        variant="outline"
+                        disabled={input === ''}
+                      >
+                        <SendIcon className="w-4" />
+                        <span className="sr-only">{t('Send message')}</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t('Send message')}</TooltipContent>
+                  </Tooltip>
                 </div>
               </div>
-            ))}
+            </div>
+            {!isAtBottom && (
+              <ButtonScrollToBottom
+                variant="outline"
+                className="rounded-full dark:hover:bg-zinc-700 group-data-[has-messages=false]:hidden"
+                scrollToBottom={scrollToBottom}
+                type="button"
+                size="icon"
+              />
+            )}
           </div>
+          <p className="text-xs text-zinc-400 text-center">
+            {t('The model may present inaccuracies, use it with discretion')}
+          </p>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

@@ -231,6 +231,7 @@ export const pronunciationsAssessment = pgTable('pronunciationsAssessment', {
 export const models = pgTable('models', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
+  description: text('description'),
   slug: text('slug').notNull(),
   image: text('image').notNull(),
   updatedAt: timestamp('updatedAt').defaultNow().notNull(),

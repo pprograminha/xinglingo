@@ -1,21 +1,17 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/use-auth'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { usePathname, useRouter } from '@/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import { Unit } from '../page'
+import { Unit } from '../(sidebar)/page'
 import { Section } from './section'
-import { UnitForm } from './unit-form'
 
 type UnitsProps = {
   units: Unit[]
-  currentModelId: string
 }
 
-export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
-  const { permissions } = useAuth()
+export const Units = ({ units: defaultUnits }: UnitsProps) => {
   const router = useRouter()
   const [units, setUnits] = useState(
     defaultUnits.filter((unit) => unit.sections.length !== 0),
@@ -50,7 +46,7 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
                       unitCount: unit.numbering,
                     })}
                   </p>
-                  <h1 className={`${pixelatedFont()} text-3xl`}>
+                  <h1 className={`${pixelatedFont.className} text-3xl`}>
                     {unit.title.root.data.text}
                   </h1>
                 </div>
@@ -80,9 +76,6 @@ export const Units = ({ units: defaultUnits, currentModelId }: UnitsProps) => {
                   unit={unit}
                 />
               ))}
-              {permissions.CAN_ADD_AND_UPDATE && (
-                <UnitForm units={[unit]} currentModelId={currentModelId} />
-              )}
             </div>
           </div>
         ))}

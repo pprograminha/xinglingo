@@ -8,7 +8,7 @@ export default async function PrivacyPage() {
     <div className="px-4 container md:px-8 py-6">
       <Logo className="mb-4" />
 
-      <h1 className={`${pixelatedFont()} text-4xl mt-8 font-bold`}>
+      <h1 className={`${pixelatedFont.className} text-4xl mt-8 font-bold`}>
         1. {t('Terms')}
       </h1>
 
@@ -137,7 +137,7 @@ export default async function PrivacyPage() {
         <br />
       </p>
 
-      <h3 className={`${pixelatedFont()} text-2xl mt-8 font-bold`}>
+      <h3 className={`${pixelatedFont.className} text-2xl mt-8 font-bold`}>
         {t('Modifications')}
       </h3>
 

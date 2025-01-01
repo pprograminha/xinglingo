@@ -12,7 +12,6 @@ import { Product } from '.'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-
 type SubscriptionProps = {
   product: Product
   className?: string
@@ -71,7 +70,7 @@ export const Subscription = ({
           <form onSubmit={(e) => e.preventDefault()}>
             {product.name && (
               <h3
-                className={`text-3xl ${pixelatedFont()} tracking-wide
+                className={`text-3xl ${pixelatedFont.className} tracking-wide
               group-data-[color=pink]:text-pink-300
               group-data-[color=red]:text-red-500
               group-data-[color=slate]:text-slate-200`}
@@ -79,7 +78,7 @@ export const Subscription = ({
                 {t(product.name as TranslationKeys)}
               </h3>
             )}
-            <p className="text-xs text-zinc-500">{product.description}</p>
+            <p className={`text-xs text-zinc-500`}>{product.description}</p>
 
             {product.color !== 'red' && (
               <h2 className="rounded-md text-orange-400 font-bold  mt-2 text-xs inline-block">
@@ -89,7 +88,7 @@ export const Subscription = ({
               </h2>
             )}
             <div
-              className={`mt-4 text-zinc-600 dark:text-white text-5xl ${pixelatedFont()} `}
+              className={`mt-4 text-zinc-600 dark:text-white text-5xl ${pixelatedFont.className} `}
             >
               <div className="">
                 <span className="text-2xl text-zinc-500 line-through inline-block">

@@ -11,7 +11,8 @@ type AddAuthCookiesData = {
 export const addAuthCookies = async (
   data: AddAuthCookiesData,
 ): Promise<void> => {
+  const ck = await cookies()
   Object.entries(data).forEach(([key, value]) => {
-    cookies().set(`${lingos.prefixKey(`auth:${key}`)}`, JSON.stringify(value))
+    ck.set(`${lingos.prefixKey(`auth:${key}`)}`, JSON.stringify(value))
   })
 }

@@ -47,7 +47,9 @@ export async function checkoutWithStripe(
       throw new Error('Unable to access customer record.')
     }
 
-    const locale = (cookies().get('NEXT_LOCALE')?.value || 'en') as Locale
+    const ck = await cookies()
+
+    const locale = (ck.get('NEXT_LOCALE')?.value || 'en') as Locale
 
     let promotionCode = await db.query.promotionCodes.findFirst({
       where: (tablePromotionCodes, { eq }) =>

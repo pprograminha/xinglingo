@@ -55,13 +55,13 @@ export const MyPlans = ({ user }: MyPlansProps) => {
       <div className="relative flex flex-wrap justify-between gap-x-6 gap-y-4 bg-gradient-to-tr p-6 from-zinc-800 via-zinc-800 to-green-800/20 rounded-xl">
         <div>
           {subscription.price.product.name && (
-            <h1 className={`${pixelatedFont()} text-3xl`}>
+            <h1 className={`${pixelatedFont.className} text-3xl`}>
               {t(subscription.price.product.name as Parameters<typeof t>[0])}
             </h1>
           )}
 
           <div>
-            <h1 className={`${pixelatedFont()} text-xl text-zinc-400`}>
+            <h1 className={`${pixelatedFont.className} text-xl text-zinc-400`}>
               {t('Current subscription billing cycle')}
             </h1>
             <div className="text-xs text-zinc-500">
@@ -113,7 +113,7 @@ export const MyPlans = ({ user }: MyPlansProps) => {
             <div className="mb-4">
               <Badge
                 variant="secondary"
-                className={`dark:bg-zinc-600 hover:dark:bg-zinc-600 inline-block ${openSansFont()}`}
+                className={`dark:bg-zinc-600 hover:dark:bg-zinc-600 inline-block ${openSansFont.className}`}
               >
                 {t('Trial period has expired')}
               </Badge>

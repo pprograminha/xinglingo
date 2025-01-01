@@ -20,6 +20,7 @@ import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { History } from './components/history'
+import { getCurrentLocale } from '@/lib/intl/get-current-locale'
 
 type WelcomeProps = {
   user: User | null
@@ -61,7 +62,7 @@ export const Welcome = ({
                       <div className="flex gap-3 justify-between flex-1 items-center">
                         <div>
                           <h1
-                            className={`text-xl md:text-2xl ${pixelatedFont()} whitespace-nowrap`}
+                            className={`text-xl md:text-2xl ${pixelatedFont.className} whitespace-nowrap`}
                           >
                             {langs(t, user.profile.localeToLearn as Locale)}
                           </h1>
@@ -108,7 +109,10 @@ export const Welcome = ({
                             userId: user.id,
                             modelId: modelsData.histories[0].id,
                           })
-                          redirect(`/board/${modelsData.histories[0].id}`)
+                          redirect({
+                            href: `/board/${modelsData.histories[0].id}`,
+                            locale: await getCurrentLocale(),
+                          })
                         }
                       }}
                     >

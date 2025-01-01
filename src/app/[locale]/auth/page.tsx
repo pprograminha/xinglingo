@@ -90,7 +90,7 @@ export default function Auth() {
               </Link>
 
               <h2
-                className={`${pixelatedFont()} mb-8 text-4xl max-w-sm font-bold text-zinc-800 dark:text-white`}
+                className={`${pixelatedFont.className} mb-8 text-4xl max-w-sm font-bold text-zinc-800 dark:text-white`}
               >
                 {t('Sign in to unlock the best of Xinglingo')}
               </h2>

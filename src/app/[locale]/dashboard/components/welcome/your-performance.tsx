@@ -48,7 +48,7 @@ export const YourPerformance = ({
           <div className="flex gap-2 items-center">
             <div>
               <div className="flex gap-2 items-center">
-                <h1 className={`text-2xl ${pixelatedFont()}`}>
+                <h1 className={`text-2xl ${pixelatedFont.className}`}>
                   {t('Your performance')}{' '}
                 </h1>
                 <Tooltip>

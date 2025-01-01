@@ -5,6 +5,7 @@ type StorageKeys =
   | 'get-started:steps'
   | 'sound'
   | 'coupon-code'
+  | 'model:thumbs'
   | 'unit:section'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

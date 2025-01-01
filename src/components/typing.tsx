@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 type TypingProps = {
   text: string
   startDelay?: number
-  delay?: number
+  delay?: number // ms
 }
 export const Typing = ({
   text: textBase,

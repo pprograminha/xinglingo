@@ -17,7 +17,9 @@ export async function makeUser({
 }: Omit<NewUser, 'id'> & { steps: Steps | []; googleId: string | null }) {
   let [user] = await db.select().from(users).where(eq(users.email, email))
 
-  const locale = cookies().get('NEXT_LOCALE')?.value || 'en'
+  const ck = await cookies()
+
+  const locale = ck.get('NEXT_LOCALE')?.value || 'en'
 
   if (user && (user.image !== image || user.locale !== locale)) {
     await db

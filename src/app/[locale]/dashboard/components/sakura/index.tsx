@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { User } from '@/lib/db/drizzle/types'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
+import { getCurrentLocale } from '@/lib/intl/get-current-locale'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { redirect } from '@/navigation'
 import { ChevronRightIcon } from 'lucide-react'
@@ -37,7 +38,11 @@ export const Sakura = ({ t, user, products }: SakuraProps) => {
                 <form
                   action={async () => {
                     'use server'
-                    if (retrieveActiveSubscription(user)) redirect('/languages')
+                    if (retrieveActiveSubscription(user))
+                      redirect({
+                        href: `/languages`,
+                        locale: await getCurrentLocale(),
+                      })
                   }}
                 >
                   <ButtonWithAccessChecker
@@ -65,7 +70,7 @@ export const Sakura = ({ t, user, products }: SakuraProps) => {
               {t('Shortly')}
             </Badge>
             <h1
-              className={`text-2xl ${pixelatedFont()} flex gap-1 items-center`}
+              className={`text-2xl ${pixelatedFont.className} flex gap-1 items-center`}
             >
               {t('New AI Petutors')}
               <Badge variant="shortly" className="px-4 ml-2 text-sm">
@@ -76,7 +81,7 @@ export const Sakura = ({ t, user, products }: SakuraProps) => {
               <div className="basis-48 bg-gradient-to-tr cursor-not-allowed rounded-lg  transition-all from-zinc-900 backdrop-blur-sm  to-zinc-600/10 border border-zinc-800 flex-1 flex items-center justify-center">
                 <div className="bg-[url('/assets/svgs/bg.svg')]">
                   <div className="p-4">
-                    <p className={`min-h-[56px] text-lg ${pixelatedFont()} `}>
+                    <p className={`min-h-[56px] text-lg ${pixelatedFont.className} `}>
                       <Typing
                         text={`- ${t('Soon, I will be able to share knowledge about history with you')}`}
                         startDelay={100}
@@ -95,7 +100,7 @@ export const Sakura = ({ t, user, products }: SakuraProps) => {
               <div className="basis-48 bg-gradient-to-tr cursor-not-allowed backdrop-blur-sm transition-all from-zinc-900 to-zinc-600/10 rounded-lg border border-zinc-800 flex-1 flex items-center justify-center">
                 <div className="bg-[url('/assets/svgs/bg.svg')]">
                   <div className="p-4">
-                    <p className={`min-h-[56px] text-lg ${pixelatedFont()} `}>
+                    <p className={`min-h-[56px] text-lg ${pixelatedFont.className} `}>
                       <Typing
                         text={`- ${t('In due course, I will be available to share knowledge about technology with you')}`}
                         startDelay={50}

@@ -34,6 +34,7 @@ export type TextsPerCategoryValueObj<T> = {
   metadata: TextsPerCategoryValueObjMetadata<T>
 }
 export type TextsPerCategory<T> = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   [K in keyof T]: NextedArray<TextsPerCategoryValueObj<T>>
 }
 
@@ -67,11 +68,10 @@ export const getTexts = async function <
         or(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           /* @ts-ignore */
-          ...textsId.flatMap((textId) =>
-            user?.role === 'admin'
-              ? [eq(texts.id, textId), eq(texts.parentTextId, textId)]
-              : [eq(texts.id, textId)],
-          ),
+          ...textsId.flatMap((textId) => [
+            eq(texts.id, textId),
+            eq(texts.parentTextId, textId),
+          ]),
         ),
         // locale ? eq(texts.locale, locale) : undefined,
       ),
@@ -180,9 +180,20 @@ export const getTexts = async function <
           return recursive(textId, ...i, ti)
         }
 
-        const text = texts.find((t) => t.id === textId)
+        const text = texts.find((t) => {
+          const isSameLocale = t.locale === locale
+          const isSameTextId = t.id === textId && isSameLocale
+          const isSameParentTextId =
+            textId && t.parentTextId === textId && isSameLocale
+
+          return isSameParentTextId || isSameTextId
+        })
         const textsChildren = textId
-          ? texts.filter((t) => t.parentTextId === textId)
+          ? texts.filter(
+              (t) =>
+                (t.parentTextId === textId || t.id === textId) &&
+                t.id !== text?.id,
+            )
           : []
 
         const root: TextsPerCategoryValueObjMetadata<T>[number] = {

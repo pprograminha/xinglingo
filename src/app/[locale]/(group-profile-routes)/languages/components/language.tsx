@@ -87,7 +87,7 @@ export const Language = ({ lang, langs, onLanguages }: LanguageProps) => {
             alt="Country"
           />
           <div>
-            <h1 className={`${pixelatedFont()} text-2xl md:text-4xl mb-2`}>
+            <h1 className={`${pixelatedFont.className} text-2xl md:text-4xl mb-2`}>
               {lang.name}
             </h1>
             <p className="text-xs text-zinc-400">

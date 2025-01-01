@@ -11,7 +11,7 @@ export const Logo = ({ className, ...props }: LogoProps) => {
     <div className={cn('py-1', className)} {...props}>
       <Link href="/" className="flex items-center justify-center gap-2">
         <AudioWaveformIcon />
-        <h1 className={`${pixelatedFont()}`}>Xinglingo</h1>
+        <h1 className={`${pixelatedFont.className}`}>Xinglingo</h1>
       </Link>
     </div>
   )

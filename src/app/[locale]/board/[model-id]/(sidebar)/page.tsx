@@ -9,24 +9,31 @@ import { Link, redirect } from '@/navigation'
 import { GraduationCapIcon } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import { Units } from './components/units'
+import { Units } from '../components/units'
 import { getModels } from '@/actions/models/get-models'
 import { getUnits } from '@/actions/units/get-units'
+import { getCurrentLocale } from '@/lib/intl/get-current-locale'
 
 export type Unit = Awaited<ReturnType<typeof getUnits>>[number]
 
 type ModelsProps = {
-  params: {
+  params: Promise<{
     'model-id': string
-  }
+  }>
 }
-export default async function Models({ params }: ModelsProps) {
+export default async function Models({ params: paramsPromise }: ModelsProps) {
   const { user } = await getAuth()
+
+  const params = await paramsPromise
+
   const modelsData = await getModels(user)
   const modelExists = modelsData.models.some((m) => m.id === params['model-id'])
 
   if (!modelExists) {
-    redirect(`/model`)
+    redirect({
+      href: `/model`,
+      locale: await getCurrentLocale(),
+    })
   }
 
   const {
@@ -60,7 +67,9 @@ export default async function Models({ params }: ModelsProps) {
                   height={100}
                 />
                 <div>
-                  <h1 className={`${pixelatedFont()} text-xl md:text-3xl`}>
+                  <h1
+                    className={`${pixelatedFont.className} text-xl md:text-3xl`}
+                  >
                     {t('You are learning {lang}', {
                       lang: langs(t, user.profile.localeToLearn as Locale),
                     })}
@@ -88,7 +97,9 @@ export default async function Models({ params }: ModelsProps) {
               <div className="flex flex-col gap-4">
                 <div className="flex gap-2 items-center text-orange-500">
                   <GraduationCapIcon />
-                  <h1 className={`${pixelatedFont()} text-xl md:text-3xl`}>
+                  <h1
+                    className={`${pixelatedFont.className} text-xl md:text-3xl`}
+                  >
                     {t('Your progress')}
                   </h1>
                 </div>
@@ -103,7 +114,7 @@ export default async function Models({ params }: ModelsProps) {
             </div>
           )}
         </div>
-        <Units units={units} currentModelId={params['model-id']} />
+        <Units units={units} />
       </div>
     </div>
   )

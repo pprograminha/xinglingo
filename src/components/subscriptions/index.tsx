@@ -4,12 +4,14 @@ import { getProducts } from '@/actions/stripe/get-products'
 import { getServerAuth } from '@/actions/users/get-server-auth'
 import { env } from '@/env'
 import { User } from '@/lib/db/drizzle/types'
+import { openSansFont } from '@/lib/font/google/open-sans-font'
 import { pixelatedFont } from '@/lib/font/google/pixelated-font'
 import { getCurrency, Locale } from '@/lib/intl/locales'
 import { lingos } from '@/lib/storage/local'
 import { getStripe } from '@/lib/stripe/client'
 import { retrieveActiveSubscription } from '@/lib/subscription'
 import { cn } from '@/lib/utils'
+import { sendGAEvent } from '@next/third-parties/google'
 import BigNumber from 'bignumber.js'
 import { AlertCircleIcon } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -31,7 +33,6 @@ import {
 import { Subscription } from './subscription'
 import { SubscriptionList } from './subscription-list'
 import { SubscriptionListSkeleton } from './subscription-list-skeleton'
-import { sendGAEvent } from '@next/third-parties/google'
 
 type Benefit = {
   color: string
@@ -248,9 +249,9 @@ export const Subscriptions = ({
 
   return (
     <Dialog defaultOpen onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-max ">
+      <DialogContent className={`max-w-max ${openSansFont.className}`}>
         <DialogTitle
-          className={`text-4xl ${pixelatedFont()} text-zinc-300 tracking-wide flex gap-2 items-center animate-pulse`}
+          className={`text-4xl ${pixelatedFont.className} text-zinc-300 tracking-wide flex gap-2 items-center animate-pulse`}
         >
           {t('{days} days free trial', {
             days: env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS,

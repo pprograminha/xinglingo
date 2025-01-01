@@ -65,7 +65,7 @@ export const SubscriptionList = ({
                 <h3
                   className={`
                       text-3xl
-                      ${pixelatedFont()}
+                      ${pixelatedFont.className}
                       tracking-wide
                     group-data-[color=pink]:text-pink-300
                     group-data-[color=red]:text-red-500
@@ -87,7 +87,7 @@ export const SubscriptionList = ({
             </div>
             <div>
               <div
-                className={`mb-4 text-zinc-600 dark:text-white text-3xl ${pixelatedFont()} `}
+                className={`mb-4 text-zinc-600 dark:text-white text-3xl ${pixelatedFont.className} `}
               >
                 <span className="text-2xl text-zinc-500 line-through block">
                   {product.color === 'red'

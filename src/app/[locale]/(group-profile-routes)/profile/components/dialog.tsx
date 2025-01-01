@@ -139,7 +139,7 @@ export function CommmandItemComponent({
             </PopoverTrigger>
           </div>
           <PopoverContent className="space-y-2">
-            <h1 className={`${pixelatedFont()}`}>
+            <h1 className={`${pixelatedFont.className}`}>
               {t(
                 'To improve your score, you should practice your pronunciation',
               )}
@@ -325,7 +325,7 @@ export function Dialog({ wordsListData, model }: DialogProps) {
               alt="Petutor AI"
             />
 
-            <p className={`${pixelatedFont()} px-4 md:px-8`}>
+            <p className={`${pixelatedFont.className} px-4 md:px-8`}>
               <Typing
                 text={`- ${t('Here are all the words you learned with us, feel free to explore')}`}
               />

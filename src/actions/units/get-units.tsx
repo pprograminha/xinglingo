@@ -18,7 +18,7 @@ type GetUnitParams = {
 
 export const getUnits = async ({ modelId, locale }: GetUnitParams) => {
   const { user } = await getAuth(true)
-  console.time()
+
   const units = await db.query.units.findMany({
     where: (units, { eq, and }) => and(eq(units.modelId, modelId)),
     orderBy: [asc(schemaUnits.createdAt)],
@@ -58,7 +58,7 @@ export const getUnits = async ({ modelId, locale }: GetUnitParams) => {
       },
     },
   })
-  console.timeEnd()
+
   type Lessons = (typeof units)[number]['sections'][number]['lessons']
 
   const retrieveBoolean = function <T, Default>(
@@ -75,8 +75,6 @@ export const getUnits = async ({ modelId, locale }: GetUnitParams) => {
 
     return defaultValue
   }
-
-  console.time()
 
   const textsData = {
     unitTitles: units.map((u) => u.title),
@@ -99,8 +97,6 @@ export const getUnits = async ({ modelId, locale }: GetUnitParams) => {
   }
 
   const texts = await getTexts(textsData, { locale })
-
-  console.timeEnd()
 
   const unpackedText = function <K extends keyof typeof textsData>(
     k: K,

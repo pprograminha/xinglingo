@@ -25,9 +25,10 @@ export const authOptions: NextAuthOptions = {
       }
 
       const googleId = account?.provider === 'google' ? user.id : null
+      const ck = await cookies()
 
       const steps = JSON.parse(
-        cookies().get(`${lingos.prefixKey(`auth:steps`)}`)?.value || '[]',
+        ck.get(`${lingos.prefixKey(`auth:steps`)}`)?.value || '[]',
       ) as Steps | []
 
       const makedUser = await makeUser({

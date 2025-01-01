@@ -23,7 +23,7 @@ export function ButtonScrollToBottom({
       onClick={() => scrollToBottom()}
       {...props}
     >
-      <ArrowDownIcon />
+      <ArrowDownIcon className="w-4" />
       <span className="sr-only">Scroll to bottom</span>
     </Button>
   )

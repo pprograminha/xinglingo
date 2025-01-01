@@ -158,8 +158,8 @@ export const SideBar = ({ className, noModels, ...props }: SideBarProps) => {
                     {item.img && (
                       <Image
                         src={item.img}
-                        width={50}
-                        height={33.6}
+                        width={30}
+                        height={16}
                         alt="Petutor"
                       />
                     )}

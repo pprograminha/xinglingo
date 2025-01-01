@@ -130,7 +130,7 @@ ${JSON.stringify(
         action={generateUnitsAction}
         className="flex gap-4 items-center flex-wrap"
       >
-        <h1 className={`${pixelatedFont()} text-3xl`}>Gerar conteúdo</h1>
+        <h1 className={`${pixelatedFont.className} text-3xl`}>Gerar conteúdo</h1>
         <Button type="submit" variant="secondary" size="icon">
           {isPending ? (
             <Loader2Icon className="w-4 animate-spin text-yellow-300" />

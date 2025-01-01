@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { User } from '../db/drizzle/types'
 import { authOptions } from './auth-options'
 import { redirect } from '@/navigation'
+import { getCurrentLocale } from '../intl/get-current-locale'
 
 export const getAuth = async (isPublicPage = false) => {
   const session = await getServerSession(authOptions)
@@ -17,7 +18,11 @@ export const getAuth = async (isPublicPage = false) => {
   if (user) {
     user = await getUser(user.id)
   } else {
-    if (!isPublicPage) redirect('/auth')
+    if (!isPublicPage)
+      redirect({
+        href: '/auth',
+        locale: await getCurrentLocale(),
+      })
     return {
       user: null,
     }

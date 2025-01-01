@@ -1,9 +1,7 @@
 import { VT323 } from 'next/font/google'
 
-const fontSans = VT323({
+export const pixelatedFont = VT323({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-sans',
 })
-
-export const pixelatedFont = () => `font-sans ${fontSans.variable}`

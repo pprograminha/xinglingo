@@ -22,7 +22,7 @@ export default function GlobalError({
           alt="Panda"
         />
         <div className="mt-2">
-          <h2 className={`${pixelatedFont()} text-4xl`}>
+          <h2 className={`${pixelatedFont.className} text-4xl`}>
             {t('Something went wrong!')}
           </h2>
           <Button

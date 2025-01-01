@@ -5,10 +5,10 @@ const withNextIntl = createNextIntlPlugin()
 
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: true,
   },
   images: {
     remotePatterns: [

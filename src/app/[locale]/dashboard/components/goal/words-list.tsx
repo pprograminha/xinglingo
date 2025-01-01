@@ -41,7 +41,7 @@ export function WordsList({ wordsList, t }: WordsListProps) {
 
   return (
     <div className="pb-4">
-      <h2 className={`text-2xl ${pixelatedFont()}`}>
+      <h2 className={`text-2xl ${pixelatedFont.className}`}>
         {t('Words you have already encountered')}: {wordsList.length}
       </h2>
 

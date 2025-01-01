@@ -11,14 +11,15 @@ App de aprendizado de línguas com LLM e Neural TTS
 - [✅] O aplicativo deve ter uma trilha sonora.
 - [✅] O aplicativo deve permitir que o estudante não queria a trilha sonora.
 - [❌] O aplicativo deve aprensentar a plaforma com o modelo de voz da OpenAI antes a assinatura.
-- [❌] O aplicativo deve ter a possibilidade de conversa com o LLM.
-- [❌] O aplicativo deve ter a possibilidade de criação de "tutores" LLM.
+- [✅] O aplicativo deve ter a possibilidade de conversa com o LLM.
+- [✅] O aplicativo deve ter a possibilidade de criação de "tutores" LLM.
 - [❌] O aplicativo deve ter a possibilidade de correção de frases.
 - [❌] O aplicativo deve enviar um e-mail de boas vindas para o usuário.
-- [❌] O aplicativo deve ter um preview gratuito.
+- [✅] O aplicativo deve ter um preview gratuito.
 - [❌] O aplicativo deve enviar um e-mail de status do plano.
 - [❌] O aplicativo deve permitir que o estudante escolha um plano.
-- [❌] O aplicativo deve ter todas as vozes da OpenAI.
+- [✅] O aplicativo deve ter todas as vozes da OpenAI.
+- [❌] O aplicativo deve ter todas as vozes do ElevenLabs.
 - [❌] O aplicativo deve permitir o usuário ouvir palavra por palavra da frase.
 
 
@@ -31,4 +32,4 @@ App de aprendizado de línguas com LLM e Neural TTS
 - [❌] O estudante pode acessar ao preview gratuito com limite de 100 tokens das funcionalidades LLM e 3 requets para as TTS somente se ele estiver logado.
 - [❌] O estudante pode acessar ao preview gratuito TTS e LLM somente uma vez.
 - [❌] O estudante pode escolher aprender mais de uma língua ao mesmo tempo.
-- [❌] O estudante pode alterar a língua que está aprendendo a qualquer momento.
+- [✅] O estudante pode alterar a língua que está aprendendo a qualquer momento.
